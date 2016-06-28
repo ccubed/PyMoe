@@ -25,7 +25,7 @@ class Vndb:
         self.clientvars = {'protocol': 1, 'clientver': 0.1, 'client': 'PyMoe'}
         self.user = False
         self.data_buffer = bytes(1024)
-        self.sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        self.sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
         self.sslcontext.verify_mode = ssl.CERT_REQUIRED
         self.sslcontext.check_hostname = True
         self.sslcontext.load_default_certs()
