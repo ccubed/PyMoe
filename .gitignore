@@ -58,3 +58,8 @@ docs/_build/
 # PyBuilder
 target/
 
+# PyCharm
+.idea/
+
+# Sphinx
+docs/
