@@ -22,7 +22,7 @@ class Vndb:
         :param username: The username to log in as
         :param password: The password for that username
         """
-        self.clientvars = {'protocol': 1, 'clientver': 0.1, 'client': 'PyMoe'}
+        self.clientvars = {'protocol': 1, 'clientver': 0.1, 'client': 'Pymoe'}
         self.user = False
         self.data_buffer = bytes(1024)
         self.sslcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)

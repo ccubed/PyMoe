@@ -17,7 +17,7 @@ class Anilist:
         :param cid: Client ID
         :param csecret: Client Secret
         """
-        self.headers = {'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'PyMoe (git.vertinext.com/ccubed/PyMoe)'}
+        self.headers = {'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Pymoe (git.vertinext.com/ccubed/Pymoe)'}
         self.apiurl = "https://anilist.co/api"
         self.cid = cid
         self.csecret = csecret
