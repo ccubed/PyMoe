@@ -33,3 +33,10 @@ class GeneralLoginError(MoeError):
 
     def __repr__(self):
         return "We attempted to login but the server responded with: {}".format(self.message)
+
+class ServerError(MoeError):
+    """
+    Raised when we encounter an error retrieving information from the server.
+    """
+    def __repr__(self):
+        return "Encountered a server error attempting to access information."

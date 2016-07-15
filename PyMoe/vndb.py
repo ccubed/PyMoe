@@ -100,3 +100,4 @@ class Vndb:
             return temp
         else:
             return ujson.loads(temp.split(' ', 1)[1])
+

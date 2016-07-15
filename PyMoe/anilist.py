@@ -17,7 +17,7 @@ class Anilist:
         :param cid: Client ID
         :param csecret: Client Secret
         """
-        self.headers = {'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'PyMoe'}
+        self.headers = {'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'PyMoe (git.vertinext.com/ccubed/PyMoe)'}
         self.apiurl = "https://anilist.co/api"
         self.cid = cid
         self.csecret = csecret
@@ -30,3 +30,4 @@ class Anilist:
         if req.status_code == 200:
             jsd = req.json()
             self.readonly = {'Expiration': jsd['expires'], 'Token': jsd['access_token']}
+
