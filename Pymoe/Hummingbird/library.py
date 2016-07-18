@@ -12,7 +12,8 @@ class HBirdLib:
 
         :param username: The user whose entries we want.
         :param status: Optional filter. One of: currently-watching, plan-to-watch, completed, on-hold or dropped.
-        :return: None or the results in a dictionary
+        :return: None or a list of library entry objects
+        :rtype: NoneType or a list of dictionaries
         """
         if status:
             r = requests.get(self.apiurl + "/users/{}/library".format(username), params={'status': status},
@@ -34,13 +35,10 @@ class HBirdLib:
 
     def set(self, aid, auth_token, **kwargs):
         """
-        Prepare yourself for a giant list of params. :/
-        This is the endpoint for adding and/or updating an entry.
+        Prepare yourself for a giant list of params. This is the endpoint for adding and/or updating an entry. All kwargs are optional.
 
         :param aid: the anime id we're updating
         :param auth_token: The auth token received from the login function/endpoint.
-
-        This is the giant list of kwargs. All are optional.
         :param status: currently-watching, plan-to-watch, completed, on-hold, dropped
         :param privacy: public or private. Private means don't show to others.
         :param rating: 0, 0.5, 1, 1.5 ... 5. Setting it to 0 or the current value will remove it
@@ -48,10 +46,12 @@ class HBirdLib:
         :param rewatching: true or false. You know, if you are rewatching it.
         :param rewatched_times: Number of rewatches. 0 or above.
         :param notes: Personal notes.
-        :param episodes_watched: Number of episodes watch. Between 0 and total_episodes. If equal to total_episodes, you must set status to complete or you'll get 500'd.
+        :param episodes_watched: Number of episodes watched. Between 0 and total_episodes. If equal to total_episodes, you must set status to complete or you'll get 500'd.
         :param increment_episodes: If set to true will increment episodes_watched by 1. If used along with episodes_watched, will increment that value by 1.
-
-        :return: True if Ok, ServerError if failed, GeneralLoginError if 401'd, False if we got an invalid JSON object
+        :return: True if Ok, False if we got an invalid JSON object
+        :rtype: Boolean
+        :raises: :class:`Pymoe.errors.ServerError` - 500
+        :raises: :class:`Pymoe.errors.GeneralLoginError` - 401
         """
         params = kwargs
         params['auth_token'] = auth_token
@@ -72,7 +72,10 @@ class HBirdLib:
 
         :param aid: The ID to be removed.
         :param auth_token: The auth_token for the user from the login function/endpoint.
-        :return: True if successful, GeneralLoginError for 401, ServerError for 500.
+        :return: True if successful
+        :rtype: Boolean
+        :raises: :class:`Pymoe.errors.ServerError` - 500
+        :raises: :class:`Pymoe.errors.GeneralLoginError` - 401
         """
         r = requests.post(self.apiurl + "/libraries/{}/remove".format(aid), params={'auth_token': auth_token},
                           headers=self.header)

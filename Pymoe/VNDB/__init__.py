@@ -1,8 +1,7 @@
 from .connection import *
 
 class VNDB:
-    def __init__(self, username=None, password=None):
-        """
+    """
         Start up a vndb instance. This instance allows you to communicate with the VNDB d11 api. If you pass a username
         and password it will log you in as that user automatically. Since there can only be one user per connection,
         you will need to call this multiple times to log in as more than one user. However, this is possible.
@@ -12,5 +11,7 @@ class VNDB:
 
         :param username: The username to log in as
         :param password: The password for that username
-        """
+        :ivar VNDBConnection connection: The connection manager instance
+    """
+    def __init__(self, username=None, password=None):
         self.connection = VNDBConnection(username, password)

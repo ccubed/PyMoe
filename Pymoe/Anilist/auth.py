@@ -3,6 +3,12 @@ import time
 
 
 class ALAuth:
+    """
+    Handle the Authorization endpoints in the Anilist API.
+
+    :ivar dict settings: The settings from :class:`Pymoe.Anilist`
+    :ivar dict credentials: Storage for Readonly Credentials
+    """
     def __init__(self, settings):
         self.settings = settings
         self.credentials = None
@@ -12,7 +18,8 @@ class ALAuth:
         """
         Grab readonly credentials. Used for calls that don't need user permissions.
 
-        :return: Nothing or an error
+        :return: Nothing
+        :raises: JSONDecodeError
         """
         if self.credentials is None or int(self.credentials['expires']) < time.time():
             r = requests.post(self.settings['apiurl'] + "/auth/access_token",
@@ -27,6 +34,7 @@ class ALAuth:
 
         :param refresh_token: your refresh token
         :return: a dictionary consisting of: access_token, token_type, expires, expires_in or None to indicate an error
+        :rtype: Dictionary, NoneType
         """
         r = requests.post(self.settings['apiurl'] + "/auth/access_token",
                           params={'grant_type': 'refresh_token', 'client_id': self.settings['cid'],

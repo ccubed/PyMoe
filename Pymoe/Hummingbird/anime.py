@@ -11,9 +11,11 @@ class HBirdAnime:
         """
         Get anime information by id.
 
-        :param aid: ID of the anime.
-        :param title: If specified, will submit the title_language_preference param. This must be canonical, english or romanized.
-        :return: Anime object (Dictionary) or None (for not found)
+        :param int aid: ID of the anime.
+        :param str title: If specified, will submit the title_language_preference param. This must be canonical, english or romanized.
+        :return: Anime object or None (for not found)
+        :rtype: Dictionary or None
+        :raises: :class:`Pymoe.errors.ServerError`
         """
         if title:
             r = requests.get(self.apiurl + "/anime/{}".format(aid), params={'title_language_preference': title},
@@ -32,14 +34,14 @@ class HBirdAnime:
     def v2(self, clientid, **kwargs):
 
         """
-        This will call the V2 endpoint for anime. It requires an id and you have to register your application on hummingbird.
+        This will call the V2 endpoint for anime. It requires an id and you have to register your application on hummingbird. You should only pass one of id or malid.
 
-        :param clientid: The client id given to you after registering your app.
-
-        Only Pass One of these
-        :param id: The Hummingbird ID for the anime
-        :param malid: The MyAnimeList ID for the anime
+        :param str clientid: The client id given to you after registering your app.
+        :param int id: The Hummingbird ID for the anime
+        :param int malid: The MyAnimeList ID for the anime
         :return: Anime Object V2 or None (for not found)
+        :rtype: Dictionary or NoneType
+        :raises: :class:`Pymoe.errors.ServerError`
         """
         headers = self.header
         headers['X-Client-Id'] = clientid
@@ -62,8 +64,9 @@ class HBirdAnime:
         """
         Search for anime by term.
 
-        :param term: What to search for.
-        :return: The results as an array of anime objects. Limit 7. None if empty.
+        :param str term: What to search for.
+        :return: The results as a list of anime objects. Limit 7. None if empty.
+        :rtype: List of Dictionaries or NoneType
         """
         r = requests.get(self.apiurl + "/search/anime", params={"query": term}, headers=self.header)
         if r.status_code != 200:

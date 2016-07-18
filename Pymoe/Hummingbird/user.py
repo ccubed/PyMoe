@@ -18,23 +18,21 @@ class HBirdUser:
         r = requests.post(self.apiurl + "/users/authenticate", params={usertype: user, 'password': pw},
                           headers=self.header)
         if r.status_code != 201:
-            raise GeneralLoginError("{} and password combination not accepted by hummingbird.".format(usertype))
+            raise UserLoginFailed("{} and password combination not accepted by hummingbird.".format(usertype))
         else:
             return r.json()
 
     def authenticate(self, password, **kwargs):
         """
-        A method for calling the authenticate endpoint to login as a specific user and obtain an auth_token.
-        :param password: user's password.
+        A method for calling the authenticate endpoint to login as a specific user and obtain an auth_token. Pass only one of username or email.
 
-        Pass one of these:
-        :param username: the username to login with
-        :param email: the email to login with
+        :param str password: user's password.
+        :param str username: the username to login with
+        :param str email: the email to login with
         :return: User's auth_token
-
-        Errors:
-            MoeError.GeneralLoginError - Got a Not Authorized
-            SyntaxError - Read the docstring again
+        :rtype: Str
+        :raises: :class:`Pymoe.errors.UserLoginFailed` - 401
+        :raises: SyntaxError - Read the docstring
         """
         if len(kwargs):
             pw = password
@@ -53,7 +51,9 @@ class HBirdUser:
         Get information about a user.
 
         :param username: User to get information about.
-        :return: User object or a json decoder error.
+        :return: User object
+        :rtype: A dictionary
+        :raises: JSONDecodeError
         """
         r = requests.get(self.apiurl + "/users/{}".format(username), headers=self.header)
         return r.json()
@@ -63,7 +63,9 @@ class HBirdUser:
         Get a user's activity feed.
 
         :param username: User whose feed we are getting
-        :return: An array of story objects or a json decoder error
+        :return: A list of story objects
+        :rtype: A list of dictionaries
+        :raises: JSONDecodeError
         """
         r = requests.get(self.apiurl + "/users/{}/feed".format(username), headers=self.header)
         return r.json()
@@ -73,7 +75,9 @@ class HBirdUser:
         Get a user's favorite anime.
 
         :param username: User whose favorite anime we are retrieving.
-        :return: An array of anime objects with an added fav_rank and fav_id key or ServerError on 500
+        :return: A list of anime objects
+        :rtype: List of Dictionaries
+        :raises: :class:`Pymoe.errors.ServerError` - 500
         """
         r = requests.get(self.apiurl + "/users/{}/favorite_anime".format(username), headers=self.header)
 
