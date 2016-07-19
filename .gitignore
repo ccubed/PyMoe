@@ -54,12 +54,11 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+docs/build
+docs/apidoc
 
 # PyBuilder
 target/
 
 # PyCharm
 .idea/
-
-# Sphinx
-docs/

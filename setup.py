@@ -18,5 +18,5 @@ setup(
         'Topic :: Software Development :: Libraries'
     ],
     Keywords="Anime Manga LN VN VNDB Anilist Hummingbird AniDB MyAnimeList MAL NovelUpdates Bakatsuki",
-    install_requires=['requests', 'bs4', 'lxml']
+    install_requires=['requests', 'bs4', 'lxml', 'ujson']
 )
