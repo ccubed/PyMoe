@@ -14,10 +14,10 @@ Services
 * :doc:`Hummingbird <Hummingbird>` - Finished
 * Anidb - Not Started
 * :doc:`Anilist <Anilist>` - Partially Written
-* Bakatsuki - Code Exists in https://git.vertinext.com/ccubed/MoNovels (Not Ported)
+* :doc:`Bakatsuki <Bakatsuki>` - Implemented some features. Still need a search and method to get chapter/section text.
 * Mal - Not Started
 * Novelupdates - Not Started
-* :doc:`VNDB <VNDB>` - Connection Manager Written
+* :doc:`VNDB <VNDB>` - Some functionality in. You can query the DB now.
 
 Indices and tables
 ==================

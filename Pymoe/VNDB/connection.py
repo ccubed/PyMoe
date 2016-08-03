@@ -1,7 +1,6 @@
-from ..errors import *
 import socket
-import re
 import ujson
+from ..errors import *
 
 try:
     import ssl
@@ -35,7 +34,6 @@ class VNDBConnection:
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sslwrap = self.sslcontext.wrap_socket(self.socket, server_hostname='api.vndb.org')
         self.sslwrap.connect(('api.vndb.org', 19535))
-        self.helperpat = re.compile('[=|!=|~|>|>=|<=|<]')
         self.login(username, password)
 
     def close(self):
@@ -61,15 +59,15 @@ class VNDBConnection:
             finvars['username'] = username
             finvars['password'] = password
             self.loggedin = True
-        ret = self.send_command('login', ujson.dumps(finvars))
-        if not isinstance(ret, str):  # should just be 'Ok'
-            if self.loggedin:
-                self.loggedin = False
-                raise UserLoginFailed(ret['msg'])
-            else:
-                raise GeneralLoginError(ret['msg'])
+            ret = self.send_command('login', ujson.dumps(finvars))
+            if not isinstance(ret, str):  # should just be 'Ok'
+                if self.loggedin:
+                    self.loggedin = False
+                    raise UserLoginFailed(ret['msg'])
+                else:
+                    raise GeneralLoginError(ret['msg'])
 
-    def send_command(self, command, args):
+    def send_command(self, command, args=None):
         """
         Send a command to VNDB and then get the result.
 
@@ -78,11 +76,14 @@ class VNDBConnection:
         :return: Servers Response
         :rtype: Dictionary (See D11 docs on VNDB)
         """
-        if isinstance(args, str):
-            final_command = command + ' ' + args + '\x04'
+        if args:
+            if isinstance(args, str):
+                final_command = command + ' ' + args + '\x04'
+            else:
+                # We just let ujson propogate the error here if it can't parse the arguments
+                final_command = command + ' ' + ujson.dumps(args) + '\x04'
         else:
-            # We just let ujson propogate the error here if it can't parse the arguments
-            final_command = command + ' ' + ujson.dumps(args) + '\x04'
+            final_command = command + '\x04'
         self.sslwrap.sendall(final_command.encode('utf-8'))
         return self._recv_data()
 

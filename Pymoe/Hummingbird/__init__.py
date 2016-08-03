@@ -5,8 +5,6 @@ from .library import *
 
 class Hummingbird:
     """
-        :ivar str api: API Url for Hummingbird
-        :ivar dict header: Predefined Headers for our calls
         :ivar HBirdAnime anime: Instance interface for the Hummingbird Anime endpoints
         :ivar HBirdUser user: Instance interface for the Hummingbird User endpoints
         :ivar HBirdLib library: Instance interface for the Hummingbird Library endpoints.
