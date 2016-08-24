@@ -14,9 +14,8 @@ Services
 * :doc:`Hummingbird <Hummingbird>` - Finished
 * Anidb - Not Started
 * :doc:`Anilist <Anilist>` - Partially Written
-* :doc:`Bakatsuki <Bakatsuki>` - Implemented some features. Still need a search and method to get chapter/section text.
+* :doc:`Bakatsuki <Bakatsuki>` - Finished
 * Mal - Not Started
-* Novelupdates - Not Started
 * :doc:`VNDB <VNDB>` - Some functionality in. You can query the DB now.
 
 Indices and tables

@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='PyMoe',
-    version='0.1',
-    packages=['Pymoe', 'Pymoe.Hummingbird'],
+    version='0.2',
+    packages=['Pymoe'],
     url='https://git.vertinext.com/ccubed/PyMoe',
     license='MIT',
     author='Cooper Click',

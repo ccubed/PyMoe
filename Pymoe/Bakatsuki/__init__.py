@@ -1,5 +1,6 @@
-import requests
 import re
+import requests
+from collections import OrderedDict
 from bs4 import BeautifulSoup as soup
 from ..errors import *
 
@@ -160,7 +161,7 @@ class Bakatsuki:
         Get a list of chapters for a visual novel. Keep in mind, this can be slow. I've certainly tried to make it as fast as possible, but it's still pulling text out of a webpage.
 
         :param str title: The title of the novel you want chapters from
-        :return dict: A dictionary with a sorted and data element. Sorted contains the data dictionary's keys in numeric sort from 0 or 1 to whatever. Data isn't necessarily sorted but contains a list where index 0 is the link and index 1 is the title of the chapter.
+        :return OrderedDict: An OrderedDict which contains the chapters found for the visual novel supplied
         """
         r = requests.get("https://www.baka-tsuki.org/project/index.php?title={}".format(title.replace(" ", "_")),
                          headers=self.header)
@@ -177,15 +178,14 @@ class Bakatsuki:
                 if 'href' in link.attrs:
                     if re.search(self.chapter_regex, link.get('href')) is not None and not link.get('href').startswith('#'):
                         volumes.append(link)
-            seplist = {}
+            seplist = OrderedDict()
             for item in volumes:
                 result = re.search(self.separate_regex, item.get('title').lower())
                 if result.group('chapter').lstrip('0') in seplist:
                     seplist[result.group('chapter').lstrip('0')].append([item.get('href'), item.get('title')])
                 else:
                     seplist[result.group('chapter').lstrip('0')] = [[item.get('href'), item.get('title')]]
-            del volumes
-            return {'sorted': sorted([int(x) for x in seplist.keys()]), 'data': seplist}
+            return seplist
 
     def cover(self, pageid):
         """
@@ -206,11 +206,15 @@ class Bakatsuki:
         jsd = r.json()
         return jsd['query']['pages'][list(jsd.keys)[0]]['imageinfo']['url']
 
-    def search(self, title):
+    def get_text(self, title):
         """
-        Search content by title. Not implemented Yet!
+        This will grab the html content of the chapter given by url. Technically you can use this to get the content of other pages too.
 
-        :param str title: The title of the content you want to find.
-        :return: A list of tuples containing the titles and pageids of the results in that order.
+        :param title: Title for the page you want the content of
+        :return: a string containing the html content
         """
-        pass
+        r = requests.get(self.api,
+                         params={'action': 'parse', 'page': title, 'format': 'json'},
+                         headers=self.header)
+        jsd = r.json()
+        return jsd['parse']['text']['*']
