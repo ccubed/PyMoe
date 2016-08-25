@@ -168,7 +168,7 @@ class Bakatsuki:
         if r.status_code != 200:
             raise requests.HTTPError("Not Found")
         else:
-            parsed = soup(r.text, 'lxml')
+            parsed = soup(r.text, 'html.parser')
             dd = parsed.find_all("a")
             volumes = []
             for link in dd:

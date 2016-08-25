@@ -1,25 +1,27 @@
-from .Abstractions import NT_DATE_OBJ, NT_DATES, NT_EPISODES, NT_FLAGS, NT_REWATCHED, NT_SCORES, NT_STATUS, NT_STORAGE
+import xml.etree.ElementTree as ET
+from .Abstractions import NT_DATE_OBJ, NT_DATES, NT_EPISODES, NT_FLAGS, NT_REWATCHED, NT_SCORES, NT_STATUS, NT_STORAGE, NT_TYPEDATA, NT_STATS
+
 
 class Anime:
     """
-    An encapsulated Mal Anime Object for updates and adds.
-    These can be created by the programmer or by the library, such as with searches or pulling user data.
-    The XML data for updates, adds and other requests are gathered from the following attributes:
-    episodes.current -> episode
-    status.user -> status
-    scores.user -> score
-    rewatched.times -> times_rewatched
-    rewatched.value -> rewatch_value
-    storage.type -> storage_type
-    storage.value -> storage_value
-    dates.user.start -> date_start
-    dates.user.end -> date_finish
-    priority -> priority
-    flags.discussion -> boolean to indicate whether it's enabled or disabled
-    flags.rewatching -> boolean to indicate whether it's enabled or disabled
-    comments -> comments
-    fansub_group -> fansub_group
-    tags -> tags
+    An encapsulated Mal Anime Object for updates and adds.\n
+    These can be created by the programmer or by the library, such as with searches or pulling user data.\n
+    The XML data for updates, adds and other requests are gathered from the following attributes:\n
+    - episodes.current -> episode
+    - status.user -> status
+    - scores.user -> score
+    - rewatched.times -> times_rewatched
+    - rewatched.value -> rewatch_value
+    - storage.type -> storage_type
+    - storage.value -> storage_value
+    - dates.user.start -> date_start
+    - dates.user.end -> date_finish
+    - priority -> priority
+    - flags.discussion -> boolean to indicate whether it's enabled or disabled
+    - flags.rewatching -> boolean to indicate whether it's enabled or disabled
+    - comments -> comments
+    - fansub_group -> fansub_group
+    - tags -> tags
     """
 
     def __init__(self, aid, **kwargs):
@@ -50,9 +52,9 @@ class Anime:
         self.episodes = NT_EPISODES(total=kwargs.get('episodes'), current=kwargs.get('episode'))
         self.scores = NT_SCORES(average=kwargs.get('average'), user=kwargs.get('score'))
         self.type = kwargs.get('type')
-        self.status = NT_STATUS(anime=kwargs.get('status_anime'), user=kwargs.get('status'))
-        self.dates = NT_DATES(anime=NT_DATE_OBJ(start=kwargs.get('anime_start'), end=kwargs.get('anime_end')),
-                               user=NT_DATE_OBJ(start=kwargs.get('date_start'), end=kwargs.get('date_finish')))
+        self.status = NT_STATUS(series=kwargs.get('status_anime'), user=kwargs.get('status'))
+        self.dates = NT_DATES(series=NT_DATE_OBJ(start=kwargs.get('anime_start'), end=kwargs.get('anime_end')),
+                              user=NT_DATE_OBJ(start=kwargs.get('date_start'), end=kwargs.get('date_finish')))
         self.synopsis = kwargs.get('synopsis')
         self.image = kwargs.get('image')
         self.storage = NT_STORAGE(type=kwargs.get('storage_type'), value=kwargs.get('storage_value'))
@@ -62,30 +64,89 @@ class Anime:
         self.comments = kwargs.get('comments')
         self.tags = kwargs.get('tags')
         self.fansub_group = kwargs.get('fansub_group')
+        self.xml_tags = ['episodes', 'scores', 'status', 'dates', 'storage', 'rewatched', 'flags', 'priority',
+                         'comments', 'tags', 'fansub_group']
 
+    def to_xml(self):
+        """
+        Convert data to XML String.
+        :return: Str of valid XML data
+        """
+        root = ET.Element("entry")
+        for x in self.xml_tags:
+            if getattr(self, x):
+                if x in ['episodes', 'scores', 'status', 'dates', 'storage', 'rewatched', 'flags', 'tags']:
+                    if x == 'episodes':
+                        if self.episodes.current:
+                            temp = ET.SubElement(root, 'episode')
+                            temp.text = self.episodes.current
+                    elif x == 'scores':
+                        if self.scores.user:
+                            temp = ET.SubElement(root, 'score')
+                            temp.text = self.scores.user
+                    elif x == 'status':
+                        if self.status.user:
+                            temp = ET.SubElement(root, 'status')
+                            temp.text = self.status.user
+                    elif x == 'dates':
+                        if self.dates.user.start:
+                            start = ET.SubElement(root, 'date_start')
+                            start.text = self.dates.user.start
+                        if self.dates.user.end:
+                            end = ET.SubElement(root, 'date_finish')
+                            end.text = self.dates.user.end
+                    elif x == 'storage':
+                        if self.storage.type:
+                            stype = ET.SubElement(root, 'storage_type')
+                            stype.text = self.storage.type
+                        if self.storage.value:
+                            sval = ET.SubElement(root, 'storage_value')
+                            sval.text = self.storage.value
+                    elif x == 'rewatched':
+                        if self.rewatched.times:
+                            rt = ET.SubElement(root, 'times_rewatched')
+                            rt.text = self.rewatched.times
+                        if self.rewatched.value:
+                            rv = ET.SubElement(root, 'rewatch_value')
+                            rv.text = self.rewatched.value
+                    elif x == 'flags':
+                        if self.flags.discussion:
+                            df = ET.SubElement(root, 'enable_discussion')
+                            df.text = self.flags.discussion
+                        if self.flags.rewatching:
+                            rf = ET.SubElement(root, 'enable_rewatching')
+                            rf.text = self.flags.rewatching
+                    else:
+                        if self.tags:
+                            temp = ET.SubElement(root, 'tags')
+                            temp.text = ','.join(self.tags)
+                else:
+                    temp = ET.SubElement(root, x)
+                    temp.text = getattr(self, x)
+        return '<?xml version="1.0" encoding="UTF-8"?>' + ET.dump(root)
 
 
 class Manga:
     """
-    An encapsulated Mal Manga Object for updates and adds.
-    These can be created by the programmer or by the library, such as with searches or pulling user data.
-    The XML data for updates, adds and other requests are gathered from the following attributes:
-    chapters.current -> chapter
-    volumes.current -> volume
-    status.user -> status
-    scores.user -> score
-    reread.times -> times_reread
-    reread.value -> rewatch_value
-    storage.type -> storage_type
-    storage.value -> storage_value
-    dates.user.start -> date_start
-    dates.user.end -> date_finish
-    priority -> priority
-    flags.discussion -> boolean to indicate whether it's enabled or disabled
-    flags.rereading -> boolean to indicate whether it's enabled or disabled
-    comments -> comments
-    scan_group -> scan_group
-    tags -> tags
+    An encapsulated Mal Manga Object for updates and adds.\n
+    These can be created by the programmer or by the library, such as with searches or pulling user data.\n
+    The XML data for updates, adds and other requests are gathered from the following attributes:\n
+    - chapters.current -> chapter
+    - volumes.current -> volume
+    - status.user -> status
+    - scores.user -> score
+    - reread.times -> times_reread
+    - reread.value -> reread_value
+    - storage.type -> storage_type
+    - storage.value -> storage_value
+    - dates.user.start -> date_start
+    - dates.user.end -> date_finish
+    - priority -> priority
+    - flags.discussion -> boolean to indicate whether it's enabled or disabled
+    - flags.rereading -> boolean to indicate whether it's enabled or disabled
+    - comments -> comments
+    - scan_group -> scan_group
+    - tags -> tags
     """
 
     def __init__(self, mid, **kwargs):
@@ -115,10 +176,11 @@ class Manga:
         self.title = kwargs.get("title") or None
         self.synonyms = kwargs.get("synonyms") or None
         self.chapters = NT_EPISODES(total=kwargs.get('chapters'), current=kwargs.get('chapter'))
+        self.volumes = NT_EPISODES(total=kwargs.get('volumes'), current=kwargs.get('volume'))
         self.scores = NT_SCORES(average=kwargs.get('average'), user=kwargs.get('score'))
         self.type = kwargs.get('type')
-        self.status = NT_STATUS(anime=kwargs.get('status_manga'), user=kwargs.get('status'))
-        self.dates = NT_DATES(anime=NT_DATE_OBJ(start=kwargs.get('manga_start'), end=kwargs.get('manga_end')),
+        self.status = NT_STATUS(series=kwargs.get('status_manga'), user=kwargs.get('status'))
+        self.dates = NT_DATES(series=NT_DATE_OBJ(start=kwargs.get('manga_start'), end=kwargs.get('manga_end')),
                               user=NT_DATE_OBJ(start=kwargs.get('date_start'), end=kwargs.get('date_finish')))
         self.synopsis = kwargs.get('synopsis')
         self.image = kwargs.get('image')
@@ -129,3 +191,93 @@ class Manga:
         self.comments = kwargs.get('comments')
         self.tags = kwargs.get('tags')
         self.scan_group = kwargs.get('scan_group')
+        self.xml_tags = ['id', 'chapters', 'volumes', 'scores', 'status', 'dates', 'storage', 'reread', 'flags',
+                         'priority', 'comments', 'tags', 'scan_group']
+
+    def to_xml(self):
+        root = ET.Element("entry")
+        for x in self.xml_tags:
+            if getattr(self, x):
+                if x in ['chapters', 'volumes', 'scores', 'status', 'dates', 'storage', 'reread', 'flags', 'tags']:
+                    if x == 'chapters':
+                        if self.chapters.current:
+                            temp = ET.SubElement(root, 'chapter')
+                            temp.text = self.chapters.current
+                    elif x == 'volumes':
+                        if self.volumes.current:
+                            temp = ET.SubElement(root, 'volume')
+                            temp.text = self.volumes.current
+                    elif x == 'scores':
+                        if self.scores.user:
+                            temp = ET.SubElement(root, 'score')
+                            temp.text = self.scores.user
+                    elif x == 'status':
+                        if self.status.user:
+                            temp = ET.SubElement(root, 'status')
+                            temp.text = self.status.user
+                    elif x == 'dates':
+                        if self.dates.user.start:
+                            start = ET.SubElement(root, 'date_start')
+                            start.text = self.dates.user.start
+                        if self.dates.user.end:
+                            end = ET.SubElement(root, 'date_finish')
+                            end.text = self.dates.user.end
+                    elif x == 'storage':
+                        if self.storage.type:
+                            stype = ET.SubElement(root, 'storage_type')
+                            stype.text = self.storage.type
+                        if self.storage.value:
+                            sval = ET.SubElement(root, 'storage_value')
+                            sval.text = self.storage.value
+                    elif x == 'reread':
+                        if self.reread.times:
+                            rt = ET.SubElement(root, 'times_reread')
+                            rt.text = self.reread.times
+                        if self.reread.value:
+                            rv = ET.SubElement(root, 'reread_value')
+                            rv.text = self.reread.value
+                    elif x == 'flags':
+                        if self.flags.discussion:
+                            df = ET.SubElement(root, 'enable_discussion')
+                            df.text = self.flags.discussion
+                        if self.flags.rereading:
+                            rf = ET.SubElement(root, 'enable_rereading')
+                            rf.text = self.flags.rereading
+                    else:
+                        if self.tags:
+                            temp = ET.SubElement(root, 'tags')
+                            temp.text = ','.join(self.tags)
+                else:
+                    temp = ET.SubElement(root, x)
+                    temp.text = getattr(self, x)
+        return '<?xml version="1.0" encoding="UTF-8"?>' + ET.dump(root)
+
+
+class User:
+    """
+    An encapsualted object for a User on MyAnimeList. This is never created directly, rather it is made internally.
+    """
+
+    def __init__(self, **kwargs):
+        """
+        Creates the initial data object. Has the following params.
+
+        :param str id: User ID
+        :param str name: User Name
+        :param NT_TYPEDATA anime: A namedtuple containing a list and stats attribute. List contains a list of :class:`Pymoe.Mal.Objects.Anime` objects and stats contains anime stats for the user.
+        :param NT_TYPEDATA manga: A namedtuple containing a list and stats attribute. List contains a list of :class:`Pymoe.Mal.Objects.Manga` objects and stats contains manga stats for the user.
+        """
+        self.id = kwargs.get('uid')
+        self.name = kwargs.get('name')
+        self.anime = NT_TYPEDATA(list=kwargs.get('anime_list'), stats=NT_STATS(completed=kwargs.get('anime_completed'),
+                                                                               onhold=kwargs.get('anime_onhold'),
+                                                                               dropped=kwargs.get('anime_dropped'),
+                                                                               planned=kwargs.get('anime_planned'),
+                                                                               current=kwargs.get('anime_watching'),
+                                                                               days=kwargs.get('anime_days')))
+        self.manga = NT_TYPEDATA(list=kwargs.get('manga_list'), stats=NT_STATS(completed=kwargs.get('manga_completed'),
+                                                                               onhold=kwargs.get('manga_onhold'),
+                                                                               dropped=kwargs.get('manga_dropped'),
+                                                                               planned=kwargs.get('manga_planned'),
+                                                                               current=kwargs.get('manga_watching'),
+                                                                               days=kwargs.get('manga_days')))

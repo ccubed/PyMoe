@@ -15,7 +15,7 @@ Services
 * Anidb - Not Started
 * :doc:`Anilist <Anilist>` - Partially Written
 * :doc:`Bakatsuki <Bakatsuki>` - Finished
-* Mal - Not Started
+* :doc:`Mal <Mal>` - Needs Testing, but code is finished.
 * :doc:`VNDB <VNDB>` - Some functionality in. You can query the DB now.
 
 Indices and tables
