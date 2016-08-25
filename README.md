@@ -1,4 +1,4 @@
-[![Documentation Status](http://pymoe.readthedocs.io/en/latest/)](http://pymoe.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/pymoe/badge/?version=latest)](http://pymoe.readthedocs.io/en/latest/?badge=latest)
 # PyMoe
 Welcome to PyMoe, the only python lib you'll ever need if you need the animu/mangu on the python platform.
 
