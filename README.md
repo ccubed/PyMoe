@@ -18,6 +18,10 @@ instance.user.authenticate(password, kwargs)  # Authenticate user for auth_token
 instance.user.favorite_anime(username)  # Grab a user's favorite anime
 instance.user.feed(username)  # Get a user's feed
 instance.user.info(username)  # Get user information
+instance.library.get(username, status)  # Get a user's library entries. Status is an optional status type to filter against.
+instance.library.remove(id, auth_token)  # Remove anime referred to by ID from the user's library.
+instance.library.set(id, auth_token, kwargs)  # There are a lot of params here. Add the anime referred to by ID to the user's library.
+```
 
 ## Anidb
 Status: Not Started
