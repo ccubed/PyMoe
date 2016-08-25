@@ -9,13 +9,13 @@ PyMoe is a python interface to several popular anime, manga, VN and LN services.
 
 Services
 ========
-**As Of Version**: 0.1 Beta
+**As Of Version**: 0.3 Beta
 
 * :doc:`Hummingbird <Hummingbird>` - Finished
 * Anidb - Not Started
 * :doc:`Anilist <Anilist>` - Partially Written
 * :doc:`Bakatsuki <Bakatsuki>` - Finished
-* :doc:`Mal <Mal>` - Needs Testing, but code is finished.
+* :doc:`Mal <Mal>` - Finished
 * :doc:`VNDB <VNDB>` - Some functionality in. You can query the DB now.
 
 Indices and tables
