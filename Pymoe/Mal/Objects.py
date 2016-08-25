@@ -53,8 +53,8 @@ class Anime:
         self.scores = NT_SCORES(average=kwargs.get('average'), user=kwargs.get('score'))
         self.type = kwargs.get('type')
         self.status = NT_STATUS(series=kwargs.get('status_anime'), user=kwargs.get('status'))
-        self.dates = NT_DATES(series=NT_DATE_OBJ(start=kwargs.get('anime_start'), end=kwargs.get('anime_end')),
-                              user=NT_DATE_OBJ(start=kwargs.get('date_start'), end=kwargs.get('date_finish')))
+        self.dates = NT_DATES(series=[kwargs.get('anime_start'), kwargs.get('anime_end')],
+                              user=[kwargs.get('date_start'), kwargs.get('date_finish')])
         self.synopsis = kwargs.get('synopsis')
         self.image = kwargs.get('image')
         self.storage = NT_STORAGE(type=kwargs.get('storage_type'), value=kwargs.get('storage_value'))
@@ -79,15 +79,15 @@ class Anime:
                     if x == 'episodes':
                         if self.episodes.current:
                             temp = ET.SubElement(root, 'episode')
-                            temp.text = self.episodes.current
+                            temp.text = str(self.episodes.current)
                     elif x == 'scores':
                         if self.scores.user:
                             temp = ET.SubElement(root, 'score')
-                            temp.text = self.scores.user
+                            temp.text = str(self.scores.user)
                     elif x == 'status':
                         if self.status.user:
                             temp = ET.SubElement(root, 'status')
-                            temp.text = self.status.user
+                            temp.text = str(self.status.user)
                     elif x == 'dates':
                         if self.dates.user.start:
                             start = ET.SubElement(root, 'date_start')
@@ -98,32 +98,32 @@ class Anime:
                     elif x == 'storage':
                         if self.storage.type:
                             stype = ET.SubElement(root, 'storage_type')
-                            stype.text = self.storage.type
+                            stype.text = str(self.storage.type)
                         if self.storage.value:
                             sval = ET.SubElement(root, 'storage_value')
-                            sval.text = self.storage.value
+                            sval.text = str(self.storage.value)
                     elif x == 'rewatched':
                         if self.rewatched.times:
                             rt = ET.SubElement(root, 'times_rewatched')
-                            rt.text = self.rewatched.times
+                            rt.text = str(self.rewatched.times)
                         if self.rewatched.value:
                             rv = ET.SubElement(root, 'rewatch_value')
-                            rv.text = self.rewatched.value
+                            rv.text = str(self.rewatched.value)
                     elif x == 'flags':
                         if self.flags.discussion:
                             df = ET.SubElement(root, 'enable_discussion')
-                            df.text = self.flags.discussion
+                            df.text = '1' if self.flags.discussion else '0'
                         if self.flags.rewatching:
                             rf = ET.SubElement(root, 'enable_rewatching')
-                            rf.text = self.flags.rewatching
+                            rf.text = '1' if self.flags.rewatching else '0'
                     else:
                         if self.tags:
                             temp = ET.SubElement(root, 'tags')
                             temp.text = ','.join(self.tags)
                 else:
                     temp = ET.SubElement(root, x)
-                    temp.text = getattr(self, x)
-        return '<?xml version="1.0" encoding="UTF-8"?>' + ET.dump(root)
+                    temp.text = str(getattr(self, x))
+        return '<?xml version="1.0" encoding="UTF-8"?>{}'.format(ET.tostring(root, encoding="unicode"))
 
 
 class Manga:
@@ -180,8 +180,8 @@ class Manga:
         self.scores = NT_SCORES(average=kwargs.get('average'), user=kwargs.get('score'))
         self.type = kwargs.get('type')
         self.status = NT_STATUS(series=kwargs.get('status_manga'), user=kwargs.get('status'))
-        self.dates = NT_DATES(series=NT_DATE_OBJ(start=kwargs.get('manga_start'), end=kwargs.get('manga_end')),
-                              user=NT_DATE_OBJ(start=kwargs.get('date_start'), end=kwargs.get('date_finish')))
+        self.dates = NT_DATES(series=[kwargs.get('manga_start'), kwargs.get('manga_end')],
+                              user=[kwargs.get('date_start'), kwargs.get('date_finish')])
         self.synopsis = kwargs.get('synopsis')
         self.image = kwargs.get('image')
         self.storage = NT_STORAGE(type=kwargs.get('storage_type'), value=kwargs.get('storage_value'))
@@ -202,55 +202,55 @@ class Manga:
                     if x == 'chapters':
                         if self.chapters.current:
                             temp = ET.SubElement(root, 'chapter')
-                            temp.text = self.chapters.current
+                            temp.text = str(self.chapters.current)
                     elif x == 'volumes':
                         if self.volumes.current:
                             temp = ET.SubElement(root, 'volume')
-                            temp.text = self.volumes.current
+                            temp.text = str(self.volumes.current)
                     elif x == 'scores':
                         if self.scores.user:
                             temp = ET.SubElement(root, 'score')
-                            temp.text = self.scores.user
+                            temp.text = str(self.scores.user)
                     elif x == 'status':
                         if self.status.user:
                             temp = ET.SubElement(root, 'status')
-                            temp.text = self.status.user
+                            temp.text = str(self.status.user)
                     elif x == 'dates':
                         if self.dates.user.start:
                             start = ET.SubElement(root, 'date_start')
-                            start.text = self.dates.user.start
+                            start.text = str(self.dates.user.start)
                         if self.dates.user.end:
                             end = ET.SubElement(root, 'date_finish')
-                            end.text = self.dates.user.end
+                            end.text = str(self.dates.user.end)
                     elif x == 'storage':
                         if self.storage.type:
                             stype = ET.SubElement(root, 'storage_type')
-                            stype.text = self.storage.type
+                            stype.text = str(self.storage.type)
                         if self.storage.value:
                             sval = ET.SubElement(root, 'storage_value')
-                            sval.text = self.storage.value
+                            sval.text = str(self.storage.value)
                     elif x == 'reread':
                         if self.reread.times:
                             rt = ET.SubElement(root, 'times_reread')
-                            rt.text = self.reread.times
+                            rt.text = str(self.reread.times)
                         if self.reread.value:
                             rv = ET.SubElement(root, 'reread_value')
-                            rv.text = self.reread.value
+                            rv.text = str(self.reread.value)
                     elif x == 'flags':
                         if self.flags.discussion:
                             df = ET.SubElement(root, 'enable_discussion')
-                            df.text = self.flags.discussion
+                            df.text = '1' if self.flags.discussion else '0'
                         if self.flags.rereading:
                             rf = ET.SubElement(root, 'enable_rereading')
-                            rf.text = self.flags.rereading
+                            rf.text = '1' if self.flags.rereading else '0'
                     else:
                         if self.tags:
                             temp = ET.SubElement(root, 'tags')
                             temp.text = ','.join(self.tags)
                 else:
                     temp = ET.SubElement(root, x)
-                    temp.text = getattr(self, x)
-        return '<?xml version="1.0" encoding="UTF-8"?>' + ET.dump(root)
+                    temp.text = str(getattr(self, x))
+        return '<?xml version="1.0" encoding="UTF-8"?>{}'.format(ET.tostring(root, encoding="unicode"))
 
 
 class User:

@@ -38,5 +38,12 @@ class ServerError(MoeError):
     """
     Raised when we encounter an error retrieving information from the server.
     """
+    def __init__(self, message=None, code=500):
+        self.msg = message
+        self.code = code
+
     def __repr__(self):
-        return "Encountered a server error attempting to access information."
+        if self.msg:
+            return "Server Error encounted.\nCode: {}\nMessage: {}".format(self.code, self.msg)
+        else:
+            return "Encountered a server error attempting to access information."

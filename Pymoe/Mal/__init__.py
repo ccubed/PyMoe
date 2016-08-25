@@ -1,7 +1,7 @@
 import html
 import xml.etree.ElementTree as ET
 import requests
-from .Abstractions import NT_MANGA, NT_ANIME
+from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS_ANIME, STATUS_INTS_MANGA
 from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
@@ -81,8 +81,8 @@ class MAL:
         data = ET.fromstring(r.text)
         final_list = []
         if which == 1:
-            for item in data.getroot().findall('entry'):
-                syn = item.find('synonyms').text.split(';') or []
+            for item in data.findall('entry'):
+                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
                 final_list.append(Anime(
                     item.find('id').text,
                     title=item.find('title').text,
@@ -97,8 +97,8 @@ class MAL:
                     type=item.find('type').text
                 ))
         else:
-            for item in data.getroot().findall('entry'):
-                syn = item.find('synonyms').text.split(';') or []
+            for item in data.findall('entry'):
+                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
                 final_list.append(Manga(
                     item.find('id').text,
                     title=item.find('title').text,
@@ -127,12 +127,13 @@ class MAL:
         """
         if isinstance(data, Anime):
             xmlstr = data.to_xml()
-            r = requests.post(self.apiurl+"animelist/add/{}.xml".format(data.id),
+            print(self.apiurl+"animelist/add/{}.xml".format(data.id))
+            r = requests.get(self.apiurl+"animelist/add/{}.xml".format(data.id),
                              params={'data': xmlstr},
                              auth=HTTPBasicAuth(self._username, self._password),
                              headers=self.header)
             if r.status_code != 201:
-                raise ServerError(r.text)
+                raise ServerError(r.text, r.status_code)
             return True
         else:
             raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
@@ -149,12 +150,12 @@ class MAL:
         """
         if isinstance(data, Manga):
             xmlstr = data.to_xml()
-            r = requests.post(self.apiurl+"mangalist/add/{}.xml".format(data.id),
+            r = requests.get(self.apiurl+"mangalist/add/{}.xml".format(data.id),
                              params={'data': xmlstr},
                              auth=HTTPBasicAuth(self._username, self._password),
                              headers=self.header)
             if r.status_code != 201:
-                raise ServerError(r.text)
+                raise ServerError(r.text, r.status_code)
             return True
         else:
             raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
@@ -171,12 +172,12 @@ class MAL:
         """
         if isinstance(data, Anime):
             xmlstr = data.to_xml()
-            r = requests.post(self.apiurl+"animelist/update/{}.xml".format(data.id),
+            r = requests.get(self.apiurl+"animelist/update/{}.xml".format(data.id),
                               params={'data': xmlstr},
                               auth=HTTPBasicAuth(self._username, self._password),
-                              Headers=self.header)
+                              headers=self.header)
             if r.status_code != 200:
-                raise ServerError(r.text)
+                raise ServerError(r.text, r.status_code)
             return True
         else:
             raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
@@ -193,12 +194,12 @@ class MAL:
         """
         if isinstance(data, Manga):
             xmlstr = data.to_xml()
-            r = requests.post(self.apiurl+"mangalist/update/{}.xml".format(data.id),
+            r = requests.get(self.apiurl+"mangalist/update/{}.xml".format(data.id),
                               params={'data': xmlstr},
                               auth=HTTPBasicAuth(self._username, self._password),
-                              Headers=self.header)
+                              headers=self.header)
             if r.status_code != 200:
-                raise ServerError(r.text)
+                raise ServerError(r.text, r.status_code)
             return True
         else:
             raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
@@ -214,11 +215,11 @@ class MAL:
         :return: True on success
         """
         if isinstance(data, Anime):
-            r = requests.post(self.apiurl+"animelist/delete/{}.xml".format(data.id),
+            r = requests.get(self.apiurl+"animelist/delete/{}.xml".format(data.id),
                               auth=HTTPBasicAuth(self._username, self._password),
-                              Headers=self.header)
+                              headers=self.header)
             if r.status_code != 200:
-                raise ServerError(r.text)
+                raise ServerError(r.text, r.status_code)
             return True
         else:
             raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
@@ -234,11 +235,11 @@ class MAL:
         :return: True on success
         """
         if isinstance(data, Manga):
-            r = requests.post(self.apiurl+"mangalist/delete/{}.xml".format(data.id),
+            r = requests.get(self.apiurl+"mangalist/delete/{}.xml".format(data.id),
                               auth=HTTPBasicAuth(self._username, self._password),
-                              Headers=self.header)
+                              headers=self.header)
             if r.status_code != 200:
-                raise ServerError(r.text)
+                raise ServerError(r.text, r.status_code)
             return True
         else:
             raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
@@ -256,8 +257,8 @@ class MAL:
         manga_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'manga'},
                                   headers=self.header)
         root = ET.fromstring(anime_data.text)
-        uid = root.getroot().find('myinfo').find('user_id').text
-        uname = root.getroot().find('myinfo').find('user_name').text
+        uid = root.find('myinfo').find('user_id').text
+        uname = root.find('myinfo').find('user_name').text
         anime_object_list = self.parse_anime_data(anime_data.text)
         manga_object_list = self.parse_manga_data(manga_data.text)
         return User(uid=uid,
@@ -279,22 +280,27 @@ class MAL:
 
     @staticmethod
     def parse_anime_data(xml):
-        root = ET.fromstring(xml).getroot()
+        root = ET.fromstring(xml)
         anime_list = []
         for item in root.findall('anime'):
-            syn = item.find('synonyms').text.split(';') or []
+            syn = item.find('series_synonyms').text.split(';') if item.find('series_synonyms').text else []
             anime_list.append(Anime(
-                item.find('id').text,
-                title=item.find('title').text,
-                synonyms=syn.append(item.find('english').text),
-                episodes=item.find('episodes').text,
-                average=item.find('score').text,
-                anime_start=item.find('start_date').text,
-                anime_end=item.find('end_date').text,
-                synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')),
-                image=item.find('image').text,
-                status_anime=item.find('status').text,
-                type=item.find('type').text
+                item.find('series_animedb_id').text,
+                title=item.find('series_title').text,
+                synonyms=syn,
+                episodes=item.find('series_episodes').text,
+                episode=item.find('my_watched_episodes').text,
+                user=item.find('my_score').text,
+                anime_start=item.find('series_end').text,
+                anime_end=item.find('series_start').text,
+                date_start=item.find('my_start_date').text,
+                date_finish=item.find('my_finish_date').text,
+                image=item.find('series_image').text,
+                status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text)-1],
+                status=int(item.find('my_status').text),
+                rewatcing=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
+                type=item.find('series_type').text,
+                tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
         return {'data': anime_list,
                 'completed': root.find('myinfo').find('user_completed').text,
@@ -306,23 +312,29 @@ class MAL:
 
     @staticmethod
     def parse_manga_data(xml):
-        root = ET.fromstring(xml).getroot()
+        root = ET.fromstring(xml)
         manga_list = []
         for item in root.findall('manga'):
-            syn = item.find('synonyms').text.split(';') or []
+            syn = item.find('series_synonyms').text.split(';') if item.find('series_synonyms').text else []
             manga_list.append(Manga(
-                item.find('id').text,
-                title=item.find('title').text,
-                synonyms=syn.append(item.find('english').text),
-                chapters=item.find('chapters').text,
-                volumes=item.find('volumes').text,
-                average=item.find('score').text,
-                manga_start=item.find('start_date').text,
-                manga_end=item.find('end_date').text,
-                synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')),
-                image=item.find('image').text,
-                status_manga=item.find('status').text,
-                type=item.find('type').text
+                item.find('series_mangadb_id').text,
+                title=item.find('series_title').text,
+                synonyms=syn,
+                chapters=item.find('series_chapters').text,
+                volumes=item.find('series_volumes').text,
+                chapter=item.find('my_read_chapters').text,
+                volume=item.find('my_read_volumes').text,
+                user=item.find('my_score').text,
+                manga_start=item.find('series_start').text,
+                manga_end=item.find('series_end').text,
+                date_start=item.find('my_start_date').text,
+                date_finish=item.find('my_finish_date').text,
+                image=item.find('series_image').text,
+                status_manga=STATUS_INTS_MANGA[int(item.find('series_status').text)-1],
+                status=int(item.find('my_status').text),
+                rereading=int(item.find('my_rereadingg').text) if item.find('my_rereadingg') else None,
+                type=item.find('series_type').text,
+                tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
         return {'data': manga_list,
                 'completed': root.find('myinfo').find('user_completed').text,
