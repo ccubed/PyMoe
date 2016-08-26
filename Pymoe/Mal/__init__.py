@@ -91,7 +91,7 @@ class MAL:
                     average=item.find('score').text,
                     anime_start=item.find('start_date').text,
                     anime_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')),
+                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
                     image=item.find('image').text,
                     status_anime=item.find('status').text,
                     type=item.find('type').text
@@ -108,7 +108,7 @@ class MAL:
                     average=item.find('score').text,
                     manga_start=item.find('start_date').text,
                     manga_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')),
+                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
                     image=item.find('image').text,
                     status_manga=item.find('status').text,
                     type=item.find('type').text
