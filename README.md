@@ -50,7 +50,7 @@ instance.web_novels(language)  # Get a list of language's web novels
 Status: Finished as of 0.3
 To create an instance.
 ```python
-from Pymoe import Mal
+from Pymoe import MAL
 instance = MAL(username, password)  # Since every endpoint requires authentication, un/pw isn't optional
 ```
 This particular branch relies on a ton of abstractions and encapsulations. You should read up on them. However, ultimately, it makes your life as a programmer easier. Anime and Manga share the same 4 functions: search, add, update, delete.
