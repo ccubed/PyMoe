@@ -6,7 +6,7 @@ from .library import *
 class Hummingbird:
     """
         :ivar HBirdAnime anime: Instance interface for the Hummingbird Anime endpoints
-        :ivar HBirdUser *user*: Instance interface for the Hummingbird User endpoints
+        :ivar HBirdUser user: Instance interface for the Hummingbird User endpoints
         :ivar HBirdLib library: Instance interface for the Hummingbird Library endpoints.
     """
     def __init__(self):

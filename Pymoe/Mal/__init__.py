@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
 
-class MAL:
+class mal:
     """
     The interface for MyAnimeList, quite possibly the worst API in existence.
 
@@ -82,19 +82,42 @@ class MAL:
         final_list = []
         if which == 1:
             for item in data.findall('entry'):
-                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
+                syn = []
+                ds = {}
+                for child in item:
+                    if child.tag == 'id':
+                        ds['id'] = child.text
+                    elif child.tag == 'title':
+                        ds['title'] = child.text
+                    elif child.tag == 'synonyms' and child.text:
+                        syn.append(child.text.split(';'))
+                    elif child.tag == 'english' and child.text:
+                        syn.append(child.text)
+                    elif child.tag == 'episodes':
+                        ds['episodes'] = child.text
+                    elif child.tag == 'score':
+                        ds['score'] = child.text
+                    elif child.tag == 'start_date':
+                        ds['start_date'] = child.text
+                    elif child.tag == 'end_date':
+                        ds['end_date'] = child.text
+                    elif child.tag == 'synopsis' and child.text:
+                        ds['synopsis'] = html.unescape(child.text.replace('<br />', ''))
+                    elif child.tag == 'image':
+                        ds['image'] = child.text
+                    elif child.tag == 'type':
+                        ds['type'] = child.text
                 final_list.append(Anime(
-                    item.find('id').text,
-                    title=item.find('title').text,
-                    synonyms=syn.append(item.find('english').text),
-                    episodes=item.find('episodes').text,
-                    average=item.find('score').text,
-                    anime_start=item.find('start_date').text,
-                    anime_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
-                    image=item.find('image').text,
-                    status_anime=item.find('status').text,
-                    type=item.find('type').text
+                    ds['id'],
+                    title=ds['title'],
+                    synonyms=syn,
+                    episode=ds['episodes'],
+                    average=ds['score'],
+                    anime_start=ds['start_date'],
+                    anime_end=ds['end_date'],
+                    synopsis=ds['synopsis'],
+                    image=ds['image'],
+                    type=ds['type']
                 ))
         else:
             for item in data.findall('entry'):

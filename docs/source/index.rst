@@ -5,18 +5,23 @@
 
 PyMoe
 =====
-PyMoe is a python interface to several popular anime, manga, VN and LN services. It's a single use library for interfacing with these services. In the end, it's going to be all you need to get things going with any project related to the world of anime, manga, VNs or LNs.
+PyMoe is a python interface to several popular Anime and Manga services for Python 3.
+
+Python 2
+========
+What about python 2 bro?
+   Use python 3. It's time. Let it go, Let it die. Shhh.
 
 Services
 ========
-**As Of Version**: 0.3 Beta
+**As Of Version**: 0.5 Beta
 
-* :doc:`Hummingbird <Hummingbird>` - Finished
+* :doc:`Hummingbird.me <Hummingbird>` - Finished
 * Anidb - Not Started
-* :doc:`Anilist <Anilist>` - Partially Written
-* :doc:`Bakatsuki <Bakatsuki>` - Finished
-* :doc:`Mal <Mal>` - Finished
-* :doc:`VNDB <VNDB>` - Some functionality in. You can query the DB now.
+* :doc:`Anilist.co <Anilist>` - Partially Written
+* :doc:`Bakatsuki LN Translations <Bakatsuki>` - Finished
+* :doc:`My Anime List (MAL) <Mal>` - Finished
+* :doc:`Visual Novel DB <Vndb>` - Some functionality in. You can query the DB now.
 
 Indices and tables
 ==================

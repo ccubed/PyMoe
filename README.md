@@ -34,7 +34,7 @@ Status: Finished as of 0.2
 To create an instance do:
 ```python
 from Pymoe import Bakatsuki
-instance = Bakatsuki
+instance = Bakatsuki()
 ```
 From there you can get information on Bakatsuki's projects.
 ```python
@@ -50,8 +50,8 @@ instance.web_novels(language)  # Get a list of language's web novels
 Status: Finished as of 0.3
 To create an instance.
 ```python
-from Pymoe import MAL
-instance = MAL(username, password)  # Since every endpoint requires authentication, un/pw isn't optional
+from Pymoe import Mal
+instance = Mal(username, password)  # Since every endpoint requires authentication, un/pw isn't optional
 ```
 This particular branch relies on a ton of abstractions and encapsulations. You should read up on them. However, ultimately, it makes your life as a programmer easier. Anime and Manga share the same 4 functions: search, add, update, delete.
 ```python
@@ -67,8 +67,8 @@ instance.user(username)  # Return a user object that contains user stats and a f
 Status: Partially written as of 0.3. You can query the DB.
 To create an instance.
 ```python
-from Pymoe import VNDB
-instance = VNDB(username, password)  # Username and password are optional, but allow you to login as a user
+from Pymoe import Vndb
+instance = Vndb(username, password)  # Username and password are optional, but allow you to login as a user
 ```
 This allows you access to some of the VNDB database. Currently it's just the querying part.
 ```python
