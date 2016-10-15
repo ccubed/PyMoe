@@ -6,7 +6,7 @@ from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
 
-class mal:
+class Mal:
     """
     The interface for MyAnimeList, quite possibly the worst API in existence.
 
