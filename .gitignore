@@ -62,3 +62,9 @@ target/
 
 # PyCharm
 .idea/
+
+# virtualenv for testing
+venv/
+
+# testing logs
+test_logs/*
