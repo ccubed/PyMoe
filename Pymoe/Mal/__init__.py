@@ -366,3 +366,4 @@ class Mal:
                 'planned': root.find('myinfo').find('user_plantoread').text,
                 'watching': root.find('myinfo').find('user_reading').text,
                 'days': root.find('myinfo').find('user_days_spent_watching').text}
+
