@@ -12,6 +12,7 @@ class NoSSL(MoeError):
     def __repr__(self):
         return "No SSL Library available. Please install OpenSSL or some alternative."
 
+
 class UserLoginFailed(MoeError):
     """
     Raised when user details were not authenticated by the endpoint for the API.
@@ -24,6 +25,7 @@ class UserLoginFailed(MoeError):
     def __repr__(self):
         return "We attempted to login using those details but got an error.\nError: {}".format(self.message)
 
+
 class GeneralLoginError(MoeError):
     """
     Raised when an API refuses to allow us to login for some reason other than user credentials. Mostly for VNDB.
@@ -33,6 +35,7 @@ class GeneralLoginError(MoeError):
 
     def __repr__(self):
         return "We attempted to login but the server responded with: {}".format(self.message)
+
 
 class ServerError(MoeError):
     """
