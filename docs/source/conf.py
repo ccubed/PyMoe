@@ -124,8 +124,8 @@ todo_include_todos = False
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
-
+if not os.environ.get('READTHEDOCS') == 'True':
+    html_theme = 'alabaster'
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
@@ -316,7 +316,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'Pymoe', 'Pymoe Documentation',
-     author, 'Pymoe', 'One line description of project.',
+     author, 'Pymoe', "the only python lib you'll ever need if you need the animu/mangu on the python platform.",
      'Miscellaneous'),
 ]
 
