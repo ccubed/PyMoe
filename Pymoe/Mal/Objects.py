@@ -31,6 +31,7 @@ class Anime:
 
         :param str aid: The Anime ID.
         :param int episode: Set the user's current episode.
+        :param int average: Set the average score.
         :param int score: Set the user's score.
         :param int status: Set the user's status for this anime. 1/watching,2/completed,3/onhold,4/dropped,6/plantowatch.
         :param str date_start: Set the date the user started this anime. Format should be MM-DD-YYYY.

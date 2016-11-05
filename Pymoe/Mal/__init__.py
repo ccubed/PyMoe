@@ -313,7 +313,7 @@ class Mal:
                 synonyms=syn,
                 episodes=item.find('series_episodes').text,
                 episode=item.find('my_watched_episodes').text,
-                user=item.find('my_score').text,
+                score=item.find('my_score').text,
                 anime_start=item.find('series_end').text,
                 anime_end=item.find('series_start').text,
                 date_start=item.find('my_start_date').text,
@@ -321,7 +321,7 @@ class Mal:
                 image=item.find('series_image').text,
                 status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text)-1],
                 status=int(item.find('my_status').text),
-                rewatcing=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
+                rewatching=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
