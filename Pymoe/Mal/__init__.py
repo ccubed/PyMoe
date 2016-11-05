@@ -313,7 +313,7 @@ class Mal:
                 synonyms=syn,
                 episodes=item.find('series_episodes').text,
                 episode=item.find('my_watched_episodes').text,
-                user=item.find('my_score').text,
+                score=item.find('my_score').text,
                 anime_start=item.find('series_end').text,
                 anime_end=item.find('series_start').text,
                 date_start=item.find('my_start_date').text,
