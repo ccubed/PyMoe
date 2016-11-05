@@ -34,8 +34,8 @@ class Anime:
         :param int average: Set the average score.
         :param int score: Set the user's score.
         :param int status: Set the user's status for this anime. 1/watching,2/completed,3/onhold,4/dropped,6/plantowatch.
-        :param str date_start: Set the date the user started this anime. Format should be MM-DD-YYYY.
-        :param str date_finish: Set the date the user finished this anime. Format should be MM-DD-YYYY.
+        :param str date_start: Set the date the user started this anime. Format should be YYYY-MM-DD.
+        :param str date_finish: Set the date the user finished this anime.  Format should be YYYY-MM-DD.
         :param int storage_type: Set the storage_type for this anime. 1/hard drive,2/dvdcd,3/none,4/retail dvd,5/vhs,6/external hd,7/nas,8/bluray.
         :param int storage_value: Set the storage_value for this anime. if type is 1,6 or 7 this is drive space (gb). 2,4,5 and 8 are # of discs/cds/whatever. this doesn't apply to 3.
         :param int rewatched: Set the number of times this anime has been rewatched.
