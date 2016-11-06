@@ -1,10 +1,11 @@
 import html
 import xml.etree.ElementTree as ET
-import requests
+import aiohttp
+
 from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS_ANIME, STATUS_INTS_MANGA
-from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
-from ..errors import *
+from ..errors import UserLoginFailed, ServerError
+
 
 class Mal:
     """
@@ -28,22 +29,21 @@ class Mal:
                               update=self._anime_update, delete=self._anime_delete)
         self.manga = NT_MANGA(search=self._search_manga, add=self._manga_add,
                               update=self._manga_update, delete=self._manga_delete)
-        self._username = username
-        self._password = password
+        self._auth = aiohttp.BasicAuth(login=username, password=password)
         self._verify_credentials()
 
-    def _verify_credentials(self):
+    async def _verify_credentials(self):
         """
         An internal method that verifies the credentials given at instantiation.
 
         :raises: :class:`Pymoe.errors.UserLoginFailed`
         """
-        r = requests.get(self.apiurl+"account/verify_credentials.xml", auth=HTTPBasicAuth(self._username, self._password),
-                         headers=self.header)
-        if r.status_code != 200:
-            raise UserLoginFailed("Username or Password incorrect.")
+        with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+            async with session.get() as r:
+                if r.status != 200:
+                    raise UserLoginFailed("Username or Password incorrect.")
 
-    def _search_anime(self, term):
+    async def _search_anime(self, term):
         """
         An internal method that redirects to the real search method.
 
@@ -51,9 +51,9 @@ class Mal:
         :rtype: list
         :return: list of :class:`Pymoe.Mal.Objects.Anime` objects
         """
-        return self._search(1, term)
+        return await self._search(1, term)
 
-    def _search_manga(self, term):
+    async def _search_manga(self, term):
         """
         An internal method that redirects to the real search method.
 
@@ -61,9 +61,9 @@ class Mal:
         :rtype: list
         :return: list of :class:`Pymoe.Mal.Objects.Manga` objects
         """
-        return self._search(2, term)
+        return await self._search(2, term)
 
-    def _search(self, which, term):
+    async def _search(self, which, term):
         """
         The real search method.
 
@@ -72,73 +72,73 @@ class Mal:
         :rtype: list
         :return: list of :class:`Pymoe.Mal.Objects.Manga` or :class:`Pymoe.Mal.Objects.Anime` objects as per the type param.
         """
-        url = self.apiurl + "{}/search.xml".format('anime' if which == 1 else 'manga')
-        r = requests.get(url, params={'q': term},
-                         auth=HTTPBasicAuth(self._username, self._password),
-                         headers=self.header)
-        if r.status_code != 200:
-            return []
-        data = ET.fromstring(r.text)
-        final_list = []
-        if which == 1:
-            for item in data.findall('entry'):
-                syn = []
-                ds = {}
-                for child in item:
-                    if child.tag == 'id':
-                        ds['id'] = child.text
-                    elif child.tag == 'title':
-                        ds['title'] = child.text
-                    elif child.tag == 'synonyms' and child.text:
-                        syn.append(child.text.split(';'))
-                    elif child.tag == 'english' and child.text:
-                        syn.append(child.text)
-                    elif child.tag == 'episodes':
-                        ds['episodes'] = child.text
-                    elif child.tag == 'score':
-                        ds['score'] = child.text
-                    elif child.tag == 'start_date':
-                        ds['start_date'] = child.text
-                    elif child.tag == 'end_date':
-                        ds['end_date'] = child.text
-                    elif child.tag == 'synopsis' and child.text:
-                        ds['synopsis'] = html.unescape(child.text.replace('<br />', ''))
-                    elif child.tag == 'image':
-                        ds['image'] = child.text
-                    elif child.tag == 'type':
-                        ds['type'] = child.text
-                final_list.append(Anime(
-                    ds['id'],
-                    title=ds['title'],
-                    synonyms=syn,
-                    episode=ds['episodes'],
-                    average=ds['score'],
-                    anime_start=ds['start_date'],
-                    anime_end=ds['end_date'],
-                    synopsis=ds['synopsis'],
-                    image=ds['image'],
-                    type=ds['type']
-                ))
-        else:
-            for item in data.findall('entry'):
-                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
-                final_list.append(Manga(
-                    item.find('id').text,
-                    title=item.find('title').text,
-                    synonyms=syn.append(item.find('english').text),
-                    chapters=item.find('chapters').text,
-                    volumes=item.find('volumes').text,
-                    average=item.find('score').text,
-                    manga_start=item.find('start_date').text,
-                    manga_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
-                    image=item.find('image').text,
-                    status_manga=item.find('status').text,
-                    type=item.find('type').text
-                ))
-        return final_list
+        with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+            async with session.get(self.apiurl + "{}/search.xml".format('anime' if which == 1 else 'manga'),
+                                   params={'q': term}) as r:
+                if r.status != 200:
+                    return []
+                data = ET.fromstring(await r.text())
+                final_list = []
+                if which == 1:
+                    for item in data.findall('entry'):
+                        syn = []
+                        ds = {}
+                        for child in item:
+                            if child.tag == 'id':
+                                ds['id'] = child.text
+                            elif child.tag == 'title':
+                                ds['title'] = child.text
+                            elif child.tag == 'synonyms' and child.text:
+                                syn.append(child.text.split(';'))
+                            elif child.tag == 'english' and child.text:
+                                syn.append(child.text)
+                            elif child.tag == 'episodes':
+                                ds['episodes'] = child.text
+                            elif child.tag == 'score':
+                                ds['score'] = child.text
+                            elif child.tag == 'start_date':
+                                ds['start_date'] = child.text
+                            elif child.tag == 'end_date':
+                                ds['end_date'] = child.text
+                            elif child.tag == 'synopsis' and child.text:
+                                ds['synopsis'] = html.unescape(child.text.replace('<br />', ''))
+                            elif child.tag == 'image':
+                                ds['image'] = child.text
+                            elif child.tag == 'type':
+                                ds['type'] = child.text
+                        final_list.append(Anime(
+                            ds['id'],
+                            title=ds['title'],
+                            synonyms=syn,
+                            episode=ds['episodes'],
+                            average=ds['score'],
+                            anime_start=ds['start_date'],
+                            anime_end=ds['end_date'],
+                            synopsis=ds['synopsis'],
+                            image=ds['image'],
+                            type=ds['type']
+                        ))
+                else:
+                    for item in data.findall('entry'):
+                        syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
+                        final_list.append(Manga(
+                            item.find('id').text,
+                            title=item.find('title').text,
+                            synonyms=syn.append(item.find('english').text),
+                            chapters=item.find('chapters').text,
+                            volumes=item.find('volumes').text,
+                            average=item.find('score').text,
+                            manga_start=item.find('start_date').text,
+                            manga_end=item.find('end_date').text,
+                            synopsis=html.unescape(item.find('synopsis').text.replace(
+                                '<br />', '')) if item.find('synopsis').text else None,
+                            image=item.find('image').text,
+                            status_manga=item.find('status').text,
+                            type=item.find('type').text
+                        ))
+                return final_list
 
-    def _anime_add(self, data):
+    async def _anime_add(self, data):
         """
         Adds an anime to a user's list.
 
@@ -150,18 +150,16 @@ class Mal:
         """
         if isinstance(data, Anime):
             xmlstr = data.to_xml()
-            print(self.apiurl+"animelist/add/{}.xml".format(data.id))
-            r = requests.get(self.apiurl+"animelist/add/{}.xml".format(data.id),
-                             params={'data': xmlstr},
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 201:
-                raise ServerError(r.text, r.status_code)
-            return True
+            with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+                async with session.get(self.apiurl + "animelist/add/{}.xml".format(data.id), params={'data': xmlstr}) as r:
+                    if r.status_code != 201:
+                        raise ServerError(r.text, r.status_code)
+                    return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
 
-    def _manga_add(self, data):
+    async def _manga_add(self, data):
         """
         Adds a manga to a user's list.
 
@@ -173,17 +171,16 @@ class Mal:
         """
         if isinstance(data, Manga):
             xmlstr = data.to_xml()
-            r = requests.get(self.apiurl+"mangalist/add/{}.xml".format(data.id),
-                             params={'data': xmlstr},
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 201:
-                raise ServerError(r.text, r.status_code)
-            return True
+            with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+                async with session.get(self.apiurl + "mangalist/add/{}.xml".format(data.id), params={'data': xmlstr}) as r:
+                    if r.status_code != 201:
+                        raise ServerError(r.text, r.status_code)
+                    return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
 
-    def _anime_update(self, data):
+    async def _anime_update(self, data):
         """
         Updates data for an anime on a user's list.
 
@@ -195,17 +192,16 @@ class Mal:
         """
         if isinstance(data, Anime):
             xmlstr = data.to_xml()
-            r = requests.get(self.apiurl+"animelist/update/{}.xml".format(data.id),
-                              params={'data': xmlstr},
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
+            with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+                async with session.get(self.apiurl + "animelist/update/{}.xml".format(data.id), params={'data': xmlstr}) as r:
+                    if r.status_code != 200:
+                        raise ServerError(r.text, r.status_code)
+                    return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
 
-    def _manga_update(self, data):
+    async def _manga_update(self, data):
         """
         Updates data for a manga on a user's list.
 
@@ -217,17 +213,16 @@ class Mal:
         """
         if isinstance(data, Manga):
             xmlstr = data.to_xml()
-            r = requests.get(self.apiurl+"mangalist/update/{}.xml".format(data.id),
-                              params={'data': xmlstr},
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
+            with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+                async with session.get(self.apiurl + "mangalist/update/{}.xml".format(data.id), params={'data': xmlstr}) as r:
+                    if r.status_code != 200:
+                        raise ServerError(r.text, r.status_code)
+                    return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
 
-    def _anime_delete(self, data):
+    async def _anime_delete(self, data):
         """
         Deletes an anime from a user's list
 
@@ -238,16 +233,16 @@ class Mal:
         :return: True on success
         """
         if isinstance(data, Anime):
-            r = requests.get(self.apiurl+"animelist/delete/{}.xml".format(data.id),
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
+            with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+                async with session.get(self.apiurl + "animelist/delete/{}.xml".format(data.id)) as r:
+                    if r.status != 200:
+                        raise ServerError(r.text, r.status_code)
+                    return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
 
-    def _manga_delete(self, data):
+    async def _manga_delete(self, data):
         """
         Deletes a manga from a user's list
 
@@ -258,16 +253,16 @@ class Mal:
         :return: True on success
         """
         if isinstance(data, Manga):
-            r = requests.get(self.apiurl+"mangalist/delete/{}.xml".format(data.id),
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
+            with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+                async with session.get(self.apiurl + "mangalist/delete/{}.xml".format(data.id)) as r:
+                    if r.status_code != 200:
+                        raise ServerError(r.text, r.status_code)
+                    return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
 
-    def user(self, name):
+    async def user(self, name):
         """
         Get a user's anime list and details. This returns an encapsulated data type.
 
@@ -275,6 +270,8 @@ class Mal:
         :rtype: :class:`Pymoe.Mal.Objects.User`
         :return: A :class:`Pymoe.Mal.Objects.User` Object
         """
+        with aiohttp.ClientSession(auth=self._auth, headers=self.header) as session:
+            async with session.get()
         anime_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'anime'},
                                   headers=self.header)
         manga_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'manga'},
@@ -319,19 +316,21 @@ class Mal:
                 date_start=item.find('my_start_date').text,
                 date_finish=item.find('my_finish_date').text,
                 image=item.find('series_image').text,
-                status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text)-1],
+                status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text) - 1],
                 status=int(item.find('my_status').text),
                 rewatching=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
-        return {'data': anime_list,
-                'completed': root.find('myinfo').find('user_completed').text,
-                'onhold': root.find('myinfo').find('user_onhold').text,
-                'dropped': root.find('myinfo').find('user_dropped').text,
-                'planned': root.find('myinfo').find('user_plantowatch').text,
-                'watching': root.find('myinfo').find('user_watching').text,
-                'days': root.find('myinfo').find('user_days_spent_watching').text}
+        return {
+            'data': anime_list,
+            'completed': root.find('myinfo').find('user_completed').text,
+            'onhold': root.find('myinfo').find('user_onhold').text,
+            'dropped': root.find('myinfo').find('user_dropped').text,
+            'planned': root.find('myinfo').find('user_plantowatch').text,
+            'watching': root.find('myinfo').find('user_watching').text,
+            'days': root.find('myinfo').find('user_days_spent_watching').text
+        }
 
     @staticmethod
     def parse_manga_data(xml):
@@ -353,17 +352,18 @@ class Mal:
                 date_start=item.find('my_start_date').text,
                 date_finish=item.find('my_finish_date').text,
                 image=item.find('series_image').text,
-                status_manga=STATUS_INTS_MANGA[int(item.find('series_status').text)-1],
+                status_manga=STATUS_INTS_MANGA[int(item.find('series_status').text) - 1],
                 status=int(item.find('my_status').text),
                 rereading=int(item.find('my_rereadingg').text) if item.find('my_rereadingg') else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
-        return {'data': manga_list,
-                'completed': root.find('myinfo').find('user_completed').text,
-                'onhold': root.find('myinfo').find('user_onhold').text,
-                'dropped': root.find('myinfo').find('user_dropped').text,
-                'planned': root.find('myinfo').find('user_plantoread').text,
-                'watching': root.find('myinfo').find('user_reading').text,
-                'days': root.find('myinfo').find('user_days_spent_watching').text}
-
+        return {
+            'data': manga_list,
+            'completed': root.find('myinfo').find('user_completed').text,
+            'onhold': root.find('myinfo').find('user_onhold').text,
+            'dropped': root.find('myinfo').find('user_dropped').text,
+            'planned': root.find('myinfo').find('user_plantoread').text,
+            'watching': root.find('myinfo').find('user_reading').text,
+            'days': root.find('myinfo').find('user_days_spent_watching').text
+        }
