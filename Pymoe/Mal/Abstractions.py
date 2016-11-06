@@ -8,6 +8,9 @@ class NT_EPISODES:
         self.current = current
         self.total = total
 
+    def __repr__(self):
+        return 'NT_EPISODES(current={}, total={})'.format(repr(self.current), repr(self.total))
+
 
 class NT_SCORES:
     """
@@ -16,6 +19,9 @@ class NT_SCORES:
     def __init__(self, average, user):
         self.average = average
         self.user = user
+
+    def __repr__(self):
+        return 'NT_SCORES(average={}, user={})'.format(repr(self.average), repr(self.user))
 
 
 class NT_STATUS:
@@ -26,6 +32,9 @@ class NT_STATUS:
         self.series = series
         self.user = user
 
+    def __repr__(self):
+        return 'NT_STATUS(series={}, user={})'.format(repr(self.series), repr(self.user))
+
 
 class NT_DATES:
     """
@@ -34,6 +43,9 @@ class NT_DATES:
     def __init__(self, series, user):
         self.series = NT_DATE_OBJ(series)
         self.user = NT_DATE_OBJ(user)
+
+    def __repr__(self):
+        return 'NT_DATES(series={}, user={})'.format(repr(self.series), repr(self.user))
 
 
 class NT_DATE_OBJ:
@@ -44,6 +56,9 @@ class NT_DATE_OBJ:
         self.start = dates[0]
         self.end = dates[1]
 
+    def __repr__(self):
+        return 'NT_DATE_OBJ(start={}, end={})'.format(repr(self.start), repr(self.end))
+
 
 class NT_STORAGE:
     """
@@ -53,6 +68,8 @@ class NT_STORAGE:
         self.type = type
         self.value = value
 
+    def __repr__(self):
+        return 'NT_STORAGE(type={}, value={})'.format(repr(self.type), repr(self.value))
 
 class NT_REWATCHED:
     """
@@ -61,6 +78,9 @@ class NT_REWATCHED:
     def __init__(self, times, value):
         self.times = times
         self.value = value
+
+    def __repr__(self):
+        return 'NT_REWATCHED(times={}, value={})'.format(repr(self.times), repr(self.value))
 
 
 class NT_FLAGS:
@@ -71,6 +91,11 @@ class NT_FLAGS:
         self.discussion = discussion
         self.rewatching = rewatching
         self.rereading = rereading
+
+    def __repr__(self):
+        return 'NT_FLAGS(discussion={}, rewatching={}, rereading={})'.format(repr(self.discussion),
+                                                                             repr(self.rewatching),
+                                                                             repr(self.rereading))
 
 
 #: Abstraction for anime methods.
