@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name='PyMoe',
-    version='0.6',
+    version='0.7',
     packages=['Pymoe', 'Pymoe.Hummingbird', 'Pymoe.VNDB', 'Pymoe.Mal', 'Pymoe.Bakatsuki'],
-    url='https://git.vertinext.com/ccubed/PyMoe',
+    url='https://github.com/ccubed/PyMoe',
     license='MIT',
     author='Cooper Click',
     author_email='ccubed.techno@gmail.com',

@@ -35,6 +35,8 @@ PyMoe's MyAnimeList implementation does support grabbing user profiles. Rather t
 
     Given a proper username, retrieve a user's watched statistics and their full anime and manga data inside an encapsulated user object.
 
+    The user endpoint does not have average score data available for any anime or manga. It only has the user score data available. The average scores will be populated with None.
+
 Encapsulations Again
 --------------------
 You should probably go read :doc:`MAL Encapsulations<malencap>` now. These encapsulations are very important to the way PyMoe works and having a good knowledge of them will allow you to do impressive things within PyMoe. What you ask?

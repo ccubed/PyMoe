@@ -166,7 +166,7 @@ Now for the big boys. Anime, Manga and User. These are the three you will use th
 
     .. py:attribute:: scores : NT_SCORES
 
-        Average and User ratings for the anime. Average will only be populated on a search call. On a User List call Average is always None because it's not available. The user attribute is used for the score XML parameter.
+        Average and User ratings for the anime. Average will only be populated on a search call. The user attribute is used for the score XML parameter.
 
     .. py:attribute:: type : string
 

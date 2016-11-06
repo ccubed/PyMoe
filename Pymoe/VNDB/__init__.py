@@ -44,6 +44,7 @@ class VNDB:
                             I will attempt to properly format this if not done so when called.
         :param dict options: A dictionary of options to customize the search by. Optional, defaults to None.
         :return dict: A dictionary containing a pages and data key. data contains a list of dictionaries with data on your results. If pages is true, you can call this command again with the same parameters and pass a page option to get more data. Otherwise no further results exist for this query.
+        :raises ServerError: Raises a ServerError if an error is returned.
         """
         if not isinstance(flags, str):
             if isinstance(flags, list):
@@ -52,10 +53,13 @@ class VNDB:
                 raise SyntaxError("Flags should be a list or comma separated string")
         else:
             finflags = flags
+
         if not isinstance(filters, str):
             raise SyntaxError("Filters needs to be a string in the format Filter<op>Value. The simplest form is search=\"<Term>\".")
+
         if stype not in self.stypes:
             raise SyntaxError("{} not a valid Search type.".format(stype))
+
         if '"' not in filters or "'" not in filters:
             newfilters = self.helperpat.split(filters)
             newfilters = [x.strip() for x in newfilters]
@@ -67,8 +71,31 @@ class VNDB:
         else:
             command = '{} {} ({}){}'.format(stype, finflags, filters,
                                             ' ' + ujson.dumps(options) if options is not None else '')
+
         data = self.connection.send_command('get', command)
-        pages = False
-        if data['more']:
-            pages = True
-        return {'pages': pages, 'data': data['items']}
+
+        if 'id' in data:
+            raise ServerError(data['msg'], data['id'])
+        else:
+            return {'pages': data.get('more', default=False), 'data': data['items']}
+
+    def set(self, stype, sid, fields):
+        """
+        Send a request to the API to modify something in the database if logged in.
+
+        :param str stype: What are we modifying? One of: votelist, vnlist, wishlist
+        :param int sid: The ID that we're modifying.
+        :param dict fields: A dictionary of the fields and their values
+        :raises ServerError: Raises a ServerError if an error is returned
+        :return bool: True if successful, error otherwise
+        """
+        if stype not in ['votelist', 'vnlist', 'wishlist']:
+            raise SyntaxError("{} is not a valid type for set. Should be one of: votelist, vnlist or wishlist.".format(stype))
+
+        command = "{} {} {}".format(stype, id, ujson.dumps(fields))
+        data = self.connection.send_command('set', command)
+
+        if 'id' in data:
+            raise ServerError(data['msg'], data['id'])
+        else:
+            return True

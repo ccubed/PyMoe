@@ -64,7 +64,7 @@ instance.user(username)  # Return a user object that contains user stats and a f
 ```
 
 ## VNDB
-Status: Partially written as of 0.3. You can query the DB.
+Status: Finished as of 0.7 Beta
 To create an instance.
 ```python
 from Pymoe import Vndb
@@ -74,4 +74,5 @@ This allows you access to some of the VNDB database. Currently it's just the que
 ```python
 instance.dbstats()  # Return the list of Database stats as seen on the homepage
 instance.get(stype, flags, filters, options)  # Query the DB. You have to read the VNDB API Docs and my Docs for this. No way around it. Their API is complicated.
+instance.set(stype, sid, fields) # Modify the DB. See the API docs. This is for VNLists, Wishlists and Votelists.
 ```

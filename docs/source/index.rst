@@ -14,14 +14,15 @@ What about python 2 bro?
 
 Services
 ========
-**As Of Version**: 0.5 Beta
+**As Of Version**: 0.7 Beta
 
 * :doc:`Hummingbird.me <Hummingbird>` - Finished
 * Anidb - Not Started
 * :doc:`Anilist.co <Anilist>` - Partially Written
 * :doc:`Bakatsuki LN Translations <Bakatsuki>` - Finished
 * :doc:`My Anime List (MAL) <Mal>` - Finished
-* :doc:`Visual Novel DB <Vndb>` - Some functionality in. You can query the DB now.
+* :doc:`Visual Novel DB <Vndb>` - Finished
+* :doc:`Errors <errors>` - Details on the various Errors returned
 
 Indices and tables
 ==================
