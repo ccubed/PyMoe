@@ -274,11 +274,11 @@ class User:
                                                                                onhold=kwargs.get('anime_onhold'),
                                                                                dropped=kwargs.get('anime_dropped'),
                                                                                planned=kwargs.get('anime_planned'),
-                                                                               current=kwargs.get('anime_watching'),
+                                                                               watching=kwargs.get('anime_watching'),
                                                                                days=kwargs.get('anime_days')))
         self.manga = NT_TYPEDATA(list=kwargs.get('manga_list'), stats=NT_STATS(completed=kwargs.get('manga_completed'),
                                                                                onhold=kwargs.get('manga_onhold'),
                                                                                dropped=kwargs.get('manga_dropped'),
                                                                                planned=kwargs.get('manga_planned'),
-                                                                               current=kwargs.get('manga_watching'),
+                                                                               watching=kwargs.get('manga_watching'),
                                                                                days=kwargs.get('manga_days')))

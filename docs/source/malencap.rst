@@ -216,6 +216,22 @@ Now for the big boys. Anime, Manga and User. These are the three you will use th
 
         Your fansub group for this anime. Used for the fansub_group XML parameter.
 
+.. py:class:: STATUS_INTS_ANIME
+
+    A list used to convert the status int given by the API to a string. The API actually only gives an int in a user call. Everywhere else it's the string anyways.
+
+.. py:class:: STATUS_INTS_MANGA
+
+    A list used to convert the status int given by the API to a string. The API actually only gives an int in a user call. Everywhere else it's the string anyways.
+
+.. py:class:: STATUS_INTS_UANIME
+
+    A list used to convert the user version of status ints to a string.
+
+.. py:class:: STATUS_INTS_UMANGA
+
+    A list used to conver the user version of status ints to a string.
+
 .. py:class:: Manga
 
     Manga is basically the same as Anime. Instead of relisting every attribute, you should assume Manga has all the attributes in Anime except for those listed here which have been changed.

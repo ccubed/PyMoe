@@ -1,7 +1,7 @@
 import html
 import xml.etree.ElementTree as ET
 import requests
-from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS_ANIME, STATUS_INTS_MANGA
+from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS_ANIME, STATUS_INTS_MANGA, STATUS_INTS_UANIME, STATUS_INTS_UMANGA
 from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
@@ -82,42 +82,19 @@ class Mal:
         final_list = []
         if which == 1:
             for item in data.findall('entry'):
-                syn = []
-                ds = {}
-                for child in item:
-                    if child.tag == 'id':
-                        ds['id'] = child.text
-                    elif child.tag == 'title':
-                        ds['title'] = child.text
-                    elif child.tag == 'synonyms' and child.text:
-                        syn.append(child.text.split(';'))
-                    elif child.tag == 'english' and child.text:
-                        syn.append(child.text)
-                    elif child.tag == 'episodes':
-                        ds['episodes'] = child.text
-                    elif child.tag == 'score':
-                        ds['score'] = child.text
-                    elif child.tag == 'start_date':
-                        ds['start_date'] = child.text
-                    elif child.tag == 'end_date':
-                        ds['end_date'] = child.text
-                    elif child.tag == 'synopsis' and child.text:
-                        ds['synopsis'] = html.unescape(child.text.replace('<br />', ''))
-                    elif child.tag == 'image':
-                        ds['image'] = child.text
-                    elif child.tag == 'type':
-                        ds['type'] = child.text
+                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
                 final_list.append(Anime(
-                    ds['id'],
-                    title=ds['title'],
-                    synonyms=syn,
-                    episode=ds['episodes'],
-                    average=ds['score'],
-                    anime_start=ds['start_date'],
-                    anime_end=ds['end_date'],
-                    synopsis=ds['synopsis'],
-                    image=ds['image'],
-                    type=ds['type']
+                    item.find('id').text,
+                    title=item.find('title').text,
+                    synonyms=syn.append(item.find('english').text),
+                    episode=item.find('episodes').text,
+                    average=item.find('score').text,
+                    anime_start=item.find('start_date').text,
+                    anime_end=item.find('end_date').text,
+                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
+                    image=item.find('image').text,
+                    status_anime=item.find('status').text,
+                    type=item.find('type').text
                 ))
         else:
             for item in data.findall('entry'):
@@ -287,7 +264,7 @@ class Mal:
         return User(uid=uid,
                     name=uname,
                     anime_list=anime_object_list['data'],
-                    anime_complete=anime_object_list['completed'],
+                    anime_completed=anime_object_list['completed'],
                     anime_onhold=anime_object_list['onhold'],
                     anime_dropped=anime_object_list['dropped'],
                     anime_planned=anime_object_list['planned'],
@@ -319,8 +296,8 @@ class Mal:
                 date_start=item.find('my_start_date').text,
                 date_finish=item.find('my_finish_date').text,
                 image=item.find('series_image').text,
-                status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text)-1],
-                status=int(item.find('my_status').text),
+                status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text)-1] if item.find('series_status').text != '6' else STATUS_INTS_ANIME[4],
+                status=STATUS_INTS_UANIME[int(item.find('my_status').text)-1] if item.find('my_status').text != '6' else STATUS_INTS_UANIME[4],
                 rewatching=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
@@ -353,8 +330,8 @@ class Mal:
                 date_start=item.find('my_start_date').text,
                 date_finish=item.find('my_finish_date').text,
                 image=item.find('series_image').text,
-                status_manga=STATUS_INTS_MANGA[int(item.find('series_status').text)-1],
-                status=int(item.find('my_status').text),
+                status_manga=STATUS_INTS_MANGA[int(item.find('series_status').text)-1] if item.find('series_status').text != '6' else STATUS_INTS_MANGA[4],
+                status=STATUS_INTS_UMANGA[int(item.find('my_status').text)-1] if item.find('my_status').text != '6' else STATUS_INTS_UMANGA[4],
                 rereading=int(item.find('my_rereadingg').text) if item.find('my_rereadingg') else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
