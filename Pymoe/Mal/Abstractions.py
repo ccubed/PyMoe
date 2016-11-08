@@ -111,20 +111,15 @@ NT_TYPEDATA = namedtuple('NT_TYPEDATA', ['list', 'stats'])
 
 
 #: Abstraction for user anime and manga stats.
-NT_STATS = namedtuple('NT_TYPESTATS', ['completed', 'onhold', 'dropped', 'planned', 'watching', 'days'])
+NT_STATS = namedtuple('NT_TYPESTATS', ['completed', 'onhold', 'dropped', 'planned', 'watching', 'reading', 'days'])
 
 
 #: Status int to Name
-STATUS_INTS_ANIME = ['Currently Airing', 'Finished Airing', 'Not Yet Aired', 'Dropped', 'Plan to Watch']
-
-
-#: Status int to Name
-STATUS_INTS_MANGA = ['Publishing', 'Finished', 'Not Yet Published', 'Dropped', 'Plan to Read']
-
-
-#: Status int to Name
-STATUS_INTS_UANIME = ['Currently Watching', 'Completed', 'On Hold', 'Dropped', 'Plan to Watch']
-
-
-#: Status int to Name
-STATUS_INTS_UMANGA = ['Currently Reading', 'Completed', 'On Hold', 'Dropped', 'Plan to Read']
+STATUS_INTS = {
+    'anime': {'1': 'Currently Airing', '2': 'Finished Airing', '3': 'Not Yet Aired', '4': 'Dropped', '6': 'Plan to Watch'},
+    'manga': {'1': 'Publishing', '2': 'Finished', '3': 'Not Yet Published', '4': 'Dropped', '6': 'Plan to Read'},
+    'user': {
+        'anime': {'1': 'Currently Watching', '2': 'Completed', '3': 'On Hold', '4': 'Dropped', '6': 'Plan to Watch'},
+        'manga': {'1': 'Currently Reading', '2': 'Completed', '3': 'On Hold', '4': 'Dropped', '6': 'Plan to Read'}
+    }
+}

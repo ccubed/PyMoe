@@ -275,7 +275,7 @@ class Mal:
                     manga_onhold=manga_object_list['onhold'],
                     manga_dropped=manga_object_list['dropped'],
                     manga_planned=manga_object_list['planned'],
-                    manga_watching=manga_object_list['watching'],
+                    manga_reading=manga_object_list['reading'],
                     manga_days=manga_object_list['days'])
 
     @staticmethod
@@ -296,8 +296,8 @@ class Mal:
                 date_start=item.find('my_start_date').text,
                 date_finish=item.find('my_finish_date').text,
                 image=item.find('series_image').text,
-                status_anime=STATUS_INTS_ANIME[int(item.find('series_status').text)-1] if item.find('series_status').text != '6' else STATUS_INTS_ANIME[4],
-                status=STATUS_INTS_UANIME[int(item.find('my_status').text)-1] if item.find('my_status').text != '6' else STATUS_INTS_UANIME[4],
+                status_anime=STATUS_INTS['anime'][item.find('series_status').text],
+                status=STATUS_INTS['user']['anime'][item.find('my_status').text],
                 rewatching=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
@@ -330,8 +330,8 @@ class Mal:
                 date_start=item.find('my_start_date').text,
                 date_finish=item.find('my_finish_date').text,
                 image=item.find('series_image').text,
-                status_manga=STATUS_INTS_MANGA[int(item.find('series_status').text)-1] if item.find('series_status').text != '6' else STATUS_INTS_MANGA[4],
-                status=STATUS_INTS_UMANGA[int(item.find('my_status').text)-1] if item.find('my_status').text != '6' else STATUS_INTS_UMANGA[4],
+                status_manga=STATUS_INTS['manga'][item.find('series_status').text],
+                status=STATUS_INTS['user']['manga'][item.find('my_status').text],
                 rereading=int(item.find('my_rereadingg').text) if item.find('my_rereadingg') else None,
                 type=item.find('series_type').text,
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
@@ -341,6 +341,6 @@ class Mal:
                 'onhold': root.find('myinfo').find('user_onhold').text,
                 'dropped': root.find('myinfo').find('user_dropped').text,
                 'planned': root.find('myinfo').find('user_plantoread').text,
-                'watching': root.find('myinfo').find('user_reading').text,
+                'reading': root.find('myinfo').find('user_reading').text,
                 'days': root.find('myinfo').find('user_days_spent_watching').text}
 
