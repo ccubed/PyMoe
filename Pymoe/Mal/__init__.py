@@ -1,7 +1,7 @@
 import html
 import xml.etree.ElementTree as ET
 import requests
-from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS_ANIME, STATUS_INTS_MANGA, STATUS_INTS_UANIME, STATUS_INTS_UMANGA
+from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS
 from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
