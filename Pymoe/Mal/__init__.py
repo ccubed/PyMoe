@@ -87,7 +87,7 @@ class Mal:
                     item.find('id').text,
                     title=item.find('title').text,
                     synonyms=syn.append(item.find('english').text),
-                    episode=item.find('episodes').text,
+                    episodes=item.find('episodes').text,
                     average=item.find('score').text,
                     anime_start=item.find('start_date').text,
                     anime_end=item.find('end_date').text,

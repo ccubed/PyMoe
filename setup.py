@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='PyMoe',
-    version='0.7.1',
+    version='0.7.2',
     packages=['Pymoe', 'Pymoe.Hummingbird', 'Pymoe.VNDB', 'Pymoe.Mal', 'Pymoe.Bakatsuki'],
     url='https://github.com/ccubed/PyMoe',
     license='MIT',
