@@ -21,81 +21,50 @@ class VNDB:
     def __init__(self, username=None, password=None):
         self.connection = VNDBConnection(username, password)
         self.helperpat = re.compile('[=|!=|~|>|>=|<=|<]')
-        self.stypes = ['vn', 'release', 'producer', 'character', 'votelist', 'vnlist', 'wishlist']
+        self.stypes = {
+            'vn': 'basic,details,anime,relations,tags,stats,screens',
+            'release': 'basic,details,vn,producers',
+            'producer': 'basic,details,relations',
+            'character': 'basic,details,meas,traits,vns',
+            'user': 'basic',
+            'votelist': 'basic',
+            'vnlist': 'basic',
+            'wishlist': 'basic'
+        }
 
     def dbstats(self):
         """
-        Get the dbstats
-
-        :return: A dictionary containing the db stats.
+            Get the dbstats
+            
+            :return: A dictionary containing the db stats.
         """
         return self.connection.send_command('dbstats')
 
-    def get(self, stype, flags, filters, options=None):
+    def get(self, what, term, page=0):
         """
-        Send a request to the API to return results related to Visual Novels.
-
-        :param str stype: What are we searching for? One of: vn, release, producer, character, votelist, vnlist, wishlist
-        :param flags: See the D11 docs. A comma separated list of flags for what data to return. Can be list or str.
-        :param str filters: A string with the one filter to search by (apparently you only get one).
-                            This is kind of special. You need to pass them in the form <filter><op>"<term>"
-                            for strings or <filter><op><number> for numbers. This is counter intuitive.
-                            Also, per the docs, <filter>=<number> doesn't do what we think, use >, >= or < and <=.
-                            I will attempt to properly format this if not done so when called.
-        :param dict options: A dictionary of options to customize the search by. Optional, defaults to None.
-        :return dict: A dictionary containing a pages and data key. data contains a list of dictionaries with data on your results. If pages is true, you can call this command again with the same parameters and pass a page option to get more data. Otherwise no further results exist for this query.
-        :raises ServerError: Raises a ServerError if an error is returned.
+            Perform a get query based on a search string. By default, this will return all fields for the given type. IE: It has all flags enabled by default.
+        
+            :param what str: The type of thing to query against.
+            :param term str: The name to find.
+            :param page int: A page number to start on
         """
-        if not isinstance(flags, str):
-            if isinstance(flags, list):
-                finflags = ",".join(flags)
-            else:
-                raise SyntaxError("Flags should be a list or comma separated string")
+        if what not in self.stypes.keys():
+            raise SyntaxError("Need to pass a valid type. Got {} but we only accept the following: {}.".format(what, self.stypes.keys()))
+            
+        if page:
+            return self.connection.send_command("get vn {} ({}) {}".format(self.stypes[what], "title = {}".format(what), ujson.dumps(options)))
         else:
-            finflags = flags
-
-        if not isinstance(filters, str):
-            raise SyntaxError("Filters needs to be a string in the format Filter<op>Value. The simplest form is search=\"<Term>\".")
-
-        if stype not in self.stypes:
-            raise SyntaxError("{} not a valid Search type.".format(stype))
-
-        if '"' not in filters or "'" not in filters:
-            newfilters = self.helperpat.split(filters)
-            newfilters = [x.strip() for x in newfilters]
-            newfilters[1] = '"' + newfilters[1] + '"'
-            op = self.helperpat.search(filters)
-            newfilters = op.group(0).join(newfilters)
-            command = '{} {} ({}){}'.format(stype, finflags, newfilters,
-                                            ' ' + ujson.dumps(options) if options is not None else '')
-        else:
-            command = '{} {} ({}){}'.format(stype, finflags, filters,
-                                            ' ' + ujson.dumps(options) if options is not None else '')
-
-        data = self.connection.send_command('get', command)
-
-        if 'id' in data:
-            raise ServerError(data['msg'], data['id'])
-        else:
-            return {'pages': data.get('more', default=False), 'data': data['items']}
-
-    def set(self, stype, sid, fields):
+            return self.connection.send_command("get vn {} ({})".format(self.stypes[what], "title = {}".format(what)))
+            
+        
+        
+    def restrict(self, data, fields):
         """
-        Send a request to the API to modify something in the database if logged in.
-
-        :param str stype: What are we modifying? One of: votelist, vnlist, wishlist
-        :param int sid: The ID that we're modifying.
-        :param dict fields: A dictionary of the fields and their values
-        :raises ServerError: Raises a ServerError if an error is returned
-        :return bool: True if successful, error otherwise
+        
+            Given a data return from the api, remove all fields but the ones listed.
+            
+            :param data dict: A dictionary of the json data
+            :param fields list: A list of fields that we want to have in the final dictionary
+        
         """
-        if stype not in ['votelist', 'vnlist', 'wishlist']:
-            raise SyntaxError("{} is not a valid type for set. Should be one of: votelist, vnlist or wishlist.".format(stype))
-
-        command = "{} {} {}".format(stype, id, ujson.dumps(fields))
-        data = self.connection.send_command('set', command)
-
-        if 'id' in data:
-            raise ServerError(data['msg'], data['id'])
-        else:
-            return True
+        pass
