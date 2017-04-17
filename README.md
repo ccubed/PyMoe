@@ -2,25 +2,22 @@
 # PyMoe
 Welcome to PyMoe, the only python lib you'll ever need if you need the animu/mangu on the python platform.
 
-## Hummingbird
-Ready to use as of version 0.1.
+## Kitsu
+Ready to use as of version 0.8.
+Kitsu is the new Hummingbird if you're wondering where Hummingbird went.
 To create an instance do:
 ```python
-from Pymoe import Hummingbird
-instance = Hummingbird()
+from Pymoe import Kitsu
+instance = Kitsu()
 ```
-You have three interfaces: anime, user, library.
+You have three interfaces: anime, manga, drama
 ```python
 instance.anime.id(id)  # Search anime by ID
 instance.anime.search(term)  # Search anime by term
-instance.anime.v2(clientid, id)  # Search anime by the V2 endpoint
-instance.user.authenticate(password, kwargs)  # Authenticate user for auth_token. Give either email or username
-instance.user.favorite_anime(username)  # Grab a user's favorite anime
-instance.user.feed(username)  # Get a user's feed
-instance.user.info(username)  # Get user information
-instance.library.get(username, status)  # Get a user's library entries. Status is an optional status type to filter against.
-instance.library.remove(id, auth_token)  # Remove anime referred to by ID from the user's library.
-instance.library.set(id, auth_token, kwargs)  # There are a lot of params here. Add the anime referred to by ID to the user's library.
+instance.manga.id(id)  # Search manga by ID
+instance.manga.search(term)  # Search manga by term
+instance.drama.id(id)  # Search drama by ID
+instance.drama.search(term)  # Search drama by term
 ```
 
 ## Anidb

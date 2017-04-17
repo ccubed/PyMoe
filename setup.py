@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='PyMoe',
-    version='0.7.2',
-    packages=['Pymoe', 'Pymoe.Hummingbird', 'Pymoe.VNDB', 'Pymoe.Mal', 'Pymoe.Bakatsuki'],
+    version='0.8',
+    packages=['Pymoe', 'Pymoe.Kitsu', 'Pymoe.VNDB', 'Pymoe.Mal', 'Pymoe.Bakatsuki'],
     url='https://github.com/ccubed/PyMoe',
     license='MIT',
     author='Cooper Click',
@@ -17,6 +17,6 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Libraries'
     ],
-    keywords="Anime Manga LN VN VNDB Anilist Hummingbird AniDB MyAnimeList MAL Bakatsuki",
+    keywords="Anime Manga LN VN VNDB Anilist Kitsu AniDB MyAnimeList MAL Bakatsuki",
     install_requires=['requests', 'bs4', 'ujson']
 )
