@@ -1,8 +1,9 @@
 import requests
 from ..errors import *
+from .helpers import SearchWrapper
 
 
-class HBirdDrama:
+class KitsuDrama:
     def __init__(self, api, header):
         self.apiurl = api
         self.header = header
@@ -31,8 +32,8 @@ class HBirdDrama:
         Search for drama by term.
 
         :param str term: What to search for.
-        :return: The results as a list of Dictionaries objects. Limit 7. None if empty.
-        :rtype: List of Dictionaries or NoneType
+        :return: The results as a SearchWrapper iterator.
+        :rtype: SearchWrapper
         """
         r = requests.get(self.apiurl + "/drama", params={"filter[text]": term}, headers=self.header)
         
@@ -40,8 +41,8 @@ class HBirdDrama:
             raise ServerError
             
         jsd = r.json()
-        
-        if len(jsd):
-            return jsd
+
+        if jsd['meta']['count']:
+            return SearchWrapper(jsd['data'], jsd['links']['next'] if 'next' in jsd['links'] else None, self.header)
         else:
             return None

@@ -3,19 +3,19 @@ from .user import *
 from .library import *
 from .manga import *
 from .drama import *
+from .auth import *
 
 
 class Kitsu:
     """
-        :ivar HBirdAnime anime: Instance interface for the Kitsu Anime endpoints
-        :ivar HBirdUser user: Instance interface for the Kitsu User endpoints
-        :ivar HBirdLib library: Instance interface for the Kitsu Library endpoints.
-        :ivar HBirdManga manga: Instance interface for the Kitsu Manga endpoints.
-        :ivar HBirdDrama drama: Instsance interface for the Kitsu Drama endpoints.
-        :ivar str cid: Client ID for oauth.
-        :ivar str csecret: Client Secret for oauth.
+        :ivar KitsuAnime anime: Instance interface for the Kitsu Anime endpoints
+        :ivar KitsuUser user: Instance interface for the Kitsu User endpoints
+        :ivar KitsuLib library: Instance interface for the Kitsu Library endpoints.
+        :ivar KitsuManga manga: Instance interface for the Kitsu Manga endpoints.
+        :ivar KitsuDrama drama: Instance interface for the Kitsu Drama endpoints.
+        :ivar KitsuAuth auth: Instance interface for the Kitsu Auth endpoints / storage engine.
     """
-    def __init__(self):
+    def __init__(self, cid, csecret):
         """
         Initialize a new Kitsu API instance.
         """
@@ -25,6 +25,9 @@ class Kitsu:
             'Accept': 'application/vnd.api+json',
             'Content-Type': 'application/vnd.api+json'
         }
-        self.anime = HBirdAnime(api, header)
-        self.manga = HBirdManga(api, header)
-        self.drama = HBirdDrama(api, header)
+        self.anime = KitsuAnime(api, header)
+        self.manga = KitsuManga(api, header)
+        self.drama = KitsuDrama(api, header)
+        #self.library = KitsuLib(api, header)
+        self.user = KitsuUser(api, header)
+        self.auth = KitsuAuth(header, cid, csecret)

@@ -1,87 +1,85 @@
 import requests
 from ..errors import *
+from .helpers import SearchWrapper
 
 
-class HBirdUser:
+class KitsuUser:
     def __init__(self, api, header):
         self.apiurl = api
         self.header = header
 
-    def _login(self, user, pw, usertype):
+    def search(self, term):
         """
-        Login and get a user's auth_token. Internal function.
+        Search for a user by name.
 
-        :param user: username or email
-        :param pw: password
-        :param usertype: email or username, used for the params.
+        :param str term: What to search for.
+        :return: The results as a SearchWrapper iterator or None if no results.
+        :rtype: SearchWrapper or None
         """
-        r = requests.post(self.apiurl + "/users/authenticate", params={usertype: user, 'password': pw},
-                          headers=self.header)
-        if r.status_code != 201:
-            raise UserLoginFailed("{} and password combination not accepted by hummingbird.".format(usertype))
+        r = requests.get(self.apiurl + "/user", params={"filter[text]": term}, headers=self.header)
+
+        if r.status_code != 200:
+            raise ServerError
+
+        jsd = r.json()
+
+        if jsd['meta']['count']:
+            return SearchWrapper(jsd['data'], jsd['links']['next'] if 'next' in jsd['links'] else None, self.header)
         else:
-            return r.json()
+            return None
 
-    def authenticate(self, password, **kwargs):
+    def create(self, data):
         """
-        A method for calling the authenticate endpoint to login as a specific user and obtain an auth_token. Pass only one of username or email.
-
-        :param str password: user's password.
-        :param str username: the username to login with
-        :param str email: the email to login with
-        :return: User's auth_token
-        :rtype: Str
-        :raises: :class:`Pymoe.errors.UserLoginFailed` - 401
-        :raises: SyntaxError - Read the docstring
+        Create a user. Please review the attributes required. You need only provide the attributes.
+        
+        :param data: A dictionary of the required attributes 
+        :return: Dictionary returned by server or a ServerError exception
+        :rtype: Dictionary or Exception
         """
-        if len(kwargs):
-            pw = password
-            if 'username' in kwargs:
-                usertype = 'username'
-                user = kwargs.pop('username')
-            else:
-                usertype = 'email'
-                user = kwargs.pop('email')
-            return self._login(user, pw, usertype)
-        else:
-            raise SyntaxError("Not enough parameters to login.")
+        final_dict = {"data": {"type": "users", "attributes": data}}
+        r = requests.post(self.apiurl + "/user", json=final_dict, headers=self.header)
 
-    def info(self, username):
-        """
-        Get information about a user.
-
-        :param username: User to get information about.
-        :return: User object
-        :rtype: A dictionary
-        :raises: JSONDecodeError
-        """
-        r = requests.get(self.apiurl + "/users/{}".format(username), headers=self.header)
-        return r.json()
-
-    def feed(self, username):
-        """
-        Get a user's activity feed.
-
-        :param username: User whose feed we are getting
-        :return: A list of story objects
-        :rtype: A list of dictionaries
-        :raises: JSONDecodeError
-        """
-        r = requests.get(self.apiurl + "/users/{}/feed".format(username), headers=self.header)
-        return r.json()
-
-    def favorite_anime(self, username):
-        """
-        Get a user's favorite anime.
-
-        :param username: User whose favorite anime we are retrieving.
-        :return: A list of anime objects
-        :rtype: List of Dictionaries
-        :raises: :class:`Pymoe.errors.ServerError` - 500
-        """
-        r = requests.get(self.apiurl + "/users/{}/favorite_anime".format(username), headers=self.header)
-
-        if r.status_code == 500:
+        if r.status_code != 200:
             raise ServerError
 
         return r.json()
+
+    def get(self, uid):
+        """
+        Get a user's information by their id.
+        
+        :param uid: User ID 
+        :return: The user's information or None
+        :rtype: Dictionary or None
+        """
+        r = requests.get(self.apiurl + "/user/{}".format(uid), headers=self.header)
+
+        if r.status_code != 200:
+            raise ServerError
+
+        jsd = r.json()
+
+        if jsd['data']:
+            return jsd['data']
+        else:
+            return None
+
+    def update(self, uid, data, token):
+        """
+        Update a user's data. Requires an auth token.
+        
+        :param uid: User ID to update 
+        :param data: The dictionary of data attributes to change. Just the attributes.
+        :param token: The authorization token for this user
+        :return: True or Exception
+        :rtype: Bool or ServerError
+        """
+        final_dict = {"data": {"id": uid, "type": "users", "attributes": data}}
+        final_headers = self.header
+        final_headers['Authorization'] = "Bearer {}".format(token)
+        r = requests.patch(self.apiurl + "/user/{}".format(uid), json=final_dict, headers=final_headers)
+
+        if r.status_code != 200:
+            raise ServerError
+
+        return True
