@@ -5,7 +5,7 @@ from ..errors import *
 
 class KitsuAuth:
     def __init__(self, header, cid, csecret):
-        self.apiurl = "https://kitsu.io/api/oauth/token"
+        self.apiurl = "https://kitsu.io/api/oauth"
         self.header = header
         self.remember = False
         self.cid = cid
@@ -30,10 +30,11 @@ class KitsuAuth:
         :param username: username
         :param password: password
         :param alias: A list of alternative names for a person if using the KitsuAuth token storage
-        :return: A tuple of (token, expiration time in unix seconds, refresh_token) or ServerError
+        :return: A tuple of (token, expiration time in unix time stamp, refresh_token) or ServerError
         """
-        r = requests.post(self.apiurl, params={"grant_type": "password", "username": username, "password": password,
-                                               "client_id": self.cid, "client_secret": self.csecret})
+        r = requests.post(self.apiurl + "/token",
+                          params={"grant_type": "password", "username": username, "password": password,
+                                  "client_id": self.cid, "client_secret": self.csecret})
 
         if r.status_code != 200:
             raise ServerError
@@ -51,10 +52,11 @@ class KitsuAuth:
         Renew an oauth token given an appropriate refresh token.
         
         :param refresh_token: The Refresh Token 
-        :return: A tuple of (token, expiration time in unix seconds)
+        :return: A tuple of (token, expiration time in unix time stamp)
         """
-        r = requests.post(self.apiurl, params={"grant_type": "refresh_token", "client_id": self.cid,
-                                               "client_secret": self.csecret, "refresh_token": refresh_token})
+        r = requests.post(self.apiurl + "/token", params={"grant_type": "refresh_token", "client_id": self.cid,
+                                                          "client_secret": self.csecret,
+                                                          "refresh_token": refresh_token})
 
         if r.status_code != 200:
             raise ServerError

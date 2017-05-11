@@ -28,6 +28,6 @@ class Kitsu:
         self.anime = KitsuAnime(api, header)
         self.manga = KitsuManga(api, header)
         self.drama = KitsuDrama(api, header)
-        #self.library = KitsuLib(api, header)
+        self.library = KitsuLib(api, header)
         self.user = KitsuUser(api, header)
         self.auth = KitsuAuth(header, cid, csecret)

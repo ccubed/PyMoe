@@ -8,9 +8,10 @@ Kitsu is the new Hummingbird if you're wondering where Hummingbird went.
 To create an instance do:
 ```python
 from Pymoe import Kitsu
-instance = Kitsu()
+instance = Kitsu(client_id, client_secret)
 ```
-You have three interfaces: anime, manga, drama
+You can get the client_id and client_secret off the forums. There's only one.
+You have six interfaces: anime, manga, drama, auth, user, library
 ```python
 instance.anime.id(id)  # Search anime by ID
 instance.anime.search(term)  # Search anime by term
@@ -18,6 +19,12 @@ instance.manga.id(id)  # Search manga by ID
 instance.manga.search(term)  # Search manga by term
 instance.drama.id(id)  # Search drama by ID
 instance.drama.search(term)  # Search drama by term
+instance.auth.authenticate(username, password)  # Authenticate through oauth
+instance.user.search(term)  # Search for users by name
+instance.user.get(id)  # Search for user by ID
+instance.user.update(id, dictionary, token)  # Update a user's attributes
+instance.user.create(dictionary)  # Create a new user. I haven't tested this.
+instance.library.get(id)  # Get a user's library entries (lol, see source notes)
 ```
 
 ## Anidb
