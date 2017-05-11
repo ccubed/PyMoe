@@ -8,7 +8,7 @@ class KitsuAnime:
         self.apiurl = api
         self.header = header
 
-    def id(self, aid):
+    def get(self, aid):
         """
         Get anime information by id.
 

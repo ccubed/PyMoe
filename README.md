@@ -13,11 +13,11 @@ instance = Kitsu(client_id, client_secret)
 You can get the client_id and client_secret off the forums. There's only one.
 You have six interfaces: anime, manga, drama, auth, user, library
 ```python
-instance.anime.id(id)  # Search anime by ID
+instance.anime.get(id)  # Search anime by ID
 instance.anime.search(term)  # Search anime by term
-instance.manga.id(id)  # Search manga by ID
+instance.manga.get(id)  # Search manga by ID
 instance.manga.search(term)  # Search manga by term
-instance.drama.id(id)  # Search drama by ID
+instance.drama.get(id)  # Search drama by ID
 instance.drama.search(term)  # Search drama by term
 instance.auth.authenticate(username, password)  # Authenticate through oauth
 instance.user.search(term)  # Search for users by name

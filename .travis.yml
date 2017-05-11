@@ -1,0 +1,9 @@
+language: python
+python:
+  - "3.5"
+  - "3.6"
+before_install:
+install:
+notifications:
+after_success:
+script: python -m unittest -v unit_tests.Pymoe

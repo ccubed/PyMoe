@@ -8,7 +8,7 @@ class KitsuManga:
         self.apiurl = api
         self.header = header
 
-    def id(self, aid):
+    def get(self, aid):
         """
         Get manga information by id.
 
