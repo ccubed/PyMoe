@@ -4,6 +4,9 @@ python:
   - "3.6"
 before_install:
 install:
+- pip install requests
+- pip install bs4
+- pip install ujson
 notifications:
 after_success:
 script: python -m unittest -v unit_tests.Pymoe
