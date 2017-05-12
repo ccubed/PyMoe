@@ -1,7 +1,8 @@
 import html
 import xml.etree.ElementTree as ET
 import requests
-from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS
+from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS, NT_SEARCH_ANIME, \
+NT_SEARCH_MANGA, NT_USER_ANIME, NT_USER_MANGA
 from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
@@ -96,6 +97,13 @@ class Mal:
                     status_anime=item.find('status').text,
                     type=item.find('type').text
                 ))
+            return NT_SEARCH_ANIME(
+                airing=[x for x in final_list if x.status.series == "Currently Airing"],
+                finished=[x for x in final_list if x.status.series == "Finished Airing"],
+                unaired=[x for x in final_list if x.status.series == "Not Yet Aired"],
+                dropped=[x for x in final_list if x.status.series == "Dropped"],
+                planned=[x for x in final_list if x.status.series == "Plan to Watch"]
+            )
         else:
             for item in data.findall('entry'):
                 syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
@@ -113,7 +121,13 @@ class Mal:
                     status_manga=item.find('status').text,
                     type=item.find('type').text
                 ))
-        return final_list
+            return NT_SEARCH_MANGA(
+                publishing=[x for x in final_list if x.status.series == "Publishing"],
+                finished=[x for x in final_list if x.status.series == "Finished"],
+                unpublished=[x for x in final_list if x.status.series == "Not Yet Published"],
+                dropped=[x for x in final_list if x.status.series == "Dropped"],
+                planned=[x for x in final_list if x.status.series == "Plan to Read"]
+            )
 
     def _anime_add(self, data):
         """
@@ -263,19 +277,21 @@ class Mal:
         manga_object_list = self.parse_manga_data(manga_data.text)
         return User(uid=uid,
                     name=uname,
-                    anime_list=anime_object_list['data'],
-                    anime_completed=anime_object_list['completed'],
-                    anime_onhold=anime_object_list['onhold'],
-                    anime_dropped=anime_object_list['dropped'],
-                    anime_planned=anime_object_list['planned'],
-                    anime_watching=anime_object_list['watching'],
+                    anime_list=NT_USER_ANIME(
+                            watching=[x for x in anime_object_list['data'] if x.status.user == "Currently Watching"],
+                            completed=[x for x in anime_object_list['data'] if x.status.user == "Completed"],
+                            held=[x for x in anime_object_list['data'] if x.status.user == "On Hold"],
+                            dropped=[x for x in anime_object_list['data'] if x.status.user == "Dropped"],
+                            planned=[x for x in anime_object_list['data'] if x.status.user == "Plan to Watch"]
+                        ),
                     anime_days=anime_object_list['days'],
-                    manga_list=manga_object_list['data'],
-                    manga_completed=manga_object_list['completed'],
-                    manga_onhold=manga_object_list['onhold'],
-                    manga_dropped=manga_object_list['dropped'],
-                    manga_planned=manga_object_list['planned'],
-                    manga_reading=manga_object_list['reading'],
+                    manga_list=NT_USER_MANGA(
+                            reading=[x for x in manga_object_list['data'] if x.status.user == "Currently Reading"],
+                            completed=[x for x in manga_object_list['data'] if x.status.user == "Completed"],
+                            held=[x for x in manga_object_list['data'] if x.status.user == "On Hold"],
+                            dropped=[x for x in manga_object_list['data'] if x.status.user == "Dropped"],
+                            planned=[x for x in manga_object_list['data'] if x.status.user == "Plan to Read"]
+                        ),
                     manga_days=manga_object_list['days'])
 
     @staticmethod
@@ -303,11 +319,6 @@ class Mal:
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
         return {'data': anime_list,
-                'completed': root.find('myinfo').find('user_completed').text,
-                'onhold': root.find('myinfo').find('user_onhold').text,
-                'dropped': root.find('myinfo').find('user_dropped').text,
-                'planned': root.find('myinfo').find('user_plantowatch').text,
-                'watching': root.find('myinfo').find('user_watching').text,
                 'days': root.find('myinfo').find('user_days_spent_watching').text}
 
     @staticmethod
@@ -337,10 +348,5 @@ class Mal:
                 tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
             ))
         return {'data': manga_list,
-                'completed': root.find('myinfo').find('user_completed').text,
-                'onhold': root.find('myinfo').find('user_onhold').text,
-                'dropped': root.find('myinfo').find('user_dropped').text,
-                'planned': root.find('myinfo').find('user_plantoread').text,
-                'reading': root.find('myinfo').find('user_reading').text,
                 'days': root.find('myinfo').find('user_days_spent_watching').text}
 

@@ -107,11 +107,19 @@ NT_MANGA = namedtuple('NT_MANGA', ['search', 'add', 'update', 'delete'])
 
 
 #: Abstraction for User Anime and Manga data.
-NT_TYPEDATA = namedtuple('NT_TYPEDATA', ['list', 'stats'])
+NT_TYPEDATA = namedtuple('NT_TYPEDATA', ['list', 'days'])
 
+#: Abstraction for search instances for Anime
+NT_SEARCH_ANIME = namedtuple("NT_SEARCH_ANIME", ['airing', 'finished', 'unaired', 'dropped', 'planned'])
 
-#: Abstraction for user anime and manga stats.
-NT_STATS = namedtuple('NT_TYPESTATS', ['completed', 'onhold', 'dropped', 'planned', 'watching', 'reading', 'days'])
+#: Abstraction for search instances for Manga
+NT_SEARCH_MANGA = namedtuple("NT_SEARCH_MANGA", ['publishing', 'finished', 'unpublished', 'dropped', 'planned'])
+
+#: Abstraction for user Anime
+NT_USER_ANIME = namedtuple("NT_USER_ANIME", ['watching', 'completed', 'held', 'dropped', 'planned'])
+
+#: Abstraction for user Manga
+NT_USER_MANGA = namedtuple("NT_USER_MANGA", ['reading', 'completed', 'held', 'dropped', 'planned'])
 
 
 #: Status int to Name

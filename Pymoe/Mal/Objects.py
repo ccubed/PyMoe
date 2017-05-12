@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
-from .Abstractions import NT_DATE_OBJ, NT_DATES, NT_EPISODES, NT_FLAGS, NT_REWATCHED, NT_SCORES, NT_STATUS, NT_STORAGE, NT_TYPEDATA, NT_STATS
+from .Abstractions import NT_DATE_OBJ, NT_DATES, NT_EPISODES, NT_FLAGS, \
+NT_REWATCHED, NT_SCORES, NT_STATUS, NT_STORAGE, NT_TYPEDATA
 
 
 class Anime:
@@ -270,17 +271,5 @@ class User:
         """
         self.id = kwargs.get('uid')
         self.name = kwargs.get('name')
-        self.anime = NT_TYPEDATA(list=kwargs.get('anime_list'), stats=NT_STATS(completed=kwargs.get('anime_completed'),
-                                                                               onhold=kwargs.get('anime_onhold'),
-                                                                               dropped=kwargs.get('anime_dropped'),
-                                                                               planned=kwargs.get('anime_planned'),
-                                                                               watching=kwargs.get('anime_watching'),
-                                                                               reading=None,
-                                                                               days=kwargs.get('anime_days')))
-        self.manga = NT_TYPEDATA(list=kwargs.get('manga_list'), stats=NT_STATS(completed=kwargs.get('manga_completed'),
-                                                                               onhold=kwargs.get('manga_onhold'),
-                                                                               dropped=kwargs.get('manga_dropped'),
-                                                                               planned=kwargs.get('manga_planned'),
-                                                                               watching=None,
-                                                                               reading=kwargs.get('manga_reading'),
-                                                                               days=kwargs.get('manga_days')))
+        self.anime = NT_TYPEDATA(list=kwargs.get('anime_list'), days=kwargs.get('anime_days'))
+        self.manga = NT_TYPEDATA(list=kwargs.get('manga_list'), days=kwargs.get('manga_days'))
