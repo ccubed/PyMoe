@@ -9,4 +9,4 @@ install:
 - pip install ujson
 notifications:
 after_success:
-script: python -m unittest -v unit_tests.Pymoe
+script: python -m unittest -v unit_tests.TestPymoe
