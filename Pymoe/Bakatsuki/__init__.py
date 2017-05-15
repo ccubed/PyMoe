@@ -52,7 +52,7 @@ class Bakatsuki:
                             break
                     else:
                         break
-        return projects
+        return projects[0]
 
     def light_novels(self, language="English"):
         """
@@ -86,7 +86,7 @@ class Bakatsuki:
                             break
                     else:
                         break
-        return projects
+        return projects[0]
 
     def teaser(self, language="English"):
         """
@@ -120,7 +120,7 @@ class Bakatsuki:
                             break
                     else:
                         break
-        return projects
+        return projects[0]
 
     def web_novels(self, language="English"):
         """
@@ -154,7 +154,7 @@ class Bakatsuki:
                             break
                     else:
                         break
-        return projects
+        return projects[0]
 
     def chapters(self, title):
         """

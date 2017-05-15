@@ -12,12 +12,12 @@ class KitsuAuth:
         self.csecret = csecret
         self.token_storage = {}
 
-    def remember(self, setting):
+    def set_remember(self, setting):
         """
-        Adjust whether or not KitsuAuth will store your oauth tokens in memory. This enables you to call get on a user 
+        Adjust whether or not KitsuAuth will store your oauth tokens in memory. This enables you to call get on a user
         name or alias and get that user's oauth token for your current session.
-        
-        :param setting: bool 
+
+        :param setting: bool
         :return: Nothing
         """
         self.remember = setting
@@ -26,7 +26,7 @@ class KitsuAuth:
         """
         Obtain an oauth token. Pass username and password. Get a token back. If KitsuAuth is set to remember your tokens
         for this session, it will store the token under the username given.
-        
+
         :param username: username
         :param password: password
         :param alias: A list of alternative names for a person if using the KitsuAuth token storage
@@ -50,8 +50,8 @@ class KitsuAuth:
     def refresh(self, refresh_token):
         """
         Renew an oauth token given an appropriate refresh token.
-        
-        :param refresh_token: The Refresh Token 
+
+        :param refresh_token: The Refresh Token
         :return: A tuple of (token, expiration time in unix time stamp)
         """
         r = requests.post(self.apiurl + "/token", params={"grant_type": "refresh_token", "client_id": self.cid,
@@ -68,8 +68,8 @@ class KitsuAuth:
     def get(self, username):
         """
         If using the remember option and KitsuAuth is storing your tokens, this function will retrieve one.
-        
-        :param username: The username whose token we are retrieving 
+
+        :param username: The username whose token we are retrieving
         :return: A token, NotFound or NotSaving error
         """
         if not self.remember:
