@@ -1,12 +1,13 @@
 import time
 import requests
-
+from .get import *
+from .search import *
 
 class Anilist:
     """
-        Initialize a new instance to the Anilist API. 
+        Initialize a new instance to the Anilist API.
         This instance will handle read only credentials.
-        Pass in your client id and client secret. 
+        Pass in your client id and client secret.
         In calls that require a user's auth token, you will need to provide it.
 
         :ivar dict settings: Various settings used across the module
@@ -23,6 +24,8 @@ class Anilist:
                          'cid': cid,
                          'csecret': csecret}
         self.credentials = None
+        self.search = ASearch(self.readonly, self.settings)
+        self.get = AGet(self.readonly, self.settings)
 
     def readonly(self):
         """
@@ -40,7 +43,7 @@ class Anilist:
 
     def refresh_authorization(self, refresh_token):
         """
-        The oauth flow in general is outside the scope of what this lib wants to provide, 
+        The oauth flow in general is outside the scope of what this lib wants to provide,
         but it does at least provide assistance in refreshing access tokens.
 
         :param refresh_token: your refresh token
