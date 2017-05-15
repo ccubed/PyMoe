@@ -20,7 +20,7 @@ class Bakatsuki:
         self.api = "https://www.baka-tsuki.org/project/api.php"
         self.header = {'User-Agent': 'Pymoe (git.vertinext.com/ccubed/Pymoe)'}
         self.active_id = "56132"
-        self.chapter_regex = re.compile("volume|chapter")
+        self.chapter_regex = re.compile("volume|chapter", re.I)
         self.separate_regex = re.compile("(volume|chapter) (?P<chapter>[0-9]{1,2})")
 
     def active(self):
@@ -176,7 +176,7 @@ class Bakatsuki:
                     if 'image' in link.get('class'):
                         continue
                 if 'href' in link.attrs:
-                    if re.search(self.chapter_regex, link.get('href'), re.I) is not None and not link.get('href').startswith('#'):
+                    if re.search(self.chapter_regex, link.get('href')) is not None and not link.get('href').startswith('#'):
                         volumes.append(link)
             seplist = OrderedDict()
             for item in volumes:

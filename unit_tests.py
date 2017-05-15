@@ -72,8 +72,10 @@ class TestPymoe(unittest.TestCase):
         self.assertEqual("CCubed", test_search['attributes']['name'])
         del test_search
 
+        tokens = kitsu.auth.authenticate("ccubed.techno@gmail.com", os.environ['KITSU_PW'])
+
         update_dict = {"about": "A Computer Programmer, Coder and Future Teacher."}
-        self.assertTrue(kitsu.user.update(119864, update_dict, self.tokens[0]))
+        self.assertTrue(kitsu.user.update(119864, update_dict, tokens[0]))
         del update_dict
 
     def test_kitsuLibrary(self):
@@ -82,11 +84,13 @@ class TestPymoe(unittest.TestCase):
         self.assertIsInstance(test_search, SearchWrapper)
         del test_search
 
-        new_entry = {"status": "current", "progress": 4}
-        lib_entry_id = kitsu.library.create(119864, 244, "anime", self.tokens[0], new_entry)
+        tokens = kitsu.auth.authenticate("ccubed.techno@gmail.com", os.environ['KITSU_PW'])
 
-        self.assertTrue(kitsu.library.update(lib_entry_id, {"progress": 5}, self.tokens[0]))
-        self.assertTrue(kitsu.library.delete(lib_entry_id, self.tokens[0]))
+        new_entry = {"status": "current", "progress": 4}
+        lib_entry_id = kitsu.library.create(119864, 244, "anime", tokens[0], new_entry)
+
+        self.assertTrue(kitsu.library.update(lib_entry_id, {"progress": 5}, tokens[0]))
+        self.assertTrue(kitsu.library.delete(lib_entry_id, tokens[0]))
 
     def test_Mal(self):
         mal = Pymoe.Mal("TeshiKO", os.environ['MAL_PW'])

@@ -40,6 +40,9 @@ class Anilist:
                                       'client_secret': self.settings['csecret']},
                               headers=self.settings['header'])
             self.credentials = r.json()
+            return self.credentials['access_token']
+        else:
+            return self.credentials['access_token']
 
     def refresh_authorization(self, refresh_token):
         """
