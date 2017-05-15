@@ -3,7 +3,8 @@ import unittest
 import Pymoe
 import requests
 from collections import OrderedDict
-from Pymoe.Kitsu.helpers import SearchWrapper # Needed for Instance Comparisons
+from Pymoe.Kitsu.helpers import SearchWrapper  # Needed for Instance Comparisons
+from Pymoe.Mal.Abstractions import NT_SEARCH_ANIME, NT_SEARCH_MANGA  # Needed for instance Comparisons
 
 
 class TestPymoe(unittest.TestCase):
@@ -90,14 +91,14 @@ class TestPymoe(unittest.TestCase):
     def test_Mal(self):
         mal = Pymoe.Mal("TeshiKO", os.environ['MAL_PW'])
         test_search = mal.anime.search("Bleach")
-        self.assertIsInstance(test_search, list)
+        self.assertIsInstance(test_search, NT_SEARCH_ANIME)
         self.assertEqual(test_search[0].title, "Bleach")
         self.assertEqual(test_search[0].id, "269")
         test_anime = test_search[0]
         del test_search
 
         test_search = mal.manga.search("King")
-        self.assertIsInstance(test_search, list)
+        self.assertIsInstance(test_search, NT_SEARCH_MANGA)
         self.assertEqual(test_search[0].title, "Kareshi Kanojo no Jijou")
         self.assertEqual(test_search[0].id, "17")
         test_manga = test_search[0]
@@ -127,7 +128,7 @@ class TestPymoe(unittest.TestCase):
         alist = Pymoe.Anilist(os.environ['ANILIST_CSECRET'], os.environ['ANILIST_CID'])
 
         # Search
-        self.assertIsInstance(alist.search.character("Rory"), list)
+        self.assertIsInstance(alist.search.character("Cecil"), list)
         self.assertIsInstance(alist.search.anime("Bleach"), list)
         self.assertIsInstance(alist.search.manga("Bleach"), list)
         self.assertIsInstance(alist.search.staff("Miyuki"), list)
@@ -141,6 +142,6 @@ class TestPymoe(unittest.TestCase):
         self.assertIsInstance(alist.get("character", 11), dict)
 
         # Get reviews
-        self.assertIsInstance(alist.get_reviews(21049, "anime", False, 2174), dict)
-        self.assertIsInstance(alist.get_reviews(21049, "anime", True), dict)
-        self.assertIsInstance(alist.get_reviews("Remiak", "user"), dict)
+        self.assertIsInstance(alist.get.get_reviews(21049, "anime", False, 2174), dict)
+        self.assertIsInstance(alist.get.get_reviews(21049, "anime", True), dict)
+        self.assertIsInstance(alist.get.get_reviews("Remiak", "user"), dict)

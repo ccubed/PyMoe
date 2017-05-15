@@ -65,6 +65,7 @@ class KitsuAuth:
 
         return jsd['access_token'], int(jsd['expires_in']) + int(jsd['created_at'])
 
+    #TODO: Test that this is now fixed
     def get(self, username):
         """
         If using the remember option and KitsuAuth is storing your tokens, this function will retrieve one.
@@ -79,9 +80,9 @@ class KitsuAuth:
             raise UserNotFound
 
         if self.token_storage[username]['expiration'] < time.time():
-            new_token = self.refresh(self.token_storage[username]['refresh_token'])
-            self.token_storage[username]['access_token'] = new_token[0]
+            new_token = self.refresh(self.token_storage[username]['refresh'])
+            self.token_storage[username]['token'] = new_token[0]
             self.token_storage[username]['expiration'] = new_token[1]
             return new_token[0]
         else:
-            return self.token_storage[username]['access_token']
+            return self.token_storage[username]['token']

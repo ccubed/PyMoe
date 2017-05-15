@@ -176,7 +176,7 @@ class Bakatsuki:
                     if 'image' in link.get('class'):
                         continue
                 if 'href' in link.attrs:
-                    if re.search(self.chapter_regex, link.get('href')) is not None and not link.get('href').startswith('#'):
+                    if re.search(self.chapter_regex, link.get('href'), re.I) is not None and not link.get('href').startswith('#'):
                         volumes.append(link)
             seplist = OrderedDict()
             for item in volumes:
@@ -198,13 +198,13 @@ class Bakatsuki:
                          params={'action': 'query', 'prop': 'pageimages', 'pageids': pageid, 'format': 'json'},
                          headers=self.header)
         jsd = r.json()
-        image = "File:" + jsd['query']['pages'][pageid]['pageimage']
+        image = "File:" + jsd['query']['pages'][str(pageid)]['pageimage']
         r = requests.get(self.api,
                          params={'action': 'query', 'prop': 'imageinfo', 'iiprop': 'url', 'titles': image,
                                  'format': 'json'},
                          headers=self.header)
         jsd = r.json()
-        return jsd['query']['pages'][list(jsd.keys)[0]]['imageinfo']['url']
+        return jsd['query']['pages'][list(jsd['query']['pages'].keys())[0]]['imageinfo'][0]['url']
 
     def get_text(self, title):
         """

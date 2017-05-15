@@ -6,7 +6,7 @@ class ASearch:
     def __init__(self, readonly, settings):
         self.settings = settings
         self.rl = readonly
-        
+
     def character(self, term):
         """
         Search for a character by term.
