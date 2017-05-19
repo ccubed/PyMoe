@@ -139,13 +139,13 @@ class TestPymoe(unittest.TestCase):
         self.assertIsInstance(alist.search.studio("go"), list)
 
         # Get
-        self.assertIsInstance(alist.get("anime", 49), dict)
-        self.assertIsInstance(alist.get("manga", 30014), dict)
-        self.assertIsInstance(alist.get("staff", 95004), dict)
-        self.assertIsInstance(alist.get("studio", 2), dict)
-        self.assertIsInstance(alist.get("character", 11), dict)
+        self.assertIsInstance(alist.get.anime(49), dict)
+        self.assertIsInstance(alist.get.manga(30014), dict)
+        self.assertIsInstance(alist.get.staff(95004), dict)
+        self.assertIsInstance(alist.get.studio(2), dict)
+        self.assertIsInstance(alist.get.character(11), dict)
 
         # Get reviews
-        self.assertIsInstance(alist.get.get_reviews(21049, "anime", False, 2174), dict)
-        self.assertIsInstance(alist.get.get_reviews(21049, "anime", True), dict)
-        self.assertIsInstance(alist.get.get_reviews("Remiak", "user"), dict)
+        self.assertIsInstance(alist.get.reviews(21049, "anime", False, 2174), dict)
+        self.assertIsInstance(alist.get.reviews(21049, "anime", True), dict)
+        self.assertIsInstance(alist.get.reviews("Remiak", "user"), dict)

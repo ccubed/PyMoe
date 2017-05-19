@@ -5,32 +5,10 @@ class AGet:
     def __init__(self, readonly, settings):
         self.settings = settings
         self.rl = readonly
-        self.mapping = {
-            'anime': self.__anime, 'manga': self.__manga,
-            'staff': self.__staff, 'studio': self.__studio,
-            'character': self.__character
-        }
 
-    def get(self, ttype, item_id):
+    def anime(self, item_id):
         """
-        This is a universal function. It's the only function this class
-        publically exposes. It serves as the work horse for the rest of this
-        classes uses. You need only pass a type and the id. This class and
-        this function will handle the rest behind the scenes. This is not used
-        for reviews.
-
-        :param str ttype: One of anime, manga, staff, studio, character
-        :param int item_id: The Item ID
-        """
-        if ttype in self.mapping:
-            return self.mapping[ttype](item_id)
-        else:
-            raise SyntaxError(
-                "{} is not an accepted type. Should be one of: {}".format(ttype, ", ".join(self.mapping.keys())))
-
-    def __anime(self, item_id):
-        """
-        The internal function to retrieve an anime's details.
+        The function to retrieve an anime's details.
 
         :param int item_id: the anime's ID
         :return: dict or None
@@ -52,9 +30,9 @@ class AGet:
             else:
                 return jsd
 
-    def __manga(self, item_id):
+    def manga(self, item_id):
         """
-        The internal function to retrieve an anime's details.
+        The function to retrieve an anime's details.
 
         :param int item_id: the anime's ID
         :return: dict or None
@@ -76,9 +54,9 @@ class AGet:
             else:
                 return jsd
 
-    def __staff(self, item_id):
+    def staff(self, item_id):
         """
-        The internal function to retrieve a manga's details.
+        The function to retrieve a manga's details.
 
         :param int item_id: the anime's ID
         :return: dict or None
@@ -100,9 +78,9 @@ class AGet:
             else:
                 return jsd
 
-    def __studio(self, item_id):
+    def studio(self, item_id):
         """
-        The internal function to retrieve a studio's details.
+        The function to retrieve a studio's details.
 
         :param int item_id: the anime's ID
         :return: dict or None
@@ -124,9 +102,9 @@ class AGet:
             else:
                 return jsd
 
-    def __character(self, item_id):
+    def character(self, item_id):
         """
-        The internal function to retrieve a character's details.
+        The function to retrieve a character's details.
 
         :param int item_id: the anime's ID
         :return: dict or None
@@ -148,7 +126,7 @@ class AGet:
             else:
                 return jsd
 
-    def get_reviews(self, item_id, item_type, get_all=True, review_id=None):
+    def reviews(self, item_id, item_type, get_all=True, review_id=None):
         """
         This function is used to get reviews. Reviews come in many shapes and sizes so it
         was unrealistic to stick them all in get and try to work that function that way.
