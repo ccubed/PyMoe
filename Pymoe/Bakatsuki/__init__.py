@@ -21,7 +21,7 @@ class Bakatsuki:
         self.header = {'User-Agent': 'Pymoe (git.vertinext.com/ccubed/Pymoe)'}
         self.active_id = "56132"
         self.chapter_regex = re.compile("volume|chapter", re.I)
-        self.separate_regex = re.compile("(volume|chapter) (?P<chapter>[0-9]{1,2})")
+        self.separate_regex = re.compile("(volume|chapter) (?P<chapter>[0-9]{1,2})", re.I)
 
     def active(self):
         """
@@ -180,11 +180,18 @@ class Bakatsuki:
                         volumes.append(link)
             seplist = OrderedDict()
             for item in volumes:
-                result = re.search(self.separate_regex, item.get('title').lower())
-                if result.group('chapter').lstrip('0') in seplist:
-                    seplist[result.group('chapter').lstrip('0')].append([item.get('href'), item.get('title')])
+                if 'title' in item.attrs:
+                    result = re.search(self.separate_regex, item.get('title').lower())
                 else:
-                    seplist[result.group('chapter').lstrip('0')] = [[item.get('href'), item.get('title')]]
+                    result = re.search(self.separate_regex, item.text.lower())
+
+                if result and result.groups():
+                    if result.group('chapter').lstrip('0') in seplist:
+                        seplist[result.group('chapter').lstrip('0')].append([item.get('href'),
+                                                                             item.get('title') if 'title' in item.attrs else item.text])
+                    else:
+                        seplist[result.group('chapter').lstrip('0')] = [[item.get('href'),
+                                                                         item.get('title') if 'title' in item.attrs else item.text]]
             return seplist
 
     def cover(self, pageid):

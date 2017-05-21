@@ -96,16 +96,16 @@ class TestPymoe(unittest.TestCase):
         mal = Pymoe.Mal("TeshiKO", os.environ['MAL_PW'])
         test_search = mal.anime.search("Bleach")
         self.assertIsInstance(test_search, NT_SEARCH_ANIME)
-        self.assertEqual(test_search[0].title, "Bleach")
-        self.assertEqual(test_search[0].id, "269")
-        test_anime = test_search[0]
+        self.assertEqual(test_search.finished[0].title, "Bleach")
+        self.assertEqual(test_search.finished[0].id, "269")
+        test_anime = test_search.finished[0]
         del test_search
 
         test_search = mal.manga.search("King")
         self.assertIsInstance(test_search, NT_SEARCH_MANGA)
-        self.assertEqual(test_search[0].title, "Kareshi Kanojo no Jijou")
-        self.assertEqual(test_search[0].id, "17")
-        test_manga = test_search[0]
+        self.assertEqual(test_search.finished[0].title, "Kareshi Kanojo no Jijou")
+        self.assertEqual(test_search.finished[0].id, "17")
+        test_manga = test_search.finished[0]
         del test_search
 
         test_anime.status.user = "Currently Watching"
