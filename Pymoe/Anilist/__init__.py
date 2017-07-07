@@ -13,10 +13,10 @@ class Anilist:
         :ivar dict settings: Various settings used across the module
         :ivar ALAuth auth: Handle Authorization endpoints
     """
-    def __init__(self, csecret, cid):
+    def __init__(self, cid, csecret):
         """
-        :param csecret: Client Secret
         :param cid: Client ID
+        :param csecret: Client Secret
         """
         self.settings = {'header': {'Content-Type': 'application/x-www-form-urlencoded',
                                     'User-Agent': 'Pymoe (git.vertinext.com/ccubed/PyMoe'},

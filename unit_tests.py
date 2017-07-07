@@ -147,5 +147,5 @@ class TestPymoe(unittest.TestCase):
 
         # Get reviews
         self.assertIsInstance(alist.get.reviews(21049, "anime", False, 2174), dict)
-        self.assertIsInstance(alist.get.reviews(21049, "anime", True), dict)
+        self.assertIsInstance(alist.get.reviews(21049, "anime", True), list)
         self.assertIsInstance(alist.get.reviews("Remiak", "user"), dict)
