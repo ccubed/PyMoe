@@ -69,6 +69,11 @@ class Anime:
         self.xml_tags = ['episodes', 'scores', 'status', 'dates', 'storage', 'rewatched', 'flags', 'priority',
                          'comments', 'tags', 'fansub_group']
 
+    @staticmethod
+    def format_date(data):
+        date_list = data.split("-")
+        return "{}{}{}".format(date_list[1], date_list[2], date_list[0])
+
     def to_xml(self):
         """
         Convert data to XML String.
@@ -93,10 +98,10 @@ class Anime:
                     elif x == 'dates':
                         if self.dates.user.start:
                             start = ET.SubElement(root, 'date_start')
-                            start.text = self.dates.user.start
+                            start.text = str(self.format_date(self.dates.user.start))
                         if self.dates.user.end:
                             end = ET.SubElement(root, 'date_finish')
-                            end.text = self.dates.user.end
+                            end.text = str(self.format_date(self.dates.user.end))
                     elif x == 'storage':
                         if self.storage.type:
                             stype = ET.SubElement(root, 'storage_type')
@@ -220,10 +225,10 @@ class Manga:
                     elif x == 'dates':
                         if self.dates.user.start:
                             start = ET.SubElement(root, 'date_start')
-                            start.text = str(self.dates.user.start)
+                            start.text = str(self.format_date(self.dates.user.start))
                         if self.dates.user.end:
                             end = ET.SubElement(root, 'date_finish')
-                            end.text = str(self.dates.user.end)
+                            end.text = str(self.format_date(self.dates.user.end))
                     elif x == 'storage':
                         if self.storage.type:
                             stype = ET.SubElement(root, 'storage_type')
