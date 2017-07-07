@@ -268,8 +268,20 @@ class Mal:
         """
         anime_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'anime'},
                                   headers=self.header)
+
+        if anime_data.status_code != 200:
+            print("Anime_Data request failed.")
+            print(anime_data.text)
+            return None
+
         manga_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'manga'},
                                   headers=self.header)
+
+        if manga_data.status_code != 200:
+            print("Manga_Data request failed.")
+            print(manga_data.text)
+            return None
+
         root = ET.fromstring(anime_data.text)
         uid = root.find('myinfo').find('user_id').text
         uname = root.find('myinfo').find('user_name').text

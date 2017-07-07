@@ -14,7 +14,7 @@ class AGet:
         :return: dict or None
         :rtype: dict or NoneType
         """
-        r = requests.get(self.settings['apiurl'] + "anime/{}".format(item_id),
+        r = requests.get(self.settings['apiurl'] + "/anime/{}".format(item_id),
                          params={'access_token': self.rl()},
                          headers=self.settings['header'])
         jsd = r.text
@@ -38,7 +38,7 @@ class AGet:
         :return: dict or None
         :rtype: dict or NoneType
         """
-        r = requests.get(self.settings['apiurl'] + "manga/{}".format(item_id),
+        r = requests.get(self.settings['apiurl'] + "/manga/{}".format(item_id),
                          params={'access_token': self.rl()},
                          headers=self.settings['header'])
         jsd = r.text
@@ -62,7 +62,7 @@ class AGet:
         :return: dict or None
         :rtype: dict or NoneType
         """
-        r = requests.get(self.settings['apiurl'] + "anime/{}".format(item_id),
+        r = requests.get(self.settings['apiurl'] + "/staff/{}".format(item_id),
                          params={'access_token': self.rl()},
                          headers=self.settings['header'])
         jsd = r.text
@@ -86,7 +86,7 @@ class AGet:
         :return: dict or None
         :rtype: dict or NoneType
         """
-        r = requests.get(self.settings['apiurl'] + "studio/{}".format(item_id),
+        r = requests.get(self.settings['apiurl'] + "/studio/{}".format(item_id),
                          params={'access_token': self.rl()},
                          headers=self.settings['header'])
         jsd = r.text
@@ -110,7 +110,7 @@ class AGet:
         :return: dict or None
         :rtype: dict or NoneType
         """
-        r = requests.get(self.settings['apiurl'] + "character/{}".format(item_id),
+        r = requests.get(self.settings['apiurl'] + "/character/{}".format(item_id),
                          params={'access_token': self.rl()},
                          headers=self.settings['header'])
         jsd = r.text
@@ -149,7 +149,7 @@ class AGet:
                 if item_type == "user":
                     raise SyntaxError("User's can only return all their reviews.")
                 else:
-                    r = requests.get(self.settings['apiurl'] + "{}/review/{}".format(item_type, review_id),
+                    r = requests.get(self.settings['apiurl'] + "/{}/review/{}".format(item_type, review_id),
                                      params={'access_token': self.rl()},
                                      headers=self.settings['header'])
 
@@ -164,7 +164,7 @@ class AGet:
                         else:
                             return jsd
             else:
-                r = requests.get(self.settings['apiurl'] + "{}/{}/reviews".format(item_type, item_id),
+                r = requests.get(self.settings['apiurl'] + "/{}/{}/reviews".format(item_type, item_id),
                                  params={'access_token': {self.rl()}},
                                  headers=self.settings['header'])
 
