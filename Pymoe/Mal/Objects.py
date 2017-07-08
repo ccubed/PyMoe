@@ -3,6 +3,10 @@ from .Abstractions import NT_DATE_OBJ, NT_DATES, NT_EPISODES, NT_FLAGS, \
 NT_REWATCHED, NT_SCORES, NT_STATUS, NT_STORAGE, NT_TYPEDATA
 
 
+def format_date(data):
+    date_list = data.split("-")
+    return "{}{}{}".format(date_list[1], date_list[2], date_list[0])
+
 class Anime:
     """
     An encapsulated Mal Anime Object for updates and adds.\n
@@ -69,11 +73,6 @@ class Anime:
         self.xml_tags = ['episodes', 'scores', 'status', 'dates', 'storage', 'rewatched', 'flags', 'priority',
                          'comments', 'tags', 'fansub_group']
 
-    @staticmethod
-    def format_date(data):
-        date_list = data.split("-")
-        return "{}{}{}".format(date_list[1], date_list[2], date_list[0])
-
     def to_xml(self):
         """
         Convert data to XML String.
@@ -98,10 +97,10 @@ class Anime:
                     elif x == 'dates':
                         if self.dates.user.start:
                             start = ET.SubElement(root, 'date_start')
-                            start.text = str(self.format_date(self.dates.user.start))
+                            start.text = format_date(self.dates.user.start)
                         if self.dates.user.end:
                             end = ET.SubElement(root, 'date_finish')
-                            end.text = str(self.format_date(self.dates.user.end))
+                            end.text = format_date(self.dates.user.end)
                     elif x == 'storage':
                         if self.storage.type:
                             stype = ET.SubElement(root, 'storage_type')
@@ -225,10 +224,10 @@ class Manga:
                     elif x == 'dates':
                         if self.dates.user.start:
                             start = ET.SubElement(root, 'date_start')
-                            start.text = str(self.format_date(self.dates.user.start))
+                            start.text = format_date(self.dates.user.start)
                         if self.dates.user.end:
                             end = ET.SubElement(root, 'date_finish')
-                            end.text = str(self.format_date(self.dates.user.end))
+                            end.text = format_date(self.dates.user.end)
                     elif x == 'storage':
                         if self.storage.type:
                             stype = ET.SubElement(root, 'storage_type')
