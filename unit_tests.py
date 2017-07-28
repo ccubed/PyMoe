@@ -92,38 +92,6 @@ class TestPymoe(unittest.TestCase):
         self.assertTrue(kitsu.library.update(lib_entry_id, {"progress": 5}, tokens[0]))
         self.assertTrue(kitsu.library.delete(lib_entry_id, tokens[0]))
 
-    def test_Mal(self):
-        mal = Pymoe.Mal("TeshiKO", os.environ['MAL_PW'])
-        test_search = mal.anime.search("Bleach")
-        self.assertIsInstance(test_search, NT_SEARCH_ANIME)
-        self.assertEqual(test_search.finished[0].title, "Bleach")
-        self.assertEqual(test_search.finished[0].id, "269")
-        test_anime = test_search.finished[0]
-        del test_search
-
-        test_search = mal.manga.search("King")
-        self.assertIsInstance(test_search, NT_SEARCH_MANGA)
-        self.assertEqual(test_search.finished[0].title, "Kareshi Kanojo no Jijou")
-        self.assertEqual(test_search.finished[0].id, "17")
-        test_manga = test_search.finished[0]
-        del test_search
-
-        test_anime.status.user = "Currently Watching"
-        test_anime.episodes.current = 1
-        self.assertTrue(mal.anime.add(test_anime))
-        test_anime.episodes.current = 2
-        self.assertTrue(mal.anime.update(test_anime))
-        self.assertTrue(mal.anime.delete(test_anime))
-        del test_anime
-
-        test_manga.status.user = "Currently Reading"
-        test_manga.chapters.current = 1
-        test_manga.volumes.current = 1
-        self.assertTrue(mal.manga.add(test_manga))
-        test_manga.chapters.current = 2
-        self.assertTrue(mal.manga.update(test_manga))
-        self.assertTrue(mal.manga.delete(test_manga))
-
     def test_VNDB(self):
         vndb = Pymoe.VNDB()
         self.assertIsInstance(vndb.dbstats(), dict)
