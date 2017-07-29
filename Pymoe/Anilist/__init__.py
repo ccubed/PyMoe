@@ -19,7 +19,7 @@ class Anilist:
         :param csecret: Client Secret
         """
         self.settings = {'header': {'Content-Type': 'application/x-www-form-urlencoded',
-                                    'User-Agent': 'Pymoe (git.vertinext.com/ccubed/PyMoe'},
+                                    'User-Agent': 'Pymoe (github.com/ccubed/PyMoe)'},
                          'apiurl': 'https://anilist.co/api',
                          'cid': cid,
                          'csecret': csecret}
@@ -34,11 +34,13 @@ class Anilist:
         :return: Nothing
         :raises: JSONDecodeError
         """
+        print(self.credentials)
         if self.credentials is None or int(self.credentials['expires']) < time.time():
             r = requests.post(self.settings['apiurl'] + "/auth/access_token",
                               params={'grant_type': 'client_credentials', 'client_id': self.settings['cid'],
                                       'client_secret': self.settings['csecret']},
                               headers=self.settings['header'])
+            print(r.status_code)
             self.credentials = r.json()
             return self.credentials['access_token']
         else:
