@@ -72,7 +72,7 @@ class KitsuLib:
         r = requests.post(self.apiurl + "/library-entries", json=final_dict, headers=final_headers)
         
         if r.status_code != 200:
-            print(r.text)
+            raise ConnectionError(r.text)
             
         jsd = r.json()
         
@@ -95,7 +95,7 @@ class KitsuLib:
         r = requests.patch(self.apiurl + "/library-entries/{}".format(eid), json=final_dict, headers=final_headers)
         
         if r.status_code != 200:
-            print(r.text)
+            raise ConnectionError(r.text)
             
         return True
         
@@ -114,6 +114,6 @@ class KitsuLib:
         r = requests.delete(self.apiurl + "/library-entries/{}".format(eid), headers=final_headers)
         
         if r.status_code != 200:
-            print(r.text)
+            raise ConnectionError(r.text)
             
         return True

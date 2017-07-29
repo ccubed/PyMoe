@@ -2,10 +2,11 @@ import html
 import xml.etree.ElementTree as ET
 import requests
 from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS, NT_SEARCH_ANIME, \
-NT_SEARCH_MANGA, NT_USER_ANIME, NT_USER_MANGA
+    NT_SEARCH_MANGA, NT_USER_ANIME, NT_USER_MANGA
 from requests.auth import HTTPBasicAuth
 from .Objects import Anime, Manga, User
 from ..errors import *
+
 
 class Mal:
     """
@@ -39,7 +40,8 @@ class Mal:
 
         :raises: :class:`Pymoe.errors.UserLoginFailed`
         """
-        r = requests.get(self.apiurl+"account/verify_credentials.xml", auth=HTTPBasicAuth(self._username, self._password),
+        r = requests.get(self.apiurl + "account/verify_credentials.xml",
+                         auth=HTTPBasicAuth(self._username, self._password),
                          headers=self.header)
         if r.status_code != 200:
             raise UserLoginFailed("Username or Password incorrect.")
@@ -92,7 +94,8 @@ class Mal:
                     average=item.find('score').text,
                     anime_start=item.find('start_date').text,
                     anime_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
+                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find(
+                        'synopsis').text else None,
                     image=item.find('image').text,
                     status_anime=item.find('status').text,
                     type=item.find('type').text
@@ -116,7 +119,8 @@ class Mal:
                     average=item.find('score').text,
                     manga_start=item.find('start_date').text,
                     manga_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find('synopsis').text else None,
+                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find(
+                        'synopsis').text else None,
                     image=item.find('image').text,
                     status_manga=item.find('status').text,
                     type=item.find('type').text
@@ -141,8 +145,7 @@ class Mal:
         """
         if isinstance(data, Anime):
             xmlstr = data.to_xml()
-            print(self.apiurl+"animelist/add/{}.xml".format(data.id))
-            r = requests.get(self.apiurl+"animelist/add/{}.xml".format(data.id),
+            r = requests.get(self.apiurl + "animelist/add/{}.xml".format(data.id),
                              params={'data': xmlstr},
                              auth=HTTPBasicAuth(self._username, self._password),
                              headers=self.header)
@@ -150,7 +153,8 @@ class Mal:
                 raise ServerError(r.text, r.status_code)
             return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
 
     def _manga_add(self, data):
         """
@@ -164,7 +168,7 @@ class Mal:
         """
         if isinstance(data, Manga):
             xmlstr = data.to_xml()
-            r = requests.get(self.apiurl+"mangalist/add/{}.xml".format(data.id),
+            r = requests.get(self.apiurl + "mangalist/add/{}.xml".format(data.id),
                              params={'data': xmlstr},
                              auth=HTTPBasicAuth(self._username, self._password),
                              headers=self.header)
@@ -172,7 +176,8 @@ class Mal:
                 raise ServerError(r.text, r.status_code)
             return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
 
     def _anime_update(self, data):
         """
@@ -186,15 +191,16 @@ class Mal:
         """
         if isinstance(data, Anime):
             xmlstr = data.to_xml()
-            r = requests.get(self.apiurl+"animelist/update/{}.xml".format(data.id),
-                              params={'data': xmlstr},
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
+            r = requests.get(self.apiurl + "animelist/update/{}.xml".format(data.id),
+                             params={'data': xmlstr},
+                             auth=HTTPBasicAuth(self._username, self._password),
+                             headers=self.header)
             if r.status_code != 200:
                 raise ServerError(r.text, r.status_code)
             return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
 
     def _manga_update(self, data):
         """
@@ -208,15 +214,16 @@ class Mal:
         """
         if isinstance(data, Manga):
             xmlstr = data.to_xml()
-            r = requests.get(self.apiurl+"mangalist/update/{}.xml".format(data.id),
-                              params={'data': xmlstr},
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
+            r = requests.get(self.apiurl + "mangalist/update/{}.xml".format(data.id),
+                             params={'data': xmlstr},
+                             auth=HTTPBasicAuth(self._username, self._password),
+                             headers=self.header)
             if r.status_code != 200:
                 raise ServerError(r.text, r.status_code)
             return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
 
     def _anime_delete(self, data):
         """
@@ -229,14 +236,15 @@ class Mal:
         :return: True on success
         """
         if isinstance(data, Anime):
-            r = requests.get(self.apiurl+"animelist/delete/{}.xml".format(data.id),
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
+            r = requests.get(self.apiurl + "animelist/delete/{}.xml".format(data.id),
+                             auth=HTTPBasicAuth(self._username, self._password),
+                             headers=self.header)
             if r.status_code != 200:
                 raise ServerError(r.text, r.status_code)
             return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
 
     def _manga_delete(self, data):
         """
@@ -249,14 +257,15 @@ class Mal:
         :return: True on success
         """
         if isinstance(data, Manga):
-            r = requests.get(self.apiurl+"mangalist/delete/{}.xml".format(data.id),
-                              auth=HTTPBasicAuth(self._username, self._password),
-                              headers=self.header)
+            r = requests.get(self.apiurl + "mangalist/delete/{}.xml".format(data.id),
+                             auth=HTTPBasicAuth(self._username, self._password),
+                             headers=self.header)
             if r.status_code != 200:
                 raise ServerError(r.text, r.status_code)
             return True
         else:
-            raise SyntaxError("Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+            raise SyntaxError(
+                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
 
     def user(self, name):
         """
@@ -270,17 +279,17 @@ class Mal:
                                   headers=self.header)
 
         if anime_data.status_code != 200:
-            print("Anime_Data request failed.")
-            print(anime_data.text)
-            return None
+            raise ConnectionError(
+                "Anime Data Request failed. Please Open a bug on https://github.com/ccubed/Pymoe and include the following data.\nStatus Code: {}\n\nText:{}".format(
+                    anime_data.status_code, anime_data.text))
 
         manga_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'manga'},
                                   headers=self.header)
 
         if manga_data.status_code != 200:
-            print("Manga_Data request failed.")
-            print(manga_data.text)
-            return None
+            raise ConnectionError(
+                "Manga Data Request failed. Please Open a bug on https://github.com/ccubed/Pymoe and include the following data.\nStatus Code: {}\n\nText:{}".format(
+                    manga_data.status_code, manga_data.text))
 
         root = ET.fromstring(anime_data.text)
         uid = root.find('myinfo').find('user_id').text
@@ -290,20 +299,20 @@ class Mal:
         return User(uid=uid,
                     name=uname,
                     anime_list=NT_USER_ANIME(
-                            watching=[x for x in anime_object_list['data'] if x.status.user == "Currently Watching"],
-                            completed=[x for x in anime_object_list['data'] if x.status.user == "Completed"],
-                            held=[x for x in anime_object_list['data'] if x.status.user == "On Hold"],
-                            dropped=[x for x in anime_object_list['data'] if x.status.user == "Dropped"],
-                            planned=[x for x in anime_object_list['data'] if x.status.user == "Plan to Watch"]
-                        ),
+                        watching=[x for x in anime_object_list['data'] if x.status.user == "Currently Watching"],
+                        completed=[x for x in anime_object_list['data'] if x.status.user == "Completed"],
+                        held=[x for x in anime_object_list['data'] if x.status.user == "On Hold"],
+                        dropped=[x for x in anime_object_list['data'] if x.status.user == "Dropped"],
+                        planned=[x for x in anime_object_list['data'] if x.status.user == "Plan to Watch"]
+                    ),
                     anime_days=anime_object_list['days'],
                     manga_list=NT_USER_MANGA(
-                            reading=[x for x in manga_object_list['data'] if x.status.user == "Currently Reading"],
-                            completed=[x for x in manga_object_list['data'] if x.status.user == "Completed"],
-                            held=[x for x in manga_object_list['data'] if x.status.user == "On Hold"],
-                            dropped=[x for x in manga_object_list['data'] if x.status.user == "Dropped"],
-                            planned=[x for x in manga_object_list['data'] if x.status.user == "Plan to Read"]
-                        ),
+                        reading=[x for x in manga_object_list['data'] if x.status.user == "Currently Reading"],
+                        completed=[x for x in manga_object_list['data'] if x.status.user == "Completed"],
+                        held=[x for x in manga_object_list['data'] if x.status.user == "On Hold"],
+                        dropped=[x for x in manga_object_list['data'] if x.status.user == "Dropped"],
+                        planned=[x for x in manga_object_list['data'] if x.status.user == "Plan to Read"]
+                    ),
                     manga_days=manga_object_list['days'])
 
     @staticmethod
@@ -361,4 +370,3 @@ class Mal:
             ))
         return {'data': manga_list,
                 'days': root.find('myinfo').find('user_days_spent_watching').text}
-

@@ -39,12 +39,12 @@ class TestPymoe(unittest.TestCase):
         kitsu = Pymoe.Kitsu("dd031b32d2f56c990b1425efe6c42ad847e7fe3ab46bf1299f05ecd856bdb7dd", "54d7307928f63414defd96399fc31ba847961ceaecef3a5fd93144e960c0e151")
         test_search = kitsu.manga.get(20463)
         self.assertIsInstance(test_search, dict)
-        self.assertEqual(test_search['data']['attributes']['canonicalTitle'], "The Devil King Is Bored")
+        self.assertIsInstance(test_search['data']['attributes']['canonicalTitle'], str)
         del test_search
 
         test_search = kitsu.manga.search("King")
         self.assertIsInstance(test_search, SearchWrapper)
-        self.assertEqual(test_search[0]['attributes']['canonicalTitle'], "The Devil King Is Bored")
+        self.assertIsInstance(test_search[0]['attributes']['canonicalTitle'], str)
         del test_search
 
     def test_kitsuDrama(self):
