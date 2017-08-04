@@ -55,7 +55,7 @@ class Anilist:
         """
         r = requests.post(self.settings['apiurl'] + "/auth/access_token",
                           params={'grant_type': 'refresh_token', 'client_id': self.settings['cid'],
-                                  'client_secret': self.settings['csecret'], 'refresh_tokne': refresh_token},
+                                  'client_secret': self.settings['csecret'], 'refresh_token': refresh_token},
                           headers=self.settings['header'])
         if r.status_code == 200:
             return r.json()
