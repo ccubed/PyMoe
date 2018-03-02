@@ -2,9 +2,8 @@ import json
 import requests
 
 class AGet:
-    def __init__(self, readonly, settings):
+    def __init__(self, settings):
         self.settings = settings
-        self.rl = readonly
 
     def anime(self, item_id):
         """
@@ -14,21 +13,57 @@ class AGet:
         :return: dict or None
         :rtype: dict or NoneType
         """
-        r = requests.get(self.settings['apiurl'] + "/anime/{}".format(item_id),
-                         params={'access_token': self.rl()},
-                         headers=self.settings['header'])
+        query_string = '''
+        query ($id: Int) {
+        Media(id: $id, type: ANIME) {
+        id
+        title {
+            romaji
+            english
+        }
+        startDate {
+            year
+            month
+            day
+        }
+        endDate {
+            year
+            month
+            day
+        }
+        coverImage {
+            large
+        }
+        bannerImage
+        format
+        type
+        status
+        episodes
+        season
+        description
+        averageScore
+        genres
+        synonyms
+        nextAiringEpisode {
+            airingAt
+            timeUntilAiring
+            episode
+        }
+        }
+        }
+        '''
+        vars = {'id': item_id}
+        r = requests.post(self.settings['apiurl'],
+                         headers=self.settings['header'],
+                         data={'query':query_string, 'variables':vars})
         jsd = r.text
 
-        # AniList can return a newline for no results for some reason
-        if jsd == '\n' or r.status_code == 404:
+        try:
+            jsd = json.loads(jsd)
+        except ValueError:
             return None
         else:
-            jsd = json.loads(jsd)
-            if 'error' in jsd:
-                # it can also return a json error
-                return None
-            else:
-                return jsd
+            return jsd
 
     def manga(self, item_id):
         """

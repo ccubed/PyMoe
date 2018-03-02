@@ -3,9 +3,8 @@ import requests
 
 
 class ASearch:
-    def __init__(self, readonly, settings):
+    def __init__(self, settings):
         self.settings = settings
-        self.rl = readonly
 
     def character(self, term):
         """

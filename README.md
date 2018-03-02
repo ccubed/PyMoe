@@ -34,46 +34,7 @@ instance.library.get(id)  # Get a user's library entries (lol, see source notes)
 Status: Not Started
 
 ## Anilist
-Ready to go! My specific implementation will handle your readonly credentials.
-Specific user credentials are an exercise for the programmer.
-To create an interface:
-```python
-from Pymoe import Anilist
-instance = Anilist(client_id, client_secret)
-```
-You get a client_id and client_secret by going to your user settings and clicking developer. There you can make a new app.
-Afterwards, Anilist has four interfaces. Get, Search, Library and Users. At the moment, Get and Search work.
-```python
-# get
-alist.get.anime(49) # get anime with the id of 49
-alist.get.manga(30014) # get manga with the id of 30014
-alist.get.staff(95004) # get staff with the id of 95004
-alist.get.studio(2) # get studio with the id of 2
-alist.get.character(11) # get character with the id of 11
-
-# search
-alist.search.character("Cecil") # Search characters for cecil
-alist.search.anime("Bleach") # Search anime for bleach
-alist.search.manga("Bleach") # Search manga for bleach
-alist.search.staff("Miyuki") # Search staff for Miyuki
-alist.search.studio("go") # Search studios for go
-
-# reviews
-alist.get.reviews(21049, "anime", False, 2174) # Get reviews for anime 21049. In this case, get the review with an id of 2174
-alist.get.reviews(21049, "anime", True) # Get reviews for anime 21049. In this case, get all reviews.
-alist.get.reviews("Remiak", "user") # Get the reviews user Remiak has written
-```
-### Reviews quick and dirty
-Just a quick side about reviews.
-The reviews function works in this way.
-```python
-alist.get.reviews(from what, what is this thing, do you want all of them, if you don't want all of them which one do you want)
-```
-The first argument is what you want to get reviews from. It could be an ID for an anime or manga or it could be a username.
-The second argument is what type of thing it is. This should be one of anime, manga or user. This helps the review function know which endpoint to call.
-The third argument is a boolean that tells us whether you want all the reviews for that item or just one. A user will always get all the reviews.
-The fourth argument is optional and only applies when you just want one review. It should be the ID of the review you want.
-
+None of this matters anymore since Anilist has moved to V2 using GraphQL. I'm starting to work on the GraphQL implementation but it's annoying. Also, with the move to Oauth, we no longer need to manage readonly credentials. Yeah!
 
 ## Bakatsuki
 To create an instance do:

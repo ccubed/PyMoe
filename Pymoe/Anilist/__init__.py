@@ -13,51 +13,19 @@ class Anilist:
         :ivar dict settings: Various settings used across the module
         :ivar ALAuth auth: Handle Authorization endpoints
     """
-    def __init__(self, cid, csecret):
+    def __init__(self, cid = None, csecret = None, credentials = None):
         """
         :param cid: Client ID
         :param csecret: Client Secret
+        :param credentials: If provided, a JWT token for auth requests
         """
-        self.settings = {'header': {'Content-Type': 'application/x-www-form-urlencoded',
-                                    'User-Agent': 'Pymoe (github.com/ccubed/PyMoe)'},
-                         'apiurl': 'https://anilist.co/api',
+        self.settings = {'header': {'Content-Type': 'application/json',
+                                    'User-Agent': 'Pymoe (github.com/ccubed/PyMoe)',
+                                    'Accept': 'application/json'},
+                         'authurl': 'https://anilist.co/api',
+                         'apiurl': 'https://graphql.anilist.co',
                          'cid': cid,
-                         'csecret': csecret}
-        self.credentials = None
-        self.search = ASearch(self.readonly, self.settings)
-        self.get = AGet(self.readonly, self.settings)
-
-    def readonly(self):
-        """
-        Grab readonly credentials. Used for calls that don't need user permissions.
-
-        :return: Nothing
-        :raises: JSONDecodeError
-        """
-        if self.credentials is None or int(self.credentials['expires']) < time.time():
-            r = requests.post(self.settings['apiurl'] + "/auth/access_token",
-                              params={'grant_type': 'client_credentials', 'client_id': self.settings['cid'],
-                                      'client_secret': self.settings['csecret']},
-                              headers=self.settings['header'])
-            self.credentials = r.json()
-            return self.credentials['access_token']
-        else:
-            return self.credentials['access_token']
-
-    def refresh_authorization(self, refresh_token):
-        """
-        The oauth flow in general is outside the scope of what this lib wants to provide,
-        but it does at least provide assistance in refreshing access tokens.
-
-        :param refresh_token: your refresh token
-        :return: a dictionary consisting of: access_token, token_type, expires, and expires_in or None to indicate an error
-        :rtype: Dictionary, NoneType
-        """
-        r = requests.post(self.settings['apiurl'] + "/auth/access_token",
-                          params={'grant_type': 'refresh_token', 'client_id': self.settings['cid'],
-                                  'client_secret': self.settings['csecret'], 'refresh_token': refresh_token},
-                          headers=self.settings['header'])
-        if r.status_code == 200:
-            return r.json()
-        else:
-            return None
+                         'csecret': csecret,
+                         'token': credentials}
+        self.search = ASearch(self.settings)
+        self.get = AGet(self.settings)
