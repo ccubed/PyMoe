@@ -34,7 +34,36 @@ instance.library.get(id)  # Get a user's library entries (lol, see source notes)
 Status: Not Started
 
 ## Anilist
-None of this matters anymore since Anilist has moved to V2 using GraphQL. I'm starting to work on the GraphQL implementation but it's annoying. Also, with the move to Oauth, we no longer need to manage readonly credentials. Yeah!
+To create an instance do:
+```python
+from Pymoe import Anilist
+instance = Anilist()
+```
+From there you can get information from Anilist using their new GraphQL API using the old format.
+For example, to get data on a known ID.
+```python
+instance.get.anime(21610) # Return data on Okusama ga Seitokaichou
+instance.get.manga(64127) # Return data on Mahouka Koukou no Rettousei
+instance.get.staff(121963) # Return data on Keisuke Nishijima (Nisizima)
+instance.get.studio(94) # Return data on Telecom Animation Film
+instance.get.review(2113, False) # Return review #2113 (A review on Orange) and don't format the review body in HTML
+instance.get.review(2113) # Return review #2113 and format the review body in HTML
+```
+Searching is also making a return.
+```python
+instance.search.anime("King") # Anime search results for King.
+instance.search.manga("King") # Manga search results for King.
+instance.search.character("Kei") # Character search results for Kei.
+instance.search.staff("Keisuke") # Staff search results for Keisuke.
+instance.search.studio("Ghibli") # Studio search result for Ghibli. (There's only one)
+```
+A note about the searching. Each search function now has the signature:
+```python
+search(term, page = 1, perpage = 3)
+```
+Pagination is done automatically in the new API. I take care of that. By default you'll get 3 results per page. 
+If you want more, just change the perpage value. pageInfo is always the first result in the returned data.
+Pages start at 1 and if you want another page, just replace page with the next number. 
 
 ## Bakatsuki
 To create an instance do:

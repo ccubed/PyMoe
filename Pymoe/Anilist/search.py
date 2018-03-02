@@ -6,158 +6,243 @@ class ASearch:
     def __init__(self, settings):
         self.settings = settings
 
-    def character(self, term):
+    def character(self, term, page = 1, perpage = 3):
         """
         Search for a character by term.
+        Results are paginated by default. Page specifies which page we're on.
+        Perpage specifies how many per page to request. 3 is just the example from the API docs.
         
         :param term str: Name to search by
-        :return: List of dictionaries which are character objects or None
-        :rtype: list of dict or NoneType
+        :param page int: Which page are we requesting? Starts at 1.
+        :param perpage int: How many results per page are we requesting?
+        :return: Json object with returned results.
+        :rtype: Json object with returned results.
         """
-        r = requests.get(
-                self.settings['apiurl'] + "/character/search/" + term.replace(' ', '%20'),
-                params={'access_token': self.rl()}, 
-                headers=self.settings['header']
-            )
-        
+        query_string = """\
+            query ($query: String, $page: Int, $perpage: Int) {
+                Page (page: $page, perPage: $perpage) {
+                    pageInfo {
+                        total
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    characters (search: $query) {
+                        id
+                        name {
+                            first
+                            last
+                        }
+                        image {
+                            large
+                        }
+                    }
+                }
+            }
+        """
+        vars = {"query": term, "page": page, "perpage": perpage}
+        r = requests.post(self.settings['apiurl'],
+                          headers=self.settings['header'],
+                          json={'query': query_string, 'variables': vars})
         jsd = r.text
-        
-        # AniList can return a newline for no results for some reason
-        if jsd == '\n' or r.status_code == 404:
+
+        try:
+            jsd = json.loads(jsd)
+        except ValueError:
             return None
         else:
-            jsd = json.loads(jsd)
-            if 'error' in jsd:
-                # it can also return a json error
-                return None
-            else:
-                if len(jsd):
-                    return jsd
-                else:
-                    # it can also return a blank list
-                    return None
+            return jsd
                     
-    def anime(self, term):
+    def anime(self, term, page = 1, perpage = 3):
         """
         Search for an anime by term.
+        Results are paginated by default. Page specifies which page we're on.
+        Perpage specifies how many per page to request. 3 is just the example from the API docs.
         
         :param term str: Name to search by
+        :param page int: Which page are we requesting? starts at 1.
+        :param perpage int: How many results per page? defaults to 3.
         :return: List of dictionaries which are anime objects or None
         :rtype: list of dict or NoneType
         """
-        r = requests.get(
-                self.settings['apiurl'] + "/anime/search/" + term.replace(' ', '%20'),
-                params={'access_token': self.rl()}, 
-                headers=self.settings['header']
-            )
-        
+        query_string = """\
+            query ($query: String, $page: Int, $perpage: Int) {
+                Page (page: $page, perPage: $perpage) {
+                    pageInfo {
+                        total
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    media (search: $query, type: ANIME) {
+                        id
+                        title {
+                            romaji
+                            english
+                        }
+                        coverImage {
+                            large
+                        }
+                        averageScore
+                        popularity
+                        episodes
+                        season
+                        hashtag
+                        isAdult
+                    }
+                }
+            }
+        """
+        vars = {"query": term, "page": page, "perpage": perpage}
+        r = requests.post(self.settings['apiurl'],
+                          headers=self.settings['header'],
+                          json={'query': query_string, 'variables': vars})
         jsd = r.text
-        
-        # AniList can return a newline for no results for some reason
-        if jsd == '\n' or r.status_code == 404:
+
+        try:
+            jsd = json.loads(jsd)
+        except ValueError:
             return None
         else:
-            jsd = json.loads(jsd)
-            if 'error' in jsd:
-                # it can also return a json error
-                return None
-            else:
-                if len(jsd):
-                    return jsd
-                else:
-                    # it can also return a blank list
-                    return None
+            return jsd
 
-    def manga(self, term):
+    def manga(self, term, page = 1, perpage = 3):
         """
         Search for a manga by term.
+        Results are paginated by default. Page specifies which page we're on.
+        Perpage specifies how many per page to request. 3 is just the example from the API docs.
         
         :param term str: Name to search by
+        :param page int: Which page are we requesting? Starts at 1.
+        :param perpage int: How many results per page? defaults to 3.
         :return: List of dictionaries which are manga objects or None
         :rtype: list of dict or NoneType
         """
-        r = requests.get(
-                self.settings['apiurl'] + "/manga/search/" + term.replace(' ', '%20'),
-                params={'access_token': self.rl()}, 
-                headers=self.settings['header']
-            )
-        
+        query_string = """\
+            query ($query: String, $page: Int, $perpage: Int) {
+                Page (page: $page, perPage: $perpage) {
+                    pageInfo {
+                        total
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    media (search: $query, type: ANIME) {
+                        id
+                        title {
+                            romaji
+                            english
+                        }
+                        coverImage {
+                            large
+                        }
+                        averageScore
+                        popularity
+                        episodes
+                        season
+                        hashtag
+                        isAdult
+                    }
+                }
+            }
+        """
+        vars = {"query": term, "page": page, "perpage": perpage}
+        r = requests.post(self.settings['apiurl'],
+                          headers=self.settings['header'],
+                          json={'query': query_string, 'variables': vars})
         jsd = r.text
-        
-        # AniList can return a newline for no results for some reason
-        if jsd == '\n' or r.status_code == 404:
+
+        try:
+            jsd = json.loads(jsd)
+        except ValueError:
             return None
         else:
-            jsd = json.loads(jsd)
-            if 'error' in jsd:
-                # it can also return a json error
-                return None
-            else:
-                if len(jsd):
-                    return jsd
-                else:
-                    # it can also return a blank list
-                    return None
+            return jsd
                     
-    def staff(self, term):
+    def staff(self, term, page = 1, perpage = 3):
         """
         Search for staff by term. Staff means actors, directors, etc.
+        Results are paginated by default. Page specifies which page we're on.
+        Perpage specifies how many per page to request. 3 is just the example from the API docs.
         
         :param term str: Name to search by
+        :param page int: What page are we requesting? Starts at 1.
+        :param perpage int: How many results per page? Defaults to 3.
         :return: List of dictionaries which are staff objects or None
         :rtype: list of dict or NoneType
         """
-        r = requests.get(
-                self.settings['apiurl'] + "/staff/search/" + term.replace(' ', '%20'),
-                params={'access_token': self.rl()}, 
-                headers=self.settings['header']
-            )
-        
+        query_string = """\
+            query ($query: String, $page: Int, $perpage: Int) {
+                Page (page: $page, perPage: $perpage) {
+                    pageInfo {
+                        total
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    staff (search: $query) {
+                        id
+                        name {
+                            first
+                            last
+                        }
+                        image {
+                            large
+                        }
+                    }
+                }
+            }
+        """
+        vars = {"query": term, "page": page, "perpage": perpage}
+        r = requests.post(self.settings['apiurl'],
+                          headers=self.settings['header'],
+                          json={'query': query_string, 'variables': vars})
         jsd = r.text
-        
-        # AniList can return a newline for no results for some reason
-        if jsd == '\n' or r.status_code == 404:
+
+        try:
+            jsd = json.loads(jsd)
+        except ValueError:
             return None
         else:
-            jsd = json.loads(jsd)
-            if 'error' in jsd:
-                # it can also return a json error
-                return None
-            else:
-                if len(jsd):
-                    return jsd
-                else:
-                    # it can also return a blank list
-                    return None
+            return jsd
                     
-    def studio(self, term):
+    def studio(self, term, page = 1, perpage = 3):
         """
         Search for a studio by term.
+        Results are paginated by default. Page specifies which page we're on.
+        Perpage specifies how many per page to request. 3 is just the example from the API docs.
         
         :param term str: Name to search by
+        :param page int: What page are we requesting? starts at 1.
+        :param perpage int: How many results per page? defaults to 3.
         :return: List of dictionaries which are studio objects or None
         :rtype: list of dict or NoneType
         """
-        r = requests.get(
-                self.settings['apiurl'] + "/studio/search/" + term.replace(' ', '%20'),
-                params={'access_token': self.rl()}, 
-                headers=self.settings['header']
-            )
-        
+        query_string = """\
+            query ($query: String, $page: Int, $perpage: Int) {
+                Page (page: $page, perPage: $perpage) {
+                    pageInfo {
+                        total
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    studios (search: $query) {
+                        id
+                        name
+                    }
+                }
+            }
+        """
+        vars = {"query": term, "page": page, "perpage": perpage}
+        r = requests.post(self.settings['apiurl'],
+                          headers=self.settings['header'],
+                          json={'query': query_string, 'variables': vars})
         jsd = r.text
-        
-        # AniList can return a newline for no results for some reason
-        if jsd == '\n' or r.status_code == 404:
+
+        try:
+            jsd = json.loads(jsd)
+        except ValueError:
             return None
         else:
-            jsd = json.loads(jsd)
-            if 'error' in jsd:
-                # it can also return a json error
-                return None
-            else:
-                if len(jsd):
-                    return jsd
-                else:
-                    # it can also return a blank list
-                    return None
-
+            return jsd
