@@ -29,3 +29,4 @@ class KitsuMappings:
           return None
 
         return jsd['data'][0]
+        
