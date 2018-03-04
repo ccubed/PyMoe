@@ -28,5 +28,9 @@ class KitsuMappings:
         if len(jsd['data']) < 1:
           return None
 
-        return jsd['data'][0]
-        
+        r = requests.get(jsd['data'][0]['relationships']['item']['links']['related'], headers=self.header)
+
+        if r.status_code != 200:
+            return jsd
+        else:
+            return r.json()

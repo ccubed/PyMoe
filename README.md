@@ -5,6 +5,8 @@ Welcome to PyMoe, the only python lib you'll ever need if you need the animu/man
 ## 1.0
 This brings us to 1.0. A stable release for Pymoe. It supports the majority of my end goal websites and it has some good interfaces. This is a breaking change, thus the major bump.
 I cannot stress enough that you should not update unless you have taken the time to read through and note the differences. There are several.
+## 1.0.4
+This fixes anilist. If you don't have this, anilist won't work.
 
 ## Kitsu
 Kitsu is the new Hummingbird if you're wondering where Hummingbird went.
@@ -28,6 +30,10 @@ instance.user.get(id)  # Search for user by ID
 instance.user.update(id, dictionary, token)  # Update a user's attributes
 instance.user.create(dictionary)  # Create a new user. I haven't tested this. Let me know how it works.
 instance.library.get(id)  # Get a user's library entries (lol, see source notes)
+```
+Now supports mappings thanks to [Luna](https://github.com/ileyd)
+```python
+instance.mappings.get("myanimelist/anime", 31608) # return the anime object for Teekyuu 4 specials
 ```
 
 ## Anidb
