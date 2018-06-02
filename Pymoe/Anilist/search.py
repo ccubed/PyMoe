@@ -127,7 +127,7 @@ class ASearch:
                         lastPage
                         hasNextPage
                     }
-                    media (search: $query, type: ANIME) {
+                    media (search: $query, type: MANGA) {
                         id
                         title {
                             romaji
@@ -138,7 +138,8 @@ class ASearch:
                         }
                         averageScore
                         popularity
-                        episodes
+                        chapters
+                        volumes
                         season
                         hashtag
                         isAdult
