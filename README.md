@@ -87,7 +87,11 @@ instance.teaser(language)  # Get a list of language's teaser projects
 instance.web_novels(language)  # Get a list of language's web novels
 ```
 
-## Mal
+## Mal - Currently Disabled 
+### NOTE
+Documentation remains here in case it's useful later, but for now the public API on My Anime List has been shut down.
+Per Site Owners, It will not come back up until V2 of the API which has no ETA.
+### This is only an archive, this does not work
 To create an instance.
 ```python
 from Pymoe import Mal

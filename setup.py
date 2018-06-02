@@ -2,8 +2,8 @@ from setuptools import setup
 
 setup(
     name='PyMoe',
-    version='1.0.5',
-    packages=['Pymoe', 'Pymoe.Anilist', 'Pymoe.Kitsu', 'Pymoe.VNDB', 'Pymoe.Mal', 'Pymoe.Bakatsuki'],
+    version='1.0.6',
+    packages=['Pymoe', 'Pymoe.Anilist', 'Pymoe.Kitsu', 'Pymoe.VNDB', 'Pymoe.Bakatsuki'],
     url='https://github.com/ccubed/PyMoe',
     license='MIT',
     author='Cooper Click',
