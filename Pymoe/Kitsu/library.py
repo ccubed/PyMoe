@@ -7,21 +7,19 @@ class KitsuLib:
         self.apiurl = api
         self.header = header
 
-    def get(self, uid):
+    def get(self, uid, filters=None):
         """
-        Get a user's list of library entries. This is a little annoying.
-        The list of Library Entries by default doesn't name the item it relates
-        to. Here's the other problem, it lists a relationship to all three
-        types of items. And there's no indication of which type of item it is.
-        I have no idea how to handle this and there's no way you can just make
-        hundreds (and with some people thousands) of calls to see if it returns
-        Null for the given item or until you get data back. Good Luck I guess.
+        Get a user's list of library entries. While individual entries on this
+        list don't show what type of entry it is, you can use the filters provided
+        by the Kitsu API to only select which ones you want
 
         :param uid str: User ID to get library entries for
+        :param filters dict: Dictionary of filters for the library, keys must be in the "filter[<filter-name>]" format
+                             (https://kitsu.docs.apiary.io/#reference/user-libraries/library-entries)
         :return: Results or ServerError
         :rtype: SearchWrapper or Exception
         """
-        r = requests.get(self.apiurl + "/users/{}/library-entries".format(uid), headers=self.header)
+        r = requests.get(self.apiurl + "/users/{}/library-entries".format(uid), headers=self.header, params=filters)
 
         if r.status_code != 200:
             raise ServerError
