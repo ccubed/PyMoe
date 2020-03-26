@@ -66,9 +66,9 @@ class AGet:
 
     def manga(self, item_id):
         """
-        The function to retrieve an anime's details.
+        The function to retrieve an manga's details.
 
-        :param int item_id: the anime's ID
+        :param int item_id: the manga's ID
         :return: dict or None
         :rtype: dict or NoneType
         """
