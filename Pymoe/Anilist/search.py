@@ -66,30 +66,38 @@ class ASearch:
         :rtype: list of dict or NoneType
         """
         query_string = """\
-            query ($query: String, $page: Int, $perpage: Int) {
-                Page (page: $page, perPage: $perpage) {
-                    pageInfo {
-                        total
-                        currentPage
-                        lastPage
-                        hasNextPage
+            query ($id: Int,$search: String) { 
+                Media (id: $id, type: ANIME,search: $search) { 
+                    id
+                    title {
+                        romaji
+                        english
+                        native
                     }
-                    media (search: $query, type: ANIME) {
+                    description (asHtml: false)
+                    startDate {
+                        year
+                    }
+                    episodes
+                    season
+                    type
+                    format
+                    status
+                    duration
+                    siteUrl
+                    studios{
+                        nodes{
+                            name
+                        }
+                    }
+                    trailer{
                         id
-                        title {
-                            romaji
-                            english
-                        }
-                        coverImage {
-                            large
-                        }
-                        averageScore
-                        popularity
-                        episodes
-                        season
-                        hashtag
-                        isAdult
+                        site 
+                        thumbnail
                     }
+                    averageScore
+                    genres
+                    bannerImage
                 }
             }
         """
