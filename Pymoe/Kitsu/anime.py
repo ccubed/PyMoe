@@ -35,14 +35,41 @@ class KitsuAnime:
         :return: The results as a SearchWrapper iterator.
         :rtype: SearchWrapper
         """
-        r = requests.get(self.apiurl + "/anime", params={"filter[text]": term}, headers=self.header)
-        
+        r = requests.get(
+            self.apiurl + "/anime", params={"filter[text]": term}, headers=self.header
+        )
+
         if r.status_code != 200:
             raise ServerError
-        
+
         jsd = r.json()
 
-        if jsd['meta']['count']:
-            return SearchWrapper(jsd['data'], jsd['links']['next'] if 'next' in jsd['links'] else None, self.header)
+        if jsd["meta"]["count"]:
+            return SearchWrapper(
+                jsd["data"],
+                jsd["links"]["next"] if "next" in jsd["links"] else None,
+                self.header,
+            )
         else:
             return None
+
+    def streaming_links(self, aid):
+        """
+        Get anime streaming-links by id.
+        :param int aid: ID of the anime.
+        :return: Dictionary or None (for not found)
+        :rtype: Dictionary or None
+        :raises: :class:`Pymoe.errors.ServerError`
+        """
+        r = requests.get(
+            self.apiurl + f"/anime/{aid}/streaming-links",
+            headers=self.header,
+        )
+
+        if r.status_code != 200:
+            if r.status_code == 404:
+                return None
+            else:
+                raise ServerError
+
+        return r.json()
