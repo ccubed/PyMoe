@@ -20,6 +20,7 @@ You have six interfaces: anime, manga, drama, auth, user, library
 ```python
 instance.anime.get(id)  # Search anime by ID
 instance.anime.search(term)  # Search anime by term
+instance.anime.streaming_links(id) # get streaming-links by ID
 instance.manga.get(id)  # Search manga by ID
 instance.manga.search(term)  # Search manga by term
 instance.drama.get(id)  # Search drama by ID
