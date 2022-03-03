@@ -65,3 +65,6 @@ target/
 
 # Venv
 venv/*
+
+# Special
+DEV_NOTES
