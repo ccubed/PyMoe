@@ -1,9 +1,5 @@
 from .anime import *
-from .user import *
-from .library import *
 from .manga import *
-from .drama import *
-from .auth import *
 from .mappings import *
 
 
@@ -28,8 +24,4 @@ class Kitsu:
         }
         self.anime = KitsuAnime(api, header)
         self.manga = KitsuManga(api, header)
-        self.drama = KitsuDrama(api, header)
-        self.library = KitsuLib(api, header)
         self.mappings = KitsuMappings(api, header)
-        self.user = KitsuUser(api, header)
-        self.auth = KitsuAuth(header, cid, csecret)

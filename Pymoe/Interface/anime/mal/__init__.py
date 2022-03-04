@@ -1,372 +1,191 @@
-import html
-import xml.etree.ElementTree as ET
 import requests
-from .Abstractions import NT_MANGA, NT_ANIME, STATUS_INTS, NT_SEARCH_ANIME, \
-    NT_SEARCH_MANGA, NT_USER_ANIME, NT_USER_MANGA
-from requests.auth import HTTPBasicAuth
-from .Objects import Anime, Manga, User
-from ..errors import *
-
+from datetime import date
 
 class Mal:
     """
-    The interface for MyAnimeList, quite possibly the worst API in existence.
-
-    :ivar NT_ANIME \aanime: Stores function references for anime. references available: search, add, update and delete.
-    :ivar NT_MANGA manga: Stores function references for manga. references available: search, add, update and delete.
+        Initialize a new instance to the MyAnimeList API.
+        This instance will use your API Token to access public information.
+        Get your API Token from https://myanimelist.net/apiconfig
     """
-
-    def __init__(self, username, password):
+    def __init__(self, apikey : str):
         """
-        Initialize the instance. All methods require authorization so username and password aren't optional.
+            This is a helper class to make managing API Changes easier.
 
-        :param username: The username to use.
-        :param password: The password for that username.
+            :param apikey: Provide your API KEY from the website.
         """
-        self.apiurl = "https://myanimelist.net/api/"
-        self.apiusers = "https://myanimelist.net/malappinfo.php"
-        self.header = {'User-Agent': 'Pymoe (git.vertinext.com/ccubed/Pymoe)'}
-        self.anime = NT_ANIME(search=self._search_anime, add=self._anime_add,
-                              update=self._anime_update, delete=self._anime_delete)
-        self.manga = NT_MANGA(search=self._search_manga, add=self._manga_add,
-                              update=self._manga_update, delete=self._manga_delete)
-        self._username = username
-        self._password = password
-        self._verify_credentials()
+        self.settings = {
+            'header': {
+                'Content-Type': 'application/json',
+                'User-Agent': 'Pymoe (github.com/ccubed/PyMoe)',
+                'Accept': 'application/json',
+                'X-MAL-CLIENT-ID': apikey
+            },
+            'apiurl': 'https://api.myanimelist.net/v2/',
+            'default_fields': 'id,title,main_picture,alternative_titles,start_date,end_date,nsfw,genres,status,media_type,broadcast'
+        }
 
-    def _verify_credentials(self):
+    def search(self, name : str, limit : int = 10, offset : int = 0, fields : str = None, nsfw = None):
         """
-        An internal method that verifies the credentials given at instantiation.
+            Search for anime matching name. If fields is none, it will default to giving enough information to facilitate finding an anime.
+            Otherwise, provide a list of fields separated by ',' with no spaces.
+            See self.settings['default_fields'] for an example.
+            
+            :param name: Term to search for
+            :param limit: How many results on one page, defaults to 10 in alignment with API
+            :param offset: Which result do I start at (exclusive), defaults to 0 in alignment with API
+            :param fields: What fields should I return, defaults to None
+            :param nsfw: By default most endpoints don't return NSFW content. Set this to some true value to get NSFW results.
 
-        :raises: :class:`Pymoe.errors.UserLoginFailed`
+            :return: A dictionary of search results with keys of the anime titles and a single paging key that gives the offset for the previous and next set of results.
         """
-        r = requests.get(self.apiurl + "account/verify_credentials.xml",
-                         auth=HTTPBasicAuth(self._username, self._password),
-                         headers=self.header)
+        r = requests.get(
+            self.settings['apiurl'] + "anime",
+            params={
+                'q': name,
+                'fields': fields or 'id,title,main_picture,alternative_titles,start_date',
+                'limit': limit,
+                'offset': offset,
+                'nsfw': 'false' if not nsfw else 'true'
+            },
+            headers=self.settings['header']
+        )
+
         if r.status_code != 200:
-            raise UserLoginFailed("Username or Password incorrect.")
+            return None # TODO: This should return an error
 
-    def _search_anime(self, term):
-        """
-        An internal method that redirects to the real search method.
+        jsd = r.json()
 
-        :param term: What we are searching for.
-        :rtype: list
-        :return: list of :class:`Pymoe.Mal.Objects.Anime` objects
-        """
-        return self._search(1, term)
+        # Create a new Dictionary with the anime title as the key instead of just node
+        rdict = {}
+        for item in jsd['data']:
+            rdict[item['node']['title']] = item['node']
 
-    def _search_manga(self, term):
-        """
-        An internal method that redirects to the real search method.
+        # By default, paging has the full link to the next set of results, but we really only need the next offset to build it
+        # Offsets are set to None if they don't apply
+        rdict['paging'] = {}
+        rdict['paging']['previous'] = (offset - limit) if offset > 0 else None
+        rdict['paging']['next'] = (offset + limit) if 'next' in jsd['paging'] else None
 
-        :param term: What we are searching for.
-        :rtype: list
-        :return: list of :class:`Pymoe.Mal.Objects.Manga` objects
-        """
-        return self._search(2, term)
+        return rdict
 
-    def _search(self, which, term):
+    def get(self, id : str, fields : str = None):
         """
-        The real search method.
+            Search for details on a specific anime with the id given.
+            Fields will default to settings['default_fields'] unless provided.
+        
+            :param id: Which ID to get info on
+            :param fields: A list of fields to grab separated by ',' with no spaces
 
-        :param which: 1 for anime, 2 for manga
-        :param term: What to search for
-        :rtype: list
-        :return: list of :class:`Pymoe.Mal.Objects.Manga` or :class:`Pymoe.Mal.Objects.Anime` objects as per the type param.
+            :return: A dictionary containing the information requested on the anime.
         """
-        url = self.apiurl + "{}/search.xml".format('anime' if which == 1 else 'manga')
-        r = requests.get(url, params={'q': term},
-                         auth=HTTPBasicAuth(self._username, self._password),
-                         headers=self.header)
+        r = requests.get(
+            self.settings['apiurl'] + "anime/{}".format(id),
+            params={
+                'fields': fields or self.settings['default_fields'],
+                'nsfw': 'true' # If you search by ID, you want whatever you get
+            },
+            headers = self.settings['header']
+        )
+        
         if r.status_code != 200:
-            return []
-        data = ET.fromstring(r.text)
-        final_list = []
-        if which == 1:
-            for item in data.findall('entry'):
-                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
-                final_list.append(Anime(
-                    item.find('id').text,
-                    title=item.find('title').text,
-                    synonyms=syn.append(item.find('english').text),
-                    episodes=item.find('episodes').text,
-                    average=item.find('score').text,
-                    anime_start=item.find('start_date').text,
-                    anime_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find(
-                        'synopsis').text else None,
-                    image=item.find('image').text,
-                    status_anime=item.find('status').text,
-                    type=item.find('type').text
-                ))
-            return NT_SEARCH_ANIME(
-                airing=[x for x in final_list if x.status.series == "Currently Airing"],
-                finished=[x for x in final_list if x.status.series == "Finished Airing"],
-                unaired=[x for x in final_list if x.status.series == "Not Yet Aired"],
-                dropped=[x for x in final_list if x.status.series == "Dropped"],
-                planned=[x for x in final_list if x.status.series == "Plan to Watch"]
-            )
-        else:
-            for item in data.findall('entry'):
-                syn = item.find('synonyms').text.split(';') if item.find('synonyms').text else []
-                final_list.append(Manga(
-                    item.find('id').text,
-                    title=item.find('title').text,
-                    synonyms=syn.append(item.find('english').text),
-                    chapters=item.find('chapters').text,
-                    volumes=item.find('volumes').text,
-                    average=item.find('score').text,
-                    manga_start=item.find('start_date').text,
-                    manga_end=item.find('end_date').text,
-                    synopsis=html.unescape(item.find('synopsis').text.replace('<br />', '')) if item.find(
-                        'synopsis').text else None,
-                    image=item.find('image').text,
-                    status_manga=item.find('status').text,
-                    type=item.find('type').text
-                ))
-            return NT_SEARCH_MANGA(
-                publishing=[x for x in final_list if x.status.series == "Publishing"],
-                finished=[x for x in final_list if x.status.series == "Finished"],
-                unpublished=[x for x in final_list if x.status.series == "Not Yet Published"],
-                dropped=[x for x in final_list if x.status.series == "Dropped"],
-                planned=[x for x in final_list if x.status.series == "Plan to Read"]
-            )
+            return None # TODO: This should return an error
 
-    def _anime_add(self, data):
+        return r.json()
+
+    def ranking(self, rank_type : str = "all", limit : int = 10, offset : int = 0, fields : str = None, nsfw = None ):
         """
-        Adds an anime to a user's list.
+            Get top lists by rank_type.
+            rank_type can be one of all, airing, upcoming, tv, ova, movie, special, bypopularity, favorite.
 
-        :param data: A :class:`Pymoe.Mal.Objects.Anime` object with the anime data
-        :raises: SyntaxError on invalid data type
-        :raises: ServerError on failure to add
-        :rtype: Bool
-        :return: True on success
+            :param rank_type: A string specifying which ranking list to get
+            :param limit: How many per page? Defaults to 10 in alignment with API
+            :param offset: Which result do I start at (exclusive), defaults to 0 in alignment with API
+            :param fields: A list of fields to grab separated by ',' with no spaces
+            :param nsfw: By default most endpoints don't return NSFW content. Set this to some true value to get NSFW results.
         """
-        if isinstance(data, Anime):
-            xmlstr = data.to_xml()
-            r = requests.get(self.apiurl + "animelist/add/{}.xml".format(data.id),
-                             params={'data': xmlstr},
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 201:
-                raise ServerError(r.text, r.status_code)
-            return True
-        else:
-            raise SyntaxError(
-                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+        r = requests.get(
+            self.settings['apiurl'] + "anime/ranking",
+            params={
+                'ranking_type': rank_type,
+                'limit': limit,
+                'offset': offset,
+                'fields': fields or 'id,title,main_picture,alternative_titles,start_date',
+                'nsfw': 'false' if not nsfw else 'true'
+            },
+            headers = self.settings['header']
+        )
 
-    def _manga_add(self, data):
+        if r.status_code != 200:
+            return None # TODO: This should return an error
+
+        jsd = r.json()
+        
+        # Ok, let's make this dictionary useful again
+        rdict = {}
+        rdict['ranking'] = {}
+
+        # Presumably this could be a list, but the rank is provided so let's not assume they'll be in order
+        # We'll put all these in the ranking key of our return dictionary so someone could easily rebuild the ranking using rdict['ranking'].keys()
+        # and not have to worry about hitting 'paging' instead of a number.
+        for item in jsd['data']:
+            rdict['ranking'][item['ranking']['rank']] = item['node']
+
+        # By default, paging has the full link to the next set of results, but we really only need the next offset to build it
+        # Offsets are set to None if they don't apply
+        rdict['paging'] = {}
+        rdict['paging']['previous'] = (offset - limit) if offset > 0 else None
+        rdict['paging']['next'] = (offset + limit) if 'next' in jsd['paging'] else None
+
+        return rdict
+
+    def seasonal(self, year : int = date.today().year, season : str = None, sort : str = "anime_score", limit : int = 10, offset : int = 0, fields : str = None, nsfw = None):
         """
-        Adds a manga to a user's list.
+            Get a list of anime for a given season and year.
 
-        :param data: A :class:`Pymoe.Mal.Objects.Manga` object with the manga data
-        :raises: SyntaxError on invalid data type
-        :raises: ServerError on failure to add
-        :rtype: Bool
-        :return: True on success
+            :param year: Which Year, defaults to Current Year
+            :param season: Which Season, defaults to season based on Current Month
+            :param sort: How should we sort results, defaults to 'anime_score' but can be 'anime_num_list_users' if given
+            :param limit: How many results per page, defaults to 10
+            :param offset: Which result do we start at (Exclusive), defaults to 0
+            :param fields: A list of fields to grab separated by ',' with no space
+            :param nsfw: By default most endpoints don't return NSFW content. Set this to some true value to get NSFW results.
         """
-        if isinstance(data, Manga):
-            xmlstr = data.to_xml()
-            r = requests.get(self.apiurl + "mangalist/add/{}.xml".format(data.id),
-                             params={'data': xmlstr},
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 201:
-                raise ServerError(r.text, r.status_code)
-            return True
-        else:
-            raise SyntaxError(
-                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+        myseason = season
+        if not season:
+            if date.today().month <= 3:
+                myseason = "winter"
+            elif date.today().month <= 6:
+                myseason = "spring"
+            elif date.today().month <= 9:
+                myseason = "summer"
+            else:
+                myseason = "fall"
+        
+        r = requests.get(
+            self.settings['apiurl'] + "anime/season/{}/{}".format(year, myseason),
+            params = {
+                'sort': sort,
+                'limit': limit,
+                'offset': offset,
+                'fields': fields or 'id,title,main_picture,alternative_titles,start_date'
+            },
+            headers = self.settings['header']
+        )
 
-    def _anime_update(self, data):
-        """
-        Updates data for an anime on a user's list.
+        if r.status_code != 200:
+            return None # TODO: This should return an error
 
-        :param data: A :class:`Pymoe.Mal.Objects.Anime` object with the anime data
-        :raises: SyntaxError on invalid data type
-        :raises: ServerError on failure to add
-        :rtype: Bool
-        :return: True on success
-        """
-        if isinstance(data, Anime):
-            xmlstr = data.to_xml()
-            r = requests.get(self.apiurl + "animelist/update/{}.xml".format(data.id),
-                             params={'data': xmlstr},
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
-        else:
-            raise SyntaxError(
-                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
+        jsd = r.json()
 
-    def _manga_update(self, data):
-        """
-        Updates data for a manga on a user's list.
+        # Create a new Dictionary with the anime title as the key instead of just node
+        rdict = {}
+        for item in jsd['data']:
+            rdict[item['node']['title']] = item['node']
 
-        :param data: A :class:`Pymoe.Mal.Objects.Manga` object with the manga data
-        :raises: SyntaxError on invalid data type
-        :raises: ServerError on failure to add
-        :rtype: Bool
-        :return: True on success
-        """
-        if isinstance(data, Manga):
-            xmlstr = data.to_xml()
-            r = requests.get(self.apiurl + "mangalist/update/{}.xml".format(data.id),
-                             params={'data': xmlstr},
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
-        else:
-            raise SyntaxError(
-                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
+        # By default, paging has the full link to the next set of results, but we really only need the next offset to build it
+        # Offsets are set to None if they don't apply
+        rdict['paging'] = {}
+        rdict['paging']['previous'] = (offset - limit) if offset > 0 else None
+        rdict['paging']['next'] = (offset + limit) if 'next' in jsd['paging'] else None
 
-    def _anime_delete(self, data):
-        """
-        Deletes an anime from a user's list
-
-        :param data: A :class:`Pymoe.Mal.Objects.Anime` object with the anime data
-        :raises: SyntaxError on invalid data type
-        :raises: ServerError on failure to add
-        :rtype: Bool
-        :return: True on success
-        """
-        if isinstance(data, Anime):
-            r = requests.get(self.apiurl + "animelist/delete/{}.xml".format(data.id),
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
-        else:
-            raise SyntaxError(
-                "Invalid type: data should be a Pymoe.Mal.Objects.Anime object. Got a {}".format(type(data)))
-
-    def _manga_delete(self, data):
-        """
-        Deletes a manga from a user's list
-
-        :param data: A :class:`Pymoe.Mal.Objects.Manga` object with the manga data
-        :raises: SyntaxError on invalid data type
-        :raises: ServerError on failure to add
-        :rtype: Bool
-        :return: True on success
-        """
-        if isinstance(data, Manga):
-            r = requests.get(self.apiurl + "mangalist/delete/{}.xml".format(data.id),
-                             auth=HTTPBasicAuth(self._username, self._password),
-                             headers=self.header)
-            if r.status_code != 200:
-                raise ServerError(r.text, r.status_code)
-            return True
-        else:
-            raise SyntaxError(
-                "Invalid type: data should be a Pymoe.Mal.Objects.Manga object. Got a {}".format(type(data)))
-
-    def user(self, name):
-        """
-        Get a user's anime list and details. This returns an encapsulated data type.
-
-        :param str name: The username to query
-        :rtype: :class:`Pymoe.Mal.Objects.User`
-        :return: A :class:`Pymoe.Mal.Objects.User` Object
-        """
-        anime_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'anime'},
-                                  headers=self.header)
-
-        if anime_data.status_code != 200:
-            raise ConnectionError(
-                "Anime Data Request failed. Please Open a bug on https://github.com/ccubed/Pymoe and include the following data.\nStatus Code: {}\n\nText:{}".format(
-                    anime_data.status_code, anime_data.text))
-
-        manga_data = requests.get(self.apiusers, params={'u': name, 'status': 'all', 'type': 'manga'},
-                                  headers=self.header)
-
-        if manga_data.status_code != 200:
-            raise ConnectionError(
-                "Manga Data Request failed. Please Open a bug on https://github.com/ccubed/Pymoe and include the following data.\nStatus Code: {}\n\nText:{}".format(
-                    manga_data.status_code, manga_data.text))
-
-        root = ET.fromstring(anime_data.text)
-        uid = root.find('myinfo').find('user_id').text
-        uname = root.find('myinfo').find('user_name').text
-        anime_object_list = self.parse_anime_data(anime_data.text)
-        manga_object_list = self.parse_manga_data(manga_data.text)
-        return User(uid=uid,
-                    name=uname,
-                    anime_list=NT_USER_ANIME(
-                        watching=[x for x in anime_object_list['data'] if x.status.user == "Currently Watching"],
-                        completed=[x for x in anime_object_list['data'] if x.status.user == "Completed"],
-                        held=[x for x in anime_object_list['data'] if x.status.user == "On Hold"],
-                        dropped=[x for x in anime_object_list['data'] if x.status.user == "Dropped"],
-                        planned=[x for x in anime_object_list['data'] if x.status.user == "Plan to Watch"]
-                    ),
-                    anime_days=anime_object_list['days'],
-                    manga_list=NT_USER_MANGA(
-                        reading=[x for x in manga_object_list['data'] if x.status.user == "Currently Reading"],
-                        completed=[x for x in manga_object_list['data'] if x.status.user == "Completed"],
-                        held=[x for x in manga_object_list['data'] if x.status.user == "On Hold"],
-                        dropped=[x for x in manga_object_list['data'] if x.status.user == "Dropped"],
-                        planned=[x for x in manga_object_list['data'] if x.status.user == "Plan to Read"]
-                    ),
-                    manga_days=manga_object_list['days'])
-
-    @staticmethod
-    def parse_anime_data(xml):
-        root = ET.fromstring(xml)
-        anime_list = []
-        for item in root.findall('anime'):
-            syn = item.find('series_synonyms').text.split(';') if item.find('series_synonyms').text else []
-            anime_list.append(Anime(
-                item.find('series_animedb_id').text,
-                title=item.find('series_title').text,
-                synonyms=syn,
-                episodes=item.find('series_episodes').text,
-                episode=item.find('my_watched_episodes').text,
-                score=item.find('my_score').text,
-                anime_start=item.find('series_start').text,
-                anime_end=item.find('series_end').text,
-                date_start=item.find('my_start_date').text,
-                date_finish=item.find('my_finish_date').text,
-                image=item.find('series_image').text,
-                status_anime=STATUS_INTS['anime'][item.find('series_status').text],
-                status=STATUS_INTS['user']['anime'][item.find('my_status').text],
-                rewatching=int(item.find('my_rewatching').text) if item.find('my_rewatching').text else None,
-                type=item.find('series_type').text,
-                tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
-            ))
-        return {'data': anime_list,
-                'days': root.find('myinfo').find('user_days_spent_watching').text}
-
-    @staticmethod
-    def parse_manga_data(xml):
-        root = ET.fromstring(xml)
-        manga_list = []
-        for item in root.findall('manga'):
-            syn = item.find('series_synonyms').text.split(';') if item.find('series_synonyms').text else []
-            manga_list.append(Manga(
-                item.find('series_mangadb_id').text,
-                title=item.find('series_title').text,
-                synonyms=syn,
-                chapters=item.find('series_chapters').text,
-                volumes=item.find('series_volumes').text,
-                chapter=item.find('my_read_chapters').text,
-                volume=item.find('my_read_volumes').text,
-                user=item.find('my_score').text,
-                manga_start=item.find('series_start').text,
-                manga_end=item.find('series_end').text,
-                date_start=item.find('my_start_date').text,
-                date_finish=item.find('my_finish_date').text,
-                image=item.find('series_image').text,
-                status_manga=STATUS_INTS['manga'][item.find('series_status').text],
-                status=STATUS_INTS['user']['manga'][item.find('my_status').text],
-                rereading=int(item.find('my_rereadingg').text) if item.find('my_rereadingg') else None,
-                type=item.find('series_type').text,
-                tags=item.find('my_tags').text.split(',') if item.find('my_tags').text else []
-            ))
-        return {'data': manga_list,
-                'days': root.find('myinfo').find('user_days_spent_watching').text}
+        return rdict

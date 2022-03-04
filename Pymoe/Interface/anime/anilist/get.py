@@ -118,68 +118,6 @@ class AGet:
         else:
             return jsd
 
-    def staff(self, item_id):
-        """
-        The function to retrieve a manga's details.
-
-        :param int item_id: the anime's ID
-        :return: dict or None
-        :rtype: dict or NoneType
-        """
-        query_string = """\
-            query ($id: Int) {
-                Staff(id: $id) {
-                    name {
-                        first
-                        last
-                        native
-                    }
-                    description
-                    language
-                }
-            }
-        """
-        vars = {"id": item_id}
-        r = requests.post(self.settings['apiurl'],
-                          headers=self.settings['header'],
-                          json={'query': query_string, 'variables': vars})
-        jsd = r.text
-
-        try:
-            jsd = json.loads(jsd)
-        except ValueError:
-            return None
-        else:
-            return jsd
-
-    def studio(self, item_id):
-        """
-        The function to retrieve a studio's details.
-
-        :param int item_id: the anime's ID
-        :return: dict or None
-        :rtype: dict or NoneType
-        """
-        query_string = """\
-            query ($id: Int) {
-                Studio(id: $id) {
-                    name
-                }
-            }
-        """
-        vars = {"id": item_id}
-        r = requests.post(self.settings['apiurl'],
-                          headers=self.settings['header'],
-                          json={'query': query_string, 'variables': vars})
-        jsd = r.text
-
-        try:
-            jsd = json.loads(jsd)
-        except ValueError:
-            return None
-        else:
-            return jsd
-
     def character(self, item_id):
         """
         The function to retrieve a character's details.
