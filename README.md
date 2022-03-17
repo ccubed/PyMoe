@@ -73,17 +73,22 @@ ln.all(lang : str = "English")
 ### Removed Interfaces
 vndb.set
 : This is a user management function.
+
 vndb.dbstats
 : This is a simple command, but the information is not useful to most people
 
 bakatsuki.teasers
 : These are incomplete projects that only feature one or a few chapters.
+
 bakatsuki.web_novels()
 : This is included in all now.
+
 bakatsuki.get_text()
 : This library isn't meant to be a light novel reader, rather a way to get information about light novels that exist.
+
 bakatsuki.chapters()
 : See get_text above
+
 bakatsuki.cover()
 : This is included in all now.
 

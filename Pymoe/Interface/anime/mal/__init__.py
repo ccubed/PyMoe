@@ -24,6 +24,29 @@ class Mal:
             'default_fields': 'id,title,main_picture,alternative_titles,start_date,end_date,nsfw,genres,status,media_type,broadcast'
         }
 
+    @staticmethod
+    def offsets(limit : int = 10, offset : int = 0, more : bool = True):
+        """
+            Static method to get rid of reused code to calculate the offsets for paging.
+
+            :param limit: How many results on one page
+            :param offset: which result did we start at
+            :param more: Do we need a next?
+        """
+        return {
+            "previous": (offset - limit) if offset > 0 else None,
+            "next": (offset + limit) if more else None
+        }
+
+    @staticmethod
+    def titleKeys(data : dict):
+        """
+            Static method to get rid of reused code that recreates the dictionary with the anime title as the key
+
+            :param data: The dictionary to be realigned
+        """
+        return {item['node']['title'] : item['node'] for item in data}
+
     def search(self, name : str, limit : int = 10, offset : int = 0, fields : str = None, nsfw = None):
         """
             Search for anime matching name. If fields is none, it will default to giving enough information to facilitate finding an anime.
@@ -56,15 +79,8 @@ class Mal:
         jsd = r.json()
 
         # Create a new Dictionary with the anime title as the key instead of just node
-        rdict = {}
-        for item in jsd['data']:
-            rdict[item['node']['title']] = item['node']
-
-        # By default, paging has the full link to the next set of results, but we really only need the next offset to build it
-        # Offsets are set to None if they don't apply
-        rdict['paging'] = {}
-        rdict['paging']['previous'] = (offset - limit) if offset > 0 else None
-        rdict['paging']['next'] = (offset + limit) if 'next' in jsd['paging'] else None
+        rdict = self.titleKeys(jsd['data'])
+        rdict['paging'] = self.offsets(limit, offset, 'next' in jsd['paging'])
 
         return rdict
 
@@ -122,19 +138,8 @@ class Mal:
         
         # Ok, let's make this dictionary useful again
         rdict = {}
-        rdict['ranking'] = {}
-
-        # Presumably this could be a list, but the rank is provided so let's not assume they'll be in order
-        # We'll put all these in the ranking key of our return dictionary so someone could easily rebuild the ranking using rdict['ranking'].keys()
-        # and not have to worry about hitting 'paging' instead of a number.
-        for item in jsd['data']:
-            rdict['ranking'][item['ranking']['rank']] = item['node']
-
-        # By default, paging has the full link to the next set of results, but we really only need the next offset to build it
-        # Offsets are set to None if they don't apply
-        rdict['paging'] = {}
-        rdict['paging']['previous'] = (offset - limit) if offset > 0 else None
-        rdict['paging']['next'] = (offset + limit) if 'next' in jsd['paging'] else None
+        rdict['ranking'] = {item['ranking']['rank'] : item['node'] for item in jsd['data']}
+        rdict['paging'] = self.offsets(limit, offset, 'next' in jsd['paging'])
 
         return rdict
 
@@ -178,14 +183,7 @@ class Mal:
         jsd = r.json()
 
         # Create a new Dictionary with the anime title as the key instead of just node
-        rdict = {}
-        for item in jsd['data']:
-            rdict[item['node']['title']] = item['node']
-
-        # By default, paging has the full link to the next set of results, but we really only need the next offset to build it
-        # Offsets are set to None if they don't apply
-        rdict['paging'] = {}
-        rdict['paging']['previous'] = (offset - limit) if offset > 0 else None
-        rdict['paging']['next'] = (offset + limit) if 'next' in jsd['paging'] else None
+        rdict = self.titleKeys(jsd['data'])
+        rdict['paging'] = self.offsets(limit, offset, 'next' in jsd['paging'])
 
         return rdict
