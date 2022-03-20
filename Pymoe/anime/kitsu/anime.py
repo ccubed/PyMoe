@@ -1,6 +1,6 @@
 import requests
-from ..errors import *
-from .helpers import SearchWrapper
+from pymoe.errors import *
+from pymoe.anime.kitsu.helpers import SearchWrapper
 
 
 class KitsuAnime:
@@ -8,7 +8,7 @@ class KitsuAnime:
         self.apiurl = api
         self.header = header
 
-    def get(self, aid):
+    def get(self, aid : int):
         """
         Get anime information by id.
 
@@ -44,14 +44,16 @@ class KitsuAnime:
 
         jsd = r.json()
 
-        if jsd["meta"]["count"]:
-            return SearchWrapper(
-                jsd["data"],
-                jsd["links"]["next"] if "next" in jsd["links"] else None,
-                self.header,
-            )
-        else:
-            return None
+        #if jsd["meta"]["count"]:
+        #    return SearchWrapper(
+        #        jsd["data"],
+        #        jsd["links"]["next"] if "next" in jsd["links"] else None,
+        #        self.header,
+        #    )
+        #else:
+        #    return None
+
+        return jsd
 
     def streaming_links(self, aid):
         """

@@ -23,7 +23,7 @@ Welcome to Pymoe, the only python lib you'll ever need if you need anime/manga o
 - Someone should be able to download the library, type `Pymoe.[type].search("Dragon")` and get back information about items that match the term 
 
 ### Important Note
-Once the 2.0 update is completed, pip will transition to downloading 2.0 by default. I will keep 1.0.6 available on pip. Keep this in mind as you develop apps around the library going forward. Once the 2.0 update is on pip, you'll have to specify the specific version 1.0.6 in your requirements files or pip commands.
+Once the 2.0 update is completed, pip will transition to downloading 2.0 by default. I will keep 1.0.6 available on pip. Keep this in mind as you develop apps around the library going forward. Once the 2.0 update is on pip, you'll have to specify the specific version 1.0.6 in your requirements files or pip commands. Also take note that it's no longer Pymoe. Instead, it's pymoe to match snakecase.
 
 ---
 
@@ -47,13 +47,47 @@ Once the 2.0 update is completed, pip will transition to downloading 2.0 by defa
 --- 
 
 **Interface Usage**
+### General
+```python
+# Anime Interface (Defaults to Kitsu)
+from pymoe import anime
+
+# Manga interface (Defaults to Anilist)
+from pymoe import manga
+
+# Light Novel interface (Bakatsuki)
+from pymoe import ln
+
+# Visual Novel interface (VNDB)
+from pymoe import vn
+```
+
+### Specific Interfaces
+```python
+# Specifically kitsu for Anime
+from pymoe.anime import kitsu
+instancea = kitsu(client_id, client_secret)
+
+# Specifically kitsu for Manga
+from pymoe.manga import kitsu
+instanceb = kitsu(client_id, client_secret)
+
+# All instances have a get/search method
+instancea.search("Dragon")
+instanceb.search("Dragon")
+instancea.get(12200)
+instanceb.get(12200)
+```
+
 ### Anime
 ```python
-anime.search(term : str, service : int = 1)
+anime.search(term : str)
+anime.get(id)
 ```
 ### Manga
 ```python
-manga.search(term : str, service : int = 1)
+manga.search(term : str)
+manga.get(id)
 ```
 ### Visual Novels (VN)
 ```python
@@ -97,3 +131,13 @@ Anidb (and all features)
 
 ### Note about Removed Interfaces
 While I'm pairing down Pymoe to just focus on getting information as I originally intended (a lot of these were only added because I was just going down a list and adding all API features), you're welcome to grab any of my code and put it towards a new library or app. Have at it!
+
+### Note about defaults
+Anime
+: Kitsu is the default anime source because it is a step above the others by providing both streaming links and ID mappings for other services.
+
+Manga
+: Anilist is the default for manga because it identified more random manga by multiple titles than the others did. For example, My Wife Is a Demon Queen / Wo Laopo Shi Mowang Daren / 我老婆是魔王大人 is a chinese manga. Anilist identified it by all three titles, Kitsu by two, and myanimelist didn't find it at all.
+
+VN / LN
+: Well, there's only one source for each, so...

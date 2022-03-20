@@ -1,5 +1,6 @@
-import requests
 from datetime import date
+import requests
+from pymoe.errors import *
 
 class Mal:
     """
@@ -74,7 +75,7 @@ class Mal:
         )
 
         if r.status_code != 200:
-            return None # TODO: This should return an error
+            raise ServerError(r.text, r.status_code)
 
         jsd = r.json()
 
@@ -84,7 +85,7 @@ class Mal:
 
         return rdict
 
-    def get(self, id : str, fields : str = None):
+    def get(self, id : int, fields : str = None):
         """
             Search for details on a specific anime with the id given.
             Fields will default to settings['default_fields'] unless provided.
@@ -104,7 +105,7 @@ class Mal:
         )
         
         if r.status_code != 200:
-            return None # TODO: This should return an error
+            raise ServerError(r.text, r.status_code)
 
         return r.json()
 

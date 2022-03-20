@@ -1,6 +1,6 @@
 import requests
-from ..errors import *
-from .helpers import SearchWrapper
+from pymoe.errors import *
+from pymoe.anime.kitsu.helpers import SearchWrapper
 
 
 class KitsuManga:

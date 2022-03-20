@@ -46,18 +46,4 @@ class ServerError(MoeError):
         if self.msg:
             return "Server Error encounted.\nCode: {}\nMessage: {}".format(self.code, self.msg)
         else:
-            return "Encountered a server error attempting to access information."
-
-class NotSaving(MoeError):
-    """
-    Raised when someone asks KitsuAuth to pull a token but they haven't asked KitsuAuth to save their tokens.
-    """
-    def __repr__(self):
-        return "KitsuAuth is not currently saving your tokens. It cannot retrieve them."
-
-class UserNotFound(MoeError):
-    """
-    Raised when the user isn't found in the token cache.
-    """
-    def __repr__(self):
-        return "KitsuAuth could not find that user in the token cache."
+            return "Encountered a server error attempting to access information. \nCode: {}".format(self.code)
