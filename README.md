@@ -47,60 +47,7 @@ Once the 2.0 update is completed, pip will transition to downloading 2.0 by defa
 --- 
 
 **Interface Usage**
-### General
-```python
-# Anime Interface (Defaults to Kitsu)
-from pymoe import anime
-
-# Manga interface (Defaults to Anilist)
-from pymoe import manga
-
-# Light Novel interface (Bakatsuki)
-from pymoe import ln
-
-# Visual Novel interface (VNDB)
-from pymoe import vn
-```
-
-### Specific Interfaces
-```python
-# Specifically kitsu for Anime
-from pymoe.anime import kitsu
-instancea = kitsu(client_id, client_secret)
-
-# Specifically kitsu for Manga
-from pymoe.manga import kitsu
-instanceb = kitsu(client_id, client_secret)
-
-# All instances have a get/search method
-instancea.search("Dragon")
-instanceb.search("Dragon")
-instancea.get(12200)
-instanceb.get(12200)
-```
-
-### Anime
-```python
-anime.search(term : str)
-anime.get(id)
-```
-### Manga
-```python
-manga.search(term : str)
-manga.get(id)
-```
-### Visual Novels (VN)
-```python
-vn.search(term : str)
-vn.search(term : str, stype : str)
-vn.search(term : str, stype : str, flags : list = None, filters : str = None, options : dict = None)
-vn.release(term : int)
-```
-### Light Novels (LN)
-```python
-ln.active()
-ln.all(lang : str = "English")
-```
+Being Reworked.
 
 ---
 
@@ -114,16 +61,13 @@ vndb.dbstats
 bakatsuki.teasers
 : These are incomplete projects that only feature one or a few chapters.
 
-bakatsuki.web_novels()
+bakatsuki.web_novels
 : This is included in all now.
 
-bakatsuki.get_text()
+bakatsuki.get_text
 : This library isn't meant to be a light novel reader, rather a way to get information about light novels that exist.
 
-bakatsuki.chapters()
-: See get_text above
-
-bakatsuki.cover()
+bakatsuki.cover
 : This is included in all now.
 
 Anidb (and all features)
