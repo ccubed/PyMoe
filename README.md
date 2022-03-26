@@ -47,7 +47,23 @@ Once the 2.0 update is completed, pip will transition to downloading 2.0 by defa
 --- 
 
 **Interface Usage**
-Being Reworked.
+```python
+import pymoe
+
+pymoe.anime.search.shows("Dragon")
+pymoe.anime.get.show(13593)
+pymoe.anime.search.characters("Sakura Haruno")
+pymoe.anime.get.character(102522)
+
+# Specifically kitsu
+pymoe.anime.search.kitsu.shows("Dragon")
+
+# specifically anilist
+pymoe.anime.search.anilist.shows("Dragon")
+
+# specifically myanimelist
+pymoe.anime.search.mal.shows("Dragon")
+```
 
 ---
 

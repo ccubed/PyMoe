@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='PyMoe',
     version='2.0.0',
-    packages=['Pymoe', 'Pymoe.Interface'],
+    packages=['pymoe'],
     url='https://github.com/ccubed/PyMoe',
     license='MIT',
     author='Cooper Click',

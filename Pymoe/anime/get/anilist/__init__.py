@@ -219,7 +219,7 @@ def season(theSeason : str = None, year : int = date.today().year, page : int = 
         raise SerializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, jsd['errors']['status'])
+            raise ServerError(r.text, r.status_code)
         else:
             return jsd
 
@@ -265,7 +265,7 @@ def streaming(item_id : int, page : int = 1, perPage : int = 3):
         raise SerializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, jsd['errors']['status'])
+            raise ServerError(r.text, r.status_code)
         else:
             return jsd
 
