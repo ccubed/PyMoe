@@ -4,7 +4,9 @@ from pymoe.errors import serializationFailed, serverError
 
 def whatSeason(month : int):
     """
-        TODO: Write This
+        Given a month, return which anime season it falls in.
+
+        :param month int: What month is it?
     """
     if month in [12,1,2]:
         return "winter"
@@ -129,6 +131,9 @@ class anilistWrapper(list):
         self.base_url = base_url
         self.isNext = True
 
+    def __iter__(self):
+        return self
+
     def __next__(self):
         if self.__len__():
             return self.pop()
@@ -159,3 +164,36 @@ class anilistWrapper(list):
                     self.isNext = 0
 
                 return self.pop()
+
+class vndbWrapper(list):
+    """
+        This is a search wrapper for VNDB. It does not inherit from the subclass of SearchWrapper because the interface is too different from the other apis.
+
+        :ivar sock: The socket reference
+        :ivar page: The next page
+        :ivar command: The command
+    """
+    def __init__(self, theData: list, theSocket, thePage: int | None, theCommand: str):
+        super.__init__(theData)
+        self.sock = theSocket
+        self.page = thePage
+        self.command = theCommand
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.__len__():
+            return self.pop()
+        else:
+            if not self.page:
+                raise StopIteration
+            else:
+                data = self.sock.send_command(self.command + ' ' + ujson.dumps({'page': self.page}))
+
+                if data['more']:
+                    self.page += 1
+                else:
+                    self.page = None
+
+                self.extend(data['items'])

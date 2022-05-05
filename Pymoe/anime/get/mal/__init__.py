@@ -19,7 +19,7 @@ def setKey(apikey : str):
     """
         The MAL api requires a client ID to get data. This method applies your client ID to the requests.
 
-        :ivar apikey str: Your API Key
+        :param apikey str: Your API Key
     """
     settings['header']['X-MAL-CLIENT-ID'] = apikey
 

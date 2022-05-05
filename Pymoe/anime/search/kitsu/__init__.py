@@ -2,7 +2,7 @@ from datetime import date
 import ujson
 import requests
 from pymoe.errors import *
-from pymoe.helpers import kitsuWrapper, whatSeason
+from pymoe.helpers import *
 from pymoe.anime.get.kitsu import show
 
 settings = {
@@ -52,61 +52,17 @@ def shows(term: str):
 
 def staff(term : str):
     """
-        TODO: Write This
+        Kitsu doesn't support text filtering on the anime-staff endpoint
+        Method not supported
     """
-    r = requests.get(
-        settings['apiurl'] + "/anime-staff",
-        params={
-            'filter[text]': term
-        },
-        headers = settings['header']
-    )
-
-    if r.status_code != 200:
-        raise serverError(r.text, r.status_code)
-
-    try:
-        jsd = ujson.loads(r.text)
-    except ValueError:
-        raise serializationFailed(r.text, r.status_code)
-    else:
-        if jsd['meta']['count']:
-            return kitsuWrapper(
-                jsd['data'],
-                jsd['links']['next'] if 'next' in jsd['links'] else None,
-                settings['header']
-            )
-        else:
-            return jsd
+    raise methodNotSupported("pymoe.anime.search.kitsu.staff", "kitsu")
 
 def studios(term : str):
     """
-        TODO: Write This
+        Kitsu doesn't support text filtering on the anime-producers endpoint
+        Method not supported
     """
-    r = requests.get(
-        settings['apiurl'] + "/anime-productions",
-        params={
-            'filter[text]': term
-        },
-        headers = settings['header']
-    )
-
-    if r.status_code != 200:
-        raise serverError(r.text, r.status_code)
-
-    try:
-        jsd = ujson.loads(r.text)
-    except ValueError:
-        raise serializationFailed(r.text, r.status_code)
-    else:
-        if jsd['meta']['count']:
-            return kitsuWrapper(
-                jsd['data'],
-                jsd['links']['next'] if 'next' in jsd['links'] else None,
-                settings['header']
-            )
-        else:
-            return jsd
+    raise methodNotSupported("pymoe.anime.search.kitsu.studios", "kitsu")
 
 def season(season : str = None, seasonYear : int = date.today().year):
     """

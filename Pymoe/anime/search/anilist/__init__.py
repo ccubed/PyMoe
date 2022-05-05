@@ -61,17 +61,19 @@ def characters(term : str, page : int = 1, perPage : int = 3):
         }
     """
 
+    json_params = {
+        'query': query_string,
+        'variables': {
+            'query': term,
+            'page': page,
+            'perPage': perPage
+        }
+    }
+
     r = requests.post(
         settings['apiurl'],
         headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'query': term,
-                'page': page,
-                'perPage': perPage
-            }
-        }
+        json = json_params
     )
     
     try:
@@ -82,7 +84,15 @@ def characters(term : str, page : int = 1, perPage : int = 3):
         if 'errors' in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            return jsd
+            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+                return anilistWrapper(
+                    jsd['data']['Page']['characters'],
+                    json_params,
+                    settings['header'],
+                    settings['apiurl']
+                )
+            else:
+                return jsd['data']['Page']['characters']
 
 def shows(term : str, page : int = 1, perPage : int = 3):
     """
@@ -122,12 +132,12 @@ def shows(term : str, page : int = 1, perPage : int = 3):
     """
 
     json_params = {
-            'query': query_string,
-            'variables': {
-                'query': term,
-                'page': page,
-                'perPage': perPage
-            }
+        'query': query_string,
+        'variables': {
+            'query': term,
+            'page': page,
+            'perPage': perPage
+        }
     }
     
     r = requests.post(
@@ -247,17 +257,19 @@ def staff(term: str, page : int = 1, perPage : int = 3):
         }
     """
 
+    json_params = {
+        'query': query_string,
+        'variables': {
+            'query': term,
+            'page': page,
+            'perPage': perPage
+        }
+    }
+
     r = requests.post(
         settings['apiurl'],
         headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'query': term,
-                'page': page,
-                'perPage': perPage
-            }
-        }
+        json = json_params
     )
 
     try:
@@ -268,7 +280,15 @@ def staff(term: str, page : int = 1, perPage : int = 3):
         if 'errors' in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            return jsd
+            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+                return anilistWrapper(
+                    jsd['data']['Page']['staff'],
+                    json_params,
+                    settings['header'],
+                    settings['apiurl']
+                )
+            else:
+                return jsd['data']['Page']['staff']
 
 def studios(term : str, page : int = 1, perPage : int = 3):
     """
@@ -308,17 +328,19 @@ def studios(term : str, page : int = 1, perPage : int = 3):
         }
     """
 
+    json_params = {
+        'query': query_string,
+        'variables': {
+            'query': term,
+            'page': page,
+            'perPage': perPage
+        }
+    }
+
     r = requests.post(
         settings['apiurl'],
         headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'query': term,
-                'page': page,
-                'perPage': perPage
-            }
-        }
+        json = json_params
     )
 
     try:
@@ -329,4 +351,12 @@ def studios(term : str, page : int = 1, perPage : int = 3):
         if 'errors' in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            return jsd
+            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+                return anilistWrapper(
+                    jsd['data']['Page']['studios'],
+                    json_params,
+                    settings['header'],
+                    settings['apiurl']
+                )
+            else:
+                return jsd['data']['Page']['studios']
