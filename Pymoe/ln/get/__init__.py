@@ -3,7 +3,7 @@ import requests
 import ujson
 from collections import OrderedDict
 from bs4 import BeautifulSoup as soup
-from pymoe.errors import *
+from pymoe.errors import serverError, serializationFailed
 
 settings = {
     'apiurl': "https://www.baka-tsuki.org/project/api.php",

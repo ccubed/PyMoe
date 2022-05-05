@@ -171,9 +171,9 @@ class vndbWrapper(list):
 
         :ivar sock: The socket reference
         :ivar page: The next page
-        :ivar command: The command
+        :ivar command: The command or none, but only if 
     """
-    def __init__(self, theData: list, theSocket, thePage: int | None, theCommand: str):
+    def __init__(self, theData: list, theSocket, thePage: int | None, theCommand: str | None):
         super.__init__(theData)
         self.sock = theSocket
         self.page = thePage
@@ -191,7 +191,7 @@ class vndbWrapper(list):
             else:
                 data = self.sock.send_command(self.command + ' ' + ujson.dumps({'page': self.page}))
 
-                if data['more']:
+                if 'more' in data:
                     self.page += 1
                 else:
                     self.page = None

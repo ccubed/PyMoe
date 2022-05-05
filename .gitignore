@@ -68,3 +68,6 @@ venv/*
 
 # Special
 DEV_NOTES
+
+# toml files for flit
+*.toml

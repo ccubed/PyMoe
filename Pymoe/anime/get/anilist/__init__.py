@@ -1,8 +1,8 @@
 from datetime import date
 import ujson
 import requests
-from pymoe.errors import *
-from pymoe.helpers import *
+from pymoe.errors import serializationFailed, serverError, methodNotSupported
+from pymoe.helpers import whatSeason
 
 settings = {
     'header': {
@@ -70,7 +70,6 @@ def character(item_id : int):
         raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            print(r.text)
             raise serverError(r.text, r.status_code)
         else:
             return jsd
@@ -130,6 +129,23 @@ def show(item_id : int):
                     url
                     site
                     language
+                }
+                characters {
+                    nodes {
+                        id
+                        name {
+                            first
+                            last
+                        }
+                        image {
+                            large
+                            medium
+                        }
+                        description
+                        gender
+                        age
+                        siteUrl
+                    }
                 }
             }
         }

@@ -3,7 +3,8 @@ import ujson
 import pymoe.vn.connection
 from pymoe.vn.get import *
 from pymoe.vn.search import *
-from pymoe.errors import *
+from pymoe.errors import serverError
+from pymoe.helpers import vndbWrapper
 
 helperpat = re.compile('[=|!=|~|>|>=|<=|<]')
 stypes = ['vn', 'release', 'producer', 'character', 'votelist', 'vnlist', 'wishlist']
@@ -63,6 +64,11 @@ def manualGet(stype: str, flags, filters: str, options: dict = None):
     if 'id' in data:
         raise serverError(data['msg'], data['id'])
     else:
-        return {'pages': data.get('more', default=False), 'data': data['items']}
+        return vndbWrapper(
+            data['items'],
+            pymoe.vn.connection.mySock,
+            2 if 'more' in data else None,
+            command
+        )
 
 

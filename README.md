@@ -1,19 +1,19 @@
 [![Documentation Status](https://readthedocs.org/projects/pymoe/badge/?version=latest)](http://pymoe.readthedocs.io/en/latest/?badge=latest)
-[![Build Status](https://travis-ci.org/ccubed/PyMoe.svg?branch=master)](https://travis-ci.org/ccubed/PyMoe)
 # PyMoe
 Welcome to Pymoe, the only python lib you'll ever need if you need anime/manga on the python platform.
 ## Simplified Changelong
-1.0.0
-: This brings us to 1.0. A stable release for Pymoe. It supports the majority of my end goal websites and it has some good interfaces. This is a breaking change, thus the major bump. I cannot stress enough that you should not update unless you have taken the time to read through and note the differences. There are several.
 
-1.0.4
-: This fixes anilist. If you don't have this, anilist won't work.
+1.0.0:
+This brings us to 1.0. A stable release for Pymoe. It supports the majority of my end goal websites and it has some good interfaces. This is a breaking change, thus the major bump. I cannot stress enough that you should not update unless you have taken the time to read through and note the differences. There are several.
 
-1.0.6
-:Some additions by starry69 to add streaming links on kitsu and to make VNDB filters a little easier to use.
+1.0.4:
+This fixes anilist. If you don't have this, anilist won't work.
 
-2.0
-: Second major release of Pymoe. This will be a breaking change. The API is going to be unified. Instead of one interface for each service, the interfaces have been reduced down to categories. Note that document below represents a work in progress state.
+1.0.6:
+Some additions by starry69 to add streaming links on kitsu and to make VNDB filters a little easier to use.
+
+2.0:
+Second major release of Pymoe. This will be a breaking change. The API is going to be unified. Instead of one interface for each service, the interfaces have been reduced down to categories. Note that document below represents a work in progress state.
 
 ## Design Philosophy for 2.0
 - Quickest, Easiest way to get information about Anime, Manga, Light Novels, and Visual Novels
@@ -80,6 +80,7 @@ pymoe.vn.search.vn("ever")
 pymoe.vn.get.vn(17)
 ```
 **API Aware Iterators**
+
 All interfaces that return multiple pages of results return as an API Aware Search Iterator. That means you can call `pymoe.anime.search.kitsu.shows("Dragon")` and get back an iterator that automatically calls for new data from the API as you exhaust the items already in the list. All interfaces that only return one result will just return the result. 
 
 So, for instance, this is a valid code segment:
@@ -91,6 +92,7 @@ for item in pymoe.anime.search.shows("Dragon"):
 ```
 
 **Get vs Search**
+
 If it should return one item, it's in a get interface.
 
 If it should return multiple items (or could), it's in a search interface.
@@ -99,7 +101,7 @@ If a search interface only returns one result, we just return that result.
 
 ---
 
-### Removed Interfaces
+## Removed Interfaces
 vndb.set
 : This is a user management function.
 

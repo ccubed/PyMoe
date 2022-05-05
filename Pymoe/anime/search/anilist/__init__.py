@@ -2,8 +2,8 @@ from datetime import date
 from typing import Dict
 import ujson
 import requests
-from pymoe.errors import *
-from pymoe.helpers import *
+from pymoe.errors import serializationFailed, serverError
+from pymoe.helpers import anilistWrapper
 
 settings = {
     'header': {
@@ -126,6 +126,23 @@ def shows(term : str, page : int = 1, perPage : int = 3):
                     hashtag
                     isAdult
                     siteUrl
+                    characters {
+                        nodes {
+                            id
+                            name {
+                                first
+                                last
+                            }
+                            image {
+                                large
+                                medium
+                            }
+                            description
+                            gender
+                            age
+                            siteUrl
+                        }
+                    }
                 }
             }
         }
@@ -360,3 +377,61 @@ def studios(term : str, page : int = 1, perPage : int = 3):
                 )
             else:
                 return jsd['data']['Page']['studios']
+
+def airingSchedule(item_id: int):
+    """
+        Given an anime id, return the airing schedule.
+        Note: This returns a full airing schedule, including already aired episodes.
+        If it has already aired timeUntilAiring will be <= 0.
+        timeUntilAiring is just seconds. 
+    """
+    query_string = """\
+            query( $id: Int, $page: Int, $perPage: Int ) {
+                Page ( page: $page, perPage: $perPage ) {
+                    currentPage
+                    hasNextPage
+                }
+                airingSchedules ( mediaId: $id ) {
+                    id
+                    episode
+                    timeUntilAiring
+                    media {
+                        title
+                        id
+                    }
+                }
+            }
+        """
+
+    json_params = {
+        'query': query_string,
+        'variables': {
+            'id': item_id,
+            'page': 1,
+            'perPage': 3
+        }
+    }
+
+    r = requests.post(
+        settings['apiurl'],
+        headers = settings['header'],
+        json = json_params
+    )
+
+    try:
+        jsd = ujson.loads(r.text)
+    except ValueError:
+        raise serializationFailed(r.text, r.status_code)
+    else:
+        if 'errors' in jsd:
+            raise serverError(r.text, r.status_code)
+        else:
+            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+                return anilistWrapper(
+                    jsd['data']['Page']['airingSchedules'],
+                    json_params,
+                    settings['header'],
+                    settings['apiurl']
+                )
+            else:
+                return jsd['data']['Page']['airingSchedules']

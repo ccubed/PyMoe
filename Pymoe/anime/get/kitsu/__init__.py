@@ -1,8 +1,7 @@
 from datetime import date
 import ujson
 import requests
-from pymoe.errors import *
-from pymoe.helpers import *
+from pymoe.errors import serverError, serializationFailed
 
 settings = {
     'header': {
@@ -16,6 +15,8 @@ settings = {
 def character(item_id : int):
     """
         TODO: Write This
+        ALSO TODO: REWRITE THIS TO USE CHARACTERS ENDPOINT
+        ALSO TODO: WRITE NEW FUNCTIONS FOR GETTING ON ANIME-CHARACTERS ENDPOINT
     """
     r = requests.get(
         settings['apiurl'] + "/anime-characters/{}/character".format(item_id),

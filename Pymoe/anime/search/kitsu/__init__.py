@@ -1,8 +1,8 @@
 from datetime import date
 import ujson
 import requests
-from pymoe.errors import *
-from pymoe.helpers import *
+from pymoe.errors import methodNotSupported, serverError, serializationFailed
+from pymoe.helpers import kitsuWrapper, whatSeason
 from pymoe.anime.get.kitsu import show
 
 settings = {
@@ -16,8 +16,7 @@ settings = {
 
 def characters(term : str):
     """
-        Kitsu doesn't support text filtering on the anime-characters endpoint
-        Method not supported
+        TODO: REWRITE THIS TO USE THE CHARACTERS ENDPOINT
     """
     raise methodNotSupported("pymoe.anime.search.kitsu.characters", "kitsu")
 

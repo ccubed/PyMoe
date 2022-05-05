@@ -1,6 +1,6 @@
 import socket
 import ujson
-from pymoe.errors import *
+from pymoe.errors import generalLoginError, noSSL
 
 try:
     import ssl
