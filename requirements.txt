@@ -1,0 +1,5 @@
+# This exists solely for dependabot support until .toml is implemented
+
+bs4
+requests
+ujson
