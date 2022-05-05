@@ -1,5 +1,4 @@
 from datetime import date
-from multiprocessing.sharedctypes import Value
 from typing import Dict
 import ujson
 import requests
@@ -78,10 +77,10 @@ def characters(term : str, page : int = 1, perPage : int = 3):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -121,29 +120,34 @@ def shows(term : str, page : int = 1, perPage : int = 3):
             }
         }
     """
-    
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
+
+    json_params = {
             'query': query_string,
             'variables': {
                 'query': term,
                 'page': page,
                 'perPage': perPage
             }
-        }
+    }
+    
+    r = requests.post(
+        settings['apiurl'],
+        headers = settings['header'],
+        json = json_params
     )
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
-            return jsd
+            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+                return searchWrapper
+            else:
+                return jsd['data']['Page']['media']
 
 def staff(term: str, page : int = 1, perPage : int = 3):
     """
@@ -254,10 +258,10 @@ def staff(term: str, page : int = 1, perPage : int = 3):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -315,9 +319,9 @@ def studios(term : str, page : int = 1, perPage : int = 3):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd

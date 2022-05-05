@@ -23,12 +23,12 @@ def character(item_id : int):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         return jsd
 
@@ -42,39 +42,14 @@ def show(item_id : int):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         return jsd 
-
-def season(season : str = None, seasonYear : int = date.today().year):
-    """
-        TODO: Write This
-    """
-    myseason = season if season else whatSeason(date.today().month)
-
-    r = requests.get(
-        settings['apiurl'] + "/anime",
-        params = {
-            "filter[season]": myseason,
-            "filter[seasonYear]": seasonYear
-        },
-        headers = settings['header']
-    )
-
-    if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
-
-    try:
-        jsd = ujson.loads(r.text)
-    except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
-    else:
-        return jsd
 
 def episode(item_id : int):
     """
@@ -86,33 +61,12 @@ def episode(item_id : int):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
-    else:
-        return jsd
-
-def streaming(item_id : int):
-    """
-        TODO: Write This
-    """
-    data = show(item_id)
-
-    r = requests.get(
-        data['data']['relationships']['streamingLinks']['links']['related'],
-        headers = settings['header']
-    )
-
-    if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
-
-    try:
-        jsd = ujson.loads(r.text)
-    except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         return jsd
     
@@ -126,12 +80,12 @@ def staff(item_id : int):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         return jsd
 
@@ -145,11 +99,11 @@ def studio(item_id : int):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         return jsd

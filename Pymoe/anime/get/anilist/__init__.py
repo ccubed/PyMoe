@@ -67,11 +67,11 @@ def character(item_id : int):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
             print(r.text)
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -149,10 +149,10 @@ def show(item_id : int):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -216,10 +216,10 @@ def season(theSeason : str = None, year : int = date.today().year, page : int = 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -228,7 +228,7 @@ def episode(item_id : int):
     """
         Unsupported on Anilist
     """
-    raise MethodNotSupported("pymoe.anime.get.anilist.episode", "anilist")
+    raise methodNotSupported("pymoe.anime.get.anilist.episode", "anilist")
     
 
 def streaming(item_id : int, page : int = 1, perPage : int = 3):
@@ -262,10 +262,10 @@ def streaming(item_id : int, page : int = 1, perPage : int = 3):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -369,10 +369,10 @@ def staff(item_id : int):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd
 
@@ -421,9 +421,9 @@ def studio(item_id : int):
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
         if 'errors' in jsd:
-            raise ServerError(r.text, r.status_code)
+            raise serverError(r.text, r.status_code)
         else:
             return jsd

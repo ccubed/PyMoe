@@ -3,6 +3,7 @@ import ujson
 import requests
 from pymoe.errors import *
 from pymoe.helpers import *
+from pymoe.anime.get.kitsu import show
 
 settings = {
     'header': {
@@ -15,25 +16,10 @@ settings = {
 
 def characters(term : str):
     """
-        TODO: Write This
+        Kitsu doesn't support text filtering on the anime-characters endpoint
+        Method not supported
     """
-    r = requests.get(
-        settings['apiurl'] + "/anime-characters",
-        params={
-            'filter[text]': term
-        },
-        headers = settings['header']
-    )
-
-    if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
-
-    try:
-        jsd = ujson.loads(r.text)
-    except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
-    else:
-        return jsd
+    raise methodNotSupported("pymoe.anime.search.kitsu.characters", "kitsu")
 
 def shows(term: str):
     """
@@ -48,14 +34,21 @@ def shows(term: str):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
     
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
-        return jsd
+        if jsd['meta']['count']:
+            return kitsuWrapper(
+                jsd['data'],
+                jsd['links']['next'] if 'next' in jsd['links'] else None,
+                settings['header']
+            )
+        else:
+            return jsd
 
 def staff(term : str):
     """
@@ -70,14 +63,21 @@ def staff(term : str):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
-        return jsd
+        if jsd['meta']['count']:
+            return kitsuWrapper(
+                jsd['data'],
+                jsd['links']['next'] if 'next' in jsd['links'] else None,
+                settings['header']
+            )
+        else:
+            return jsd
 
 def studios(term : str):
     """
@@ -92,11 +92,78 @@ def studios(term : str):
     )
 
     if r.status_code != 200:
-        raise ServerError(r.text, r.status_code)
+        raise serverError(r.text, r.status_code)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
-        raise SerializationFailed(r.text, r.status_code)
+        raise serializationFailed(r.text, r.status_code)
     else:
-        return jsd
+        if jsd['meta']['count']:
+            return kitsuWrapper(
+                jsd['data'],
+                jsd['links']['next'] if 'next' in jsd['links'] else None,
+                settings['header']
+            )
+        else:
+            return jsd
+
+def season(season : str = None, seasonYear : int = date.today().year):
+    """
+        TODO: Write This
+    """
+    myseason = season if season else whatSeason(date.today().month)
+
+    r = requests.get(
+        settings['apiurl'] + "/anime",
+        params = {
+            "filter[season]": myseason,
+            "filter[seasonYear]": seasonYear
+        },
+        headers = settings['header']
+    )
+
+    if r.status_code != 200:
+        raise serverError(r.text, r.status_code)
+
+    try:
+        jsd = ujson.loads(r.text)
+    except ValueError:
+        raise serializationFailed(r.text, r.status_code)
+    else:
+        if jsd['meta']['count']:
+            return kitsuWrapper(
+                jsd['data'],
+                jsd['links']['next'] if 'next' in jsd['links'] else None,
+                settings['header']
+            )
+        else:
+            return jsd
+
+def streaming(item_id : int):
+    """
+        TODO: Write This
+    """
+    data = show(item_id)
+
+    r = requests.get(
+        data['data']['relationships']['streamingLinks']['links']['related'],
+        headers = settings['header']
+    )
+
+    if r.status_code != 200:
+        raise serverError(r.text, r.status_code)
+
+    try:
+        jsd = ujson.loads(r.text)
+    except ValueError:
+        raise serializationFailed(r.text, r.status_code)
+    else:
+        if jsd['meta']['count']:
+            return kitsuWrapper(
+                jsd['data'],
+                jsd['links']['next'] if 'next' in jsd['links'] else None,
+                settings['header']
+            )
+        else:
+            return jsd

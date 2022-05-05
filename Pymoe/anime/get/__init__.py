@@ -11,9 +11,6 @@ def character(item_id : int):
 def show(item_id : int):
     return kitsu.show(item_id)
 
-def season(season : str = None, seasonYear : int = date.today().year):
-    return kitsu.season(season, seasonYear)
-
 def episode(item_id : int):
     return kitsu.episode(item_id)
 

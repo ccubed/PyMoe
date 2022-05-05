@@ -1,18 +1,18 @@
-class MoeError(Exception):
+class moeError(Exception):
     """
     Just making it more clear where the error comes from
     """
     pass
 
 
-class NoSSL(MoeError):
+class noSSL(moeError):
     """
     Raised when we can't import SSL. Necessary for TLS and SSL Socket Wraps.
     """
     def __repr__(self):
         return "No SSL Library available. Please install OpenSSL or some alternative."
 
-class UserLoginFailed(MoeError):
+class userLoginFailed(moeError):
     """
     Raised when user details were not authenticated by the endpoint for the API.
     If available, a message that was provided from the API is given.
@@ -24,7 +24,7 @@ class UserLoginFailed(MoeError):
     def __repr__(self):
         return "We attempted to login using those details but got an error.\nError: {}".format(self.message)
 
-class GeneralLoginError(MoeError):
+class generalLoginError(moeError):
     """
     Raised when an API refuses to allow us to login for some reason other than user credentials. Mostly for VNDB.
     """
@@ -34,7 +34,7 @@ class GeneralLoginError(MoeError):
     def __repr__(self):
         return "We attempted to login but the server responded with: {}".format(self.message)
 
-class ServerError(MoeError):
+class serverError(moeError):
     """
     Raised when we encounter an error retrieving information from the server.
     """
@@ -48,7 +48,7 @@ class ServerError(MoeError):
         else:
             return "Encountered a server error attempting to access information. \nCode: {}".format(self.code)
 
-class MethodNotSupported(MoeError):
+class methodNotSupported(moeError):
     """
         Raised when an operation is requested on an Interface that does not support it.
     """
@@ -59,7 +59,7 @@ class MethodNotSupported(MoeError):
     def __repr__(self):
         return "Operation {} not supported on Interface {}.".format(self.operation, self.interface)
 
-class SerializationFailed(MoeError):
+class serializationFailed(moeError):
     """
         Raised when ujson fails to load the data sent by the server.
         Originally this raised a ServerError because I wanted to maintain the response from the server.
