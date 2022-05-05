@@ -1,17 +1,6 @@
 import requests
 import ujson
-from pymoe.anime.search import mal as ms
-from pymoe.anime.get import mal as mg
 from pymoe.errors import serializationFailed, serverError
-
-def setKey(apikey : str):
-    """
-        The MAL api requires a client ID to get data. This method applies your client ID to the requests.
-
-        :ivar apikey str: Your API Key
-    """
-    ms.settings['header']['X-MAL-CLIENT-ID'] = apikey
-    mg.settings['header']['X-MAL-CLIENT-ID'] = apikey
 
 def whatSeason(month : int):
     """

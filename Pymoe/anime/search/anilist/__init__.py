@@ -145,7 +145,12 @@ def shows(term : str, page : int = 1, perPage : int = 3):
             raise serverError(r.text, r.status_code)
         else:
             if jsd['data']['Page']['pageInfo']['hasNextPage']:
-                return searchWrapper
+                return anilistWrapper(
+                    jsd['data']['Page']['media'],
+                    json_params,
+                    settings['header'],
+                    settings['apiurl']
+                )
             else:
                 return jsd['data']['Page']['media']
 

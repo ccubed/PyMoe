@@ -1,1 +1,1 @@
-from pymoe.anime import *
+import pymoe.anime

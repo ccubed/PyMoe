@@ -2,7 +2,7 @@ from datetime import date
 import ujson
 import requests
 from pymoe.errors import *
-from pymoe.helpers import *
+from pymoe.helpers import kitsuWrapper, whatSeason
 from pymoe.anime.get.kitsu import show
 
 settings = {
