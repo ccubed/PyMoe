@@ -394,7 +394,7 @@ def studios(term : str, page : int = 1, perPage : int = 3):
             else:
                 return jsd['data']['Page']['studios']
 
-def airingSchedule(item_id: int, notYetAired: bool = False):
+def airingSchedule(item_id: int):
     """
         Given an anime id, return the airing schedule.
         This returns a full airing schedule, including already aired episodes.

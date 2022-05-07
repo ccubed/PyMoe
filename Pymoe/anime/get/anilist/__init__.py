@@ -261,6 +261,7 @@ def episode(item_id : int):
 def streaming(item_id : int, page : int = 1, perPage : int = 3):
     '''
         Given a show ID, return all streaming links for that show.
+        Unlike Kitsu, this returns one streaming link per episode per service.
 
         :param item_id: The ID of the show you want streaming links for
     '''

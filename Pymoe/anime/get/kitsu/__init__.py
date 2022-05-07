@@ -14,12 +14,12 @@ settings = {
 
 def character(item_id : int):
     """
-        TODO: Write This
-        ALSO TODO: REWRITE THIS TO USE CHARACTERS ENDPOINT
-        ALSO TODO: WRITE NEW FUNCTIONS FOR GETTING ON ANIME-CHARACTERS ENDPOINT
+        Get a character with the specific ID from the kitsu api.
+
+        :param item_id: ID of the character you want info on.
     """
     r = requests.get(
-        settings['apiurl'] + "/anime-characters/{}/character".format(item_id),
+        settings['apiurl'] + "/characters/{}".format(item_id),
         headers = settings['header']
     )
 
@@ -35,7 +35,9 @@ def character(item_id : int):
 
 def show(item_id : int):
     """
-        TODO: Write This
+        Get a show with the specific ID from the kitsu api.
+
+        :param item_id: ID of the show you want info on.
     """
     r = requests.get(
         settings['apiurl'] + "/anime/{}".format(item_id),
@@ -54,7 +56,9 @@ def show(item_id : int):
 
 def episode(item_id : int):
     """
-        TODO: Write This
+        Get an episode with the specific ID from the kitsu api.
+
+        :param item_id: ID of the episode you want info on.
     """
     r = requests.get(
         settings['apiurl'] + "/episodes/{}".format(item_id),
@@ -73,7 +77,9 @@ def episode(item_id : int):
     
 def staff(item_id : int):
     """
-        TODO: Write This
+        Get a staffer with the specific ID from the kitsu api.
+
+        :param item_id: ID of the staffer you want info on.
     """
     r = requests.get(
         settings['apiurl'] + "/anime-staff/{}/person".format(item_id),
@@ -92,7 +98,9 @@ def staff(item_id : int):
 
 def studio(item_id : int):
     """
-        TODO: Write This
+        Get a studio with the specific ID from the kitsu api.
+
+        :param item_id: ID of the studio you want info on.
     """
     r = requests.get(
         settings['apiurl'] + "/anime-productions/{}/producer".format(item_id),

@@ -14,11 +14,11 @@ settings = {
 
 def manga(term: str, page: int = 1, perPage: int = 3):
     """
-        Search for a manga by term.
-        Results are paginated by default. Page specifies which page we're on.
-        Perpage specifies how many per page to request. 3 is just the example from the API docs.
+        Search for manga that match term in the kitsu api.
 
-        TODO: WRITE THIS
+        :param term: Search Term
+        :param page: Which page of results?
+        :param perPage: How many results per page?
     """
     query_string = """\
         query( $query: String, $page: Int, $perPage: Int ){

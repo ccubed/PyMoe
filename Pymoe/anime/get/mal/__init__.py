@@ -19,7 +19,7 @@ def keyAssert():
         This is just an assert. It cancels the request if the API Key is not present.
     """
     if not settings['header']['X-MAL-CLIENT-ID'] or type(settings['header']['X-MAL-CLIENT-ID']) != str:
-        raise ValueError("API Key should be a string.")
+        raise ValueError("pymoe.anime.get.mal.keyAssert: API Key should be a string.")
     else:
         pass
 
@@ -32,7 +32,9 @@ def character(item_id : int):
 
 def show(item_id : int, fields : str = None):
     """
-        TODO: Write This
+        Get a show with the specific ID from the myanimelist api.
+
+        :param item_id: ID of the show you want info on.
     """
     keyAssert()
 

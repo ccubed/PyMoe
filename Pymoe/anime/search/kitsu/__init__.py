@@ -45,10 +45,12 @@ def characters(term : str):
             )
         else:
             return jsd
-            
+
 def shows(term: str):
     """
-        TODO: Write This
+        Search for shows that match the term in the Kitsu API.
+
+        :param term: Search Term
     """
     r = requests.get(
         settings['apiurl'] + "/anime",
@@ -77,21 +79,25 @@ def shows(term: str):
 
 def staff(term : str):
     """
-        Kitsu doesn't support text filtering on the anime-staff endpoint
-        Method not supported
+        Kitsu doesn't support text filtering on the anime-staff endpoint.
+        Method not supported.
     """
     raise methodNotSupported("pymoe.anime.search.kitsu.staff", "kitsu")
 
 def studios(term : str):
     """
-        Kitsu doesn't support text filtering on the anime-producers endpoint
-        Method not supported
+        Kitsu doesn't support text filtering on the anime-producers endpoint.
+        Method not supported.
     """
     raise methodNotSupported("pymoe.anime.search.kitsu.studios", "kitsu")
 
 def season(season : str = None, seasonYear : int = date.today().year):
     """
-        TODO: Write This
+        Given a season and a year, return a list of shows airing in that season and year.
+        This can also pull historical and future data. (Though not too far in the future)
+
+        :param season: Which Season? See pymoe.helpers for a list of seasons.
+        :param seasonYear: What year?
     """
     myseason = season if season else whatSeason(date.today().month)
 
@@ -123,7 +129,10 @@ def season(season : str = None, seasonYear : int = date.today().year):
 
 def streaming(item_id : int):
     """
-        TODO: Write This
+        Given a media ID, return all streaming links related to that media.
+        Unlike anilist, this returns one link per streaming service.
+
+        :param term: Search Term
     """
     data = show(item_id)
 

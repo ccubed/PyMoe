@@ -26,12 +26,12 @@ def keyAssert():
 
 def characters(term : str):
     """
-        No endpoint exists for this at this time
+        No endpoint exists for this at this time.
         Method not supported
     """
     raise methodNotSupported("pymoe.anime.search.mal.characters", "myanimelist")
 
-def shows(term: str, fields : str = None, limit : int = 10, offset : int = 0, nsfw : bool = False):
+def shows(term: str, fields: str | None = None, limit: int = 10, offset: int = 0, nsfw: bool = False):
     """
         Search for shows that match the given search term.
 
@@ -70,14 +70,14 @@ def shows(term: str, fields : str = None, limit : int = 10, offset : int = 0, ns
 
 def staff(term : str):
     """
-        No endpoint exists for this at this time
+        No endpoint exists for this at this time.
         Method not supported
     """
     raise methodNotSupported("pymoe.anime.search.mal.staff", "myanimelist")
 
 def studios(term : str):
     """
-        No endpoint exists for this at this time
+        No endpoint exists for this at this time.
         Method not supported
     """
     raise methodNotSupported("pymoe.anime.search.mal.studios", "myanimelist")
