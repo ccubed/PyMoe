@@ -3,7 +3,10 @@ from pymoe.helpers import vndbWrapper
 
 def vn(term: str, page: int = 1):
     """
-        TODO: Write This
+        Search VNDB for visual novels that match the search term.
+
+        :param term: Search Term
+        :param page: Which page of results to start on.
     """
     ret = pymoe.vn.connection.mySock.send_command("get vn basic,anime,details,stats,screens (title ~ {})".format(term))
     
@@ -25,7 +28,10 @@ def vn(term: str, page: int = 1):
 
 def character(term: str, page: int = 1):
     """
-        TODO: Write This
+        Search VNDB for characters that match the search term.
+
+        :param term: Search Term
+        :param page: Which page of results to start on.
     """
     ret = pymoe.vn.connection.mySock.send_command("get character basic,details,meas,vns (search ~ {})".format(term))
 
@@ -47,7 +53,10 @@ def character(term: str, page: int = 1):
 
 def releases(vnid: int, page: int = 1):
     """
-        TODO: Write This
+        Search VNDB for releases that match the search term.
+
+        :param term: Search Term
+        :param page: Which page of results to start on.
     """
     ret = pymoe.vn.connection.mySock.send_command("get release basic,details (vn = {})".format(vnid))
 

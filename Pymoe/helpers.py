@@ -19,16 +19,16 @@ def whatSeason(month : int):
 
 class searchWrapper(list):
     """
-        :ivar _url str: Link to the next set of results
-        :ivar header dict: Headers needed for API calls
+        :ivar _url: Link to the next set of results
+        :ivar header: Headers needed for API calls
     """
     def __init__(self, data: list, link: str, headers: dict):
         """
         Initialize a new SearchWrapper. This is an API aware iterator that subclasses list.
 
-        :param data list: The first set of results populates our list at initilization
-        :param link str: the link to the next set of results
-        :param headers dict: a dictionary of necessary headers on each API call
+        :param data: The first set of results populates our list at initilization
+        :param link: the link to the next set of results
+        :param headers: a dictionary of necessary headers on each API call
         """
         super().__init__(data)
         self._url = link
@@ -39,16 +39,16 @@ class searchWrapper(list):
 
 class kitsuWrapper(searchWrapper):
     """
-        :ivar _url str: Link to the next set of results
-        :ivar header dict: Headers needed for API calls
+        :ivar _url: Link to the next set of results
+        :ivar header: Headers needed for API calls
     """
     def __init__(self, data: list, link: str, headers: dict):
         """
         Initialize a new SearchWrapper. This is an API aware iterator that subclasses list.
 
-        :param data list: The first set of results populates our list at initilization
-        :param link str: the link to the next set of results
-        :param headers dict: a dictionary of necessary headers on each API call
+        :param data: The first set of results populates our list at initilization
+        :param link: the link to the next set of results
+        :param headers: a dictionary of necessary headers on each API call
         """
         super().__init__(data, link, headers)
 
@@ -75,16 +75,16 @@ class kitsuWrapper(searchWrapper):
 
 class malWrapper(searchWrapper):
     """
-        :ivar _url str: Link to the next set of results
-        :ivar header dict: Headers needed for API calls
+        :ivar _url: Link to the next set of results
+        :ivar header: Headers needed for API calls
     """
     def __init__(self, data: list, link: str, headers: dict):
         """
         Initialize a new SearchWrapper. This is an API aware iterator that subclasses list.
 
-        :param data list: The first set of results populates our list at initilization
-        :param link str: the link to the next set of results
-        :param headers dict: a dictionary of necessary headers on each API call
+        :param data: The first set of results populates our list at initilization
+        :param link: the link to the next set of results
+        :param headers: a dictionary of necessary headers on each API call
         """
         super().__init__(data, link, headers)
 
@@ -111,18 +111,22 @@ class malWrapper(searchWrapper):
 
 class anilistWrapper(list):
     """
-        This is a search wrapper for anilist. It does not inherit from the subclass of SearchWrapper because the GraphQL interface is too different from the other apis.
+        This is a search wrapper for anilist. 
+        It does not inherit from the subclass of SearchWrapper because the GraphQL interface is too different from the other apis.
 
-        :ivar _url str: Link to the next set of results
-        :ivar header dict: Headers needed for API calls
+        :ivar json: The JSON Parameters to send with the request
+        :ivar header: The Headers to send with the request
+        :ivar base_url: The base API Url
+        :ivar isNext: Simple switch for denoting no more results
     """
     def __init__(self, data: list, json: dict, headers: dict, base_url: str):
         """
         Initialize a new SearchWrapper. This is an API aware iterator that subclasses list.
 
         :param data list: The first set of results populates our list at initilization
-        :param link str: the link to the next set of results
-        :param headers dict: a dictionary of necessary headers on each API call
+        :param json: The JSON Parameters to send with the request
+        :param headers: The Headers to send with the request
+        :param base_url: The base API Url
         """
         super().__init__(data)
         self.json = json
@@ -157,23 +161,31 @@ class anilistWrapper(list):
                     else:
                         self.extend(jsd['data']['Page'][list(jsd['data']['Page'].keys())[1]])
                 
-                if jsd['data']['Page']['pageInfo']['hasNextPage']:
-                    self.isNext = 1
-                    self.json['variables']['page'] += 1
-                else:
-                    self.isNext = 0
+                    if jsd['data']['Page']['pageInfo']['hasNextPage']:
+                        self.json['variables']['page'] += 1
+                    else:
+                        self.isNext = False
 
                 return self.pop()
 
 class vndbWrapper(list):
     """
-        This is a search wrapper for VNDB. It does not inherit from the subclass of SearchWrapper because the interface is too different from the other apis.
+        This is a search wrapper for VNDB. 
+        It does not inherit from the subclass of SearchWrapper because the interface is too different from the other apis.
 
         :ivar sock: The socket reference
-        :ivar page: The next page
-        :ivar command: The command or none, but only if 
+        :ivar page: The next page or None
+        :ivar command: The command or None
     """
     def __init__(self, theData: list, theSocket, thePage: int | None, theCommand: str | None):
+        """
+            Initialize a new SearchWrapper. This is an API aware iterator that subclasses list.
+
+            :param theData: The initial list of results
+            :param theSocket: The Socket Reference
+            :param thePage: Which page of results?
+            :param theCommand: Copy of the command needed to recreate the request
+        """
         super.__init__(theData)
         self.sock = theSocket
         self.page = thePage

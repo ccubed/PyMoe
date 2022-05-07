@@ -13,7 +13,9 @@ settings = {
 
 def manga(item_id: int):
     """
-        TODO: Write This
+        Get information on the given manga by ID.
+
+        :param item_id: The ID of the manga you want information on
     """
     r = requests.get(
         settings['apiurl'] + "/manga/{}".format(item_id),

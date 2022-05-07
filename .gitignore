@@ -68,6 +68,12 @@ venv/*
 
 # Special
 DEV_NOTES
+devprep/
 
 # toml files for flit
 *.toml
+
+# Sphinx
+_build/
+_static/
+_templates/

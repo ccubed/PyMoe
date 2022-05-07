@@ -14,14 +14,6 @@ settings = {
     'default_fields': 'id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,source,rating,studios,related_anime,related_manga'
 }
 
-def setKey(apikey : str):
-    """
-        The MAL api requires a client ID to get data. This method applies your client ID to the requests.
-
-        :param apikey str: Your API Key
-    """
-    settings['header']['X-MAL-CLIENT-ID'] = apikey
-
 def keyAssert():
     """
         This is just an assert. It cancels the request if the API Key is not present.

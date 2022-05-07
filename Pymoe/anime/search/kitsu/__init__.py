@@ -1,4 +1,5 @@
 from datetime import date
+from http import server
 import ujson
 import requests
 from pymoe.errors import methodNotSupported, serverError, serializationFailed
@@ -16,10 +17,35 @@ settings = {
 
 def characters(term : str):
     """
-        TODO: REWRITE THIS TO USE THE CHARACTERS ENDPOINT
-    """
-    raise methodNotSupported("pymoe.anime.search.kitsu.characters", "kitsu")
+        Search for characters that match the term in the Kitsu API.
 
+        :param term: Search Term
+    """
+    r = requests.get(
+        settings['apiurl'] + "/characters",
+        params = {
+            'filter[name]': term
+        },
+        headers = settings['header']
+    )
+
+    if r.status_code != 200:
+        raise serverError(r.text, r.status_code)
+    
+    try:
+        jsd = ujson.loads(r.text)
+    except ValueError:
+        raise serializationFailed(r.text, r.status_code)
+    else:
+        if jsd['meta']['count']:
+            return kitsuWrapper(
+                jsd['data'],
+                jsd['links']['next'] if 'next' in jsd['links'] else None,
+                settings['header']
+            )
+        else:
+            return jsd
+            
 def shows(term: str):
     """
         TODO: Write This

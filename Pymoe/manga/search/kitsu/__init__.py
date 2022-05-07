@@ -14,9 +14,9 @@ settings = {
 
 def manga(term: str):
     """
-        Search for manga by term.
+        Search for manga that match the search term in the Kitsu API.
     
-        TODO: WRITE THIS
+        :param term: Search Term
     """
     r = requests.get(
         settings['apiurl'] + "/manga",

@@ -16,7 +16,11 @@ settings = {
 
 def characters(term : str, page : int = 1, perPage : int = 3):
     """
-        TODO: Write This
+        Search for characters that match the term in the API.
+
+        :param term: Search Term
+        :param page: Which page of the results?
+        :param perPage: How many results per page?
     """
     query_string = """\
         query ($query: String, $page: Int, $perPage: Int){
@@ -96,7 +100,11 @@ def characters(term : str, page : int = 1, perPage : int = 3):
 
 def shows(term : str, page : int = 1, perPage : int = 3):
     """
-        TODO: Write This
+        Search for shows(anime) that match the term in the API.
+
+        :param term: Search Term
+        :param page: Which page of the results?
+        :param perPage: How many results per page?
     """
     query_string = """\
         query ($query: String, $page: Int, $perPage: Int){
@@ -183,7 +191,11 @@ def shows(term : str, page : int = 1, perPage : int = 3):
 
 def staff(term: str, page : int = 1, perPage : int = 3):
     """
-        TODO: Write This
+        Search for staffers that match the term in the API.
+
+        :param term: Search Term
+        :param page: Which page of the results?
+        :param perPage: How many results per page?
     """
     query_string = """\
         query($query: String, $page: Int, $perPage: Int){
@@ -309,7 +321,11 @@ def staff(term: str, page : int = 1, perPage : int = 3):
 
 def studios(term : str, page : int = 1, perPage : int = 3):
     """
-        TODO: Write this
+        Search for studios that match the term in the API.
+
+        :param term: Search Term
+        :param page: Which page of the results?
+        :param perPage: How many results per page?
     """
     query_string = """\
         query($query: String, $page: Int, $perPage: Int){
@@ -378,16 +394,17 @@ def studios(term : str, page : int = 1, perPage : int = 3):
             else:
                 return jsd['data']['Page']['studios']
 
-def airingSchedule(item_id: int):
+def airingSchedule(item_id: int, notYetAired: bool = False):
     """
         Given an anime id, return the airing schedule.
-        Note: This returns a full airing schedule, including already aired episodes.
-        If it has already aired timeUntilAiring will be <= 0.
-        timeUntilAiring is just seconds. 
+        This returns a full airing schedule, including already aired episodes.
+        If an episode has already aired timeUntilAiring will be <= 0.
+        timeUntilAiring is just seconds.
     """
     query_string = """\
-            query( $id: Int, $page: Int, $perPage: Int ) {
-                Page ( page: $page, perPage: $perPage ) {
+        query( $id: Int, $page: Int, $perPage: Int ) {
+            Page ( page: $page, perPage: $perPage ) {
+                pageInfo {
                     currentPage
                     hasNextPage
                 }
@@ -395,13 +412,10 @@ def airingSchedule(item_id: int):
                     id
                     episode
                     timeUntilAiring
-                    media {
-                        title
-                        id
-                    }
                 }
             }
-        """
+        }
+    """
 
     json_params = {
         'query': query_string,

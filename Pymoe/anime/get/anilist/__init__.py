@@ -15,7 +15,9 @@ settings = {
 
 def character(item_id : int):
     """
-        TODO: Write This
+        Get a character with a certain ID in the anilist API.
+
+        :param item_id: The ID of the character you want information on.
     """
     query_string = '''
         query ($id: Int){
@@ -76,7 +78,9 @@ def character(item_id : int):
 
 def show(item_id : int):
     """
-        TODO: Write this
+        Get a show with a certain ID in the anilist API.
+
+        :param item_id: The ID of the show you want information on.
     """
     query_string = '''
         query ($id: Int) {
@@ -174,7 +178,14 @@ def show(item_id : int):
 
 def season(theSeason : str = None, year : int = date.today().year, page : int = 1, perPage : int = 3):
     """
-        TODO: Write This
+        Get a list of seasonal anime given a season and year.
+
+        :param theSeason: What Season? See pymoe.helpers for a list of seasons.
+        :param year: What year do you want info on?
+        :param page: Which page of results do you want?
+        :param perPage: How many results per page?
+
+        TODO: Test return data on this
     """
     myseason = theSeason if theSeason else whatSeason(date.today().month)
 
@@ -249,7 +260,9 @@ def episode(item_id : int):
 
 def streaming(item_id : int, page : int = 1, perPage : int = 3):
     '''
-        TODO: Write This
+        Given a show ID, return all streaming links for that show.
+
+        :param item_id: The ID of the show you want streaming links for
     '''
     query_string = '''
         query ($id: Int) {
@@ -288,7 +301,9 @@ def streaming(item_id : int, page : int = 1, perPage : int = 3):
 
 def staff(item_id : int):
     """
-        TODO: Write This
+        Get information on a specific staffer given their ID.
+
+        :param item_id: The ID of the staff member you want information on.
     """
     query_string = '''
         query ($id: Int){
@@ -394,7 +409,9 @@ def staff(item_id : int):
 
 def studio(item_id : int):
     """
-        TODO: Write This
+        Get a studio with a specific id.
+
+        :param item_id: The ID of the studio you want information on.
     """
     query_string = '''
         query ($id: Int) {

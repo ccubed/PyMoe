@@ -15,14 +15,6 @@ settings = {
     'default_fields': 'id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,nsfw,genres,media_type,status,num_episodes,start_season,broadcast,source,rating,studios,related_anime,related_manga'
 }
 
-def setKey(apikey : str):
-    """
-        The MAL api requires a client ID to get data. This method applies your client ID to the requests.
-
-        :ivar apikey str: Your API Key
-    """
-    settings['header']['X-MAL-CLIENT-ID'] = apikey
-
 def keyAssert():
     """
         This is just an assert. It cancels the request if the API Key is not present.
@@ -41,7 +33,13 @@ def characters(term : str):
 
 def shows(term: str, fields : str = None, limit : int = 10, offset : int = 0, nsfw : bool = False):
     """
-        TODO: Write This
+        Search for shows that match the given search term.
+
+        :param term: Search Term
+        :param fields: a comma separated list of fields to request from the API
+        :param limit: How many results per page?
+        :param offset: Which result should we start at?
+        :param nsfw: Return adult results?
     """
     keyAssert()
 
@@ -84,9 +82,15 @@ def studios(term : str):
     """
     raise methodNotSupported("pymoe.anime.search.mal.studios", "myanimelist")
 
-def season(season : str = None, seasonYear : int = date.today().year, offset : int = 0, nsfw = None):
+def season(season: str | None = None, seasonYear: int = date.today().year, limit: int = 10, offset: int = 0, nsfw: bool = False):
     """
-        TODO: Write This
+        Search for shows from a given season in a given year.
+
+        :param season: Which season? See pymoe.helpers for a list.
+        :param seasonYear: Which year?
+        :param limit: How many results per page?
+        :param offset: Which result do we start at?
+        :param nsfw: Return adult results?
     """
     keyAssert()
 
@@ -96,9 +100,10 @@ def season(season : str = None, seasonYear : int = date.today().year, offset : i
         settings['apiurl'] + "anime/season/{}/{}".format(seasonYear, myseason),
         params = {
             'sort': 'anime_score',
-            'limit': 10,
+            'limit': limit,
             'offset': offset,
-            'fields': 'id,title,main_picture,alternative_titles,start_date,broadcast'
+            'fields': 'id,title,main_picture,alternative_titles,start_date,broadcast',
+            'nsfw': 'false' if not nsfw else 'true'
         },
         headers = settings['header']
     )

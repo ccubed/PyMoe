@@ -98,10 +98,8 @@ class VNDBConnection:
                 self.data_buffer = bytes(1024)
         temp = temp.replace('\x04', '')
         if temp == 'ok':  # Because login
-            print("DEBUG: Returning String")
             return temp
         else:
-            print("DEBUG: returning dictionary")
             return ujson.loads(temp.split(' ', 1)[1])
 
 mySock = VNDBConnection()
