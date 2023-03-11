@@ -1,2 +1,2 @@
-from pymoe.ln.get import *
-from pymoe.ln.search import *
+from . import get
+from . import search

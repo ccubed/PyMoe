@@ -1,7 +1,7 @@
 from datetime import date
 import ujson
 import requests
-from pymoe.errors import serverError, serializationFailed
+from ....errors import serverError, serializationFailed
 
 settings = {
     'header': {

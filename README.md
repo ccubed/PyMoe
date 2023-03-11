@@ -1,6 +1,7 @@
 [![Documentation Status](https://readthedocs.org/projects/pymoe/badge/?version=latest)](http://pymoe.readthedocs.io/en/latest/?badge=latest)
 # PyMoe
 Welcome to Pymoe, the only python lib you'll ever need if you need anime/manga on the python platform.
+
 ## Simplified Changelong
 
 1.0.0:
@@ -39,7 +40,7 @@ Once the 2.0 update is completed, pip will transition to downloading 2.0 by defa
 - MyAnimeList
 
 ### Visual Novels (VN)
-- VNDB
+- None
 
 ### Light Novels (LN)
 - Bakatsuki
@@ -73,12 +74,6 @@ pymoe.ln.search.web_novels()
 pymoe.ln.get.cover(98771)
 ```
 
-```python
-import pymoe
-
-pymoe.vn.search.vn("ever")
-pymoe.vn.get.vn(17)
-```
 **API Aware Iterators**
 
 All interfaces that return multiple pages of results return as an API Aware Search Iterator. That means you can call `pymoe.anime.search.kitsu.shows("Dragon")` and get back an iterator that automatically calls for new data from the API as you exhaust the items already in the list. All interfaces that only return one result will just return the result. 
@@ -102,11 +97,8 @@ If a search interface only returns one result, we just return that result.
 ---
 
 ## Removed Interfaces
-vndb.set
-: This is a user management function.
-
-vndb.dbstats
-: This is a simple command, but the information is not useful to most people
+vndb
+: The TCP X11 API was shut down and I haven't had the time or energy to test the new HTTP API.
 
 bakatsuki.get_text
 : This library isn't meant to be a light novel reader, rather a way to get information about light novels that exist.
@@ -122,10 +114,17 @@ While I'm pairing down Pymoe to just focus on getting information as I originall
 
 ### Note about defaults
 Anime
-: Kitsu is the default anime source because it is a step above the others by providing both streaming links and ID mappings for other services.
+: While Kitsu was originally the default source for anime, this has changed to Anilist for long term support. See note below.
 
 Manga
 : Anilist is the default for manga because it identified more random manga by multiple titles than the others did. For example, My Wife Is a Demon Queen / Wo Laopo Shi Mowang Daren / 我老婆是魔王大人 is a chinese manga. Anilist identified it by all three titles, Kitsu by two, and myanimelist didn't find it at all.
 
-VN / LN
-: Well, there's only one source for each, so...
+LN
+: Well, there's only one source
+
+## A Note About Kitsu
+If you've been paying attention to what Kitsu is doing with their api, they appear to be moving to Algolia for searching. Algolia requires you to create an account on their website in order to access any member site's data. I'm not going to create an account just for a wrapper. They have a python api already anyways if you want to implement the search. I will continue to leave Kitsu searching in until this change actually happens. However, expect that one day, in the future, Kitsu search end points will no longer work.
+
+SubNote: kitsu.season isn't actually a search even though it appears there. It's a get request with a filter. That will continue to work based on my understanding of the design. 
+
+: You can get more information at https://github.com/hummingbird-me/api-docs

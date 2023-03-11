@@ -1,6 +1,6 @@
 import requests
 import ujson
-from pymoe.errors import serverError, serializationFailed
+from ...errors import serverError, serializationFailed
 
 settings = {
     'apiurl': "https://www.baka-tsuki.org/project/api.php",

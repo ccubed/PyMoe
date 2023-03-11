@@ -2,8 +2,8 @@ from datetime import date
 from typing import Dict
 import ujson
 import requests
-from pymoe.errors import serializationFailed, serverError
-from pymoe.helpers import anilistWrapper
+from ....errors import serializationFailed, serverError
+from ....helpers import anilistWrapper
 
 settings = {
     'header': {

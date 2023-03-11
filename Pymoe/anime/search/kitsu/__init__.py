@@ -2,9 +2,9 @@ from datetime import date
 from http import server
 import ujson
 import requests
-from pymoe.errors import methodNotSupported, serverError, serializationFailed
-from pymoe.helpers import kitsuWrapper, whatSeason
-from pymoe.anime.get.kitsu import show
+from ....errors import methodNotSupported, serverError, serializationFailed
+from ....helpers import kitsuWrapper, whatSeason
+from ...get.kitsu import show
 
 settings = {
     'header': {

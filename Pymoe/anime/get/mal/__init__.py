@@ -1,7 +1,7 @@
 from datetime import date
 import ujson
 import requests
-from pymoe.errors import methodNotSupported, serverError
+from ....errors import methodNotSupported, serverError
 
 settings = {
     'header': {

@@ -1,7 +1,8 @@
 import requests
 import ujson
-from pymoe.errors import serializationFailed, serverError
-from pymoe.anime.get.anilist import character as cref
+from ....errors import serializationFailed, serverError
+from ....anime.get.anilist import character as cref
+from ....anime.get.anilist import staff as sref
 
 settings = {
     'header': {
@@ -38,7 +39,7 @@ def manga(item_id: int):
                     day
                 }
                 coverImage {
-                    extralarge
+                    extraLarge
                     large
                     medium
                     color
@@ -100,3 +101,10 @@ def character(item_id: int):
         This is simply a reference to the character function that already exists.
     """
     return cref(item_id)
+
+def staff(item_id: int):
+    """
+        Anilist does not separate staff by anime/manga. 
+        This is simply a reference to the staff function that already exists.
+    """
+    return sref(item_id)

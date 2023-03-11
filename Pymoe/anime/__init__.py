@@ -1,7 +1,7 @@
-from pymoe.anime import get
-from pymoe.anime import search
-import pymoe.anime.get.mal as gm
-import pymoe.anime.search.mal as sm
+from ..anime import get
+from ..anime import search
+from ..anime.get import mal as gm
+from ..anime.search import mal as sm
 
 def setKey(apikey: str):
     """

@@ -1,21 +1,21 @@
 from datetime import date
-from pymoe.anime.search import anilist
-from pymoe.anime.search import kitsu
-from pymoe.anime.search import mal
+from ..search import anilist
+from ..search import kitsu
+from ..search import mal
 
 # Default Search Methods using Kitsu
 
 def characters(term : str):
-    return kitsu.characters(term)
+    return anilist.characters(term)
 
 def shows(term : str):
-    return kitsu.shows(term)
+    return anilist.shows(term)
 
 def staff(term : str):
-    return kitsu.staff(term)
+    return anilist.staff(term)
 
 def studios(term : str):
-    return kitsu.studios(term)
+    return anilist.studios(term)
 
 def season(season : str = None, seasonYear : int = date.today().year):
     return kitsu.season(season, seasonYear)

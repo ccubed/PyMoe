@@ -1,6 +1,6 @@
 import requests
 import ujson
-from pymoe.errors import serializationFailed, serverError
+from .errors import serializationFailed, serverError
 
 def whatSeason(month : int):
     """
@@ -19,6 +19,8 @@ def whatSeason(month : int):
 
 class searchWrapper(list):
     """
+        This is an API aware iterator that subclasses list.
+
         :ivar _url: Link to the next set of results
         :ivar header: Headers needed for API calls
     """
@@ -39,6 +41,8 @@ class searchWrapper(list):
 
 class kitsuWrapper(searchWrapper):
     """
+        This is an API aware iterator that subclasses list. This is for Kitsu.
+
         :ivar _url: Link to the next set of results
         :ivar header: Headers needed for API calls
     """
@@ -64,7 +68,7 @@ class kitsuWrapper(searchWrapper):
                 if r.status_code != 200:
                     raise StopIteration
                 else:
-                    jsd = r.json()
+                    jsd = ujson.loads(r.text)
 
 
                 self._url = jsd['links']['next'] if 'next' in jsd['links'] else None
@@ -75,6 +79,8 @@ class kitsuWrapper(searchWrapper):
 
 class malWrapper(searchWrapper):
     """
+        This is an API aware iterator that subclasses list. This is for MAL.
+
         :ivar _url: Link to the next set of results
         :ivar header: Headers needed for API calls
     """
@@ -100,7 +106,7 @@ class malWrapper(searchWrapper):
                 if r.status_code != 200:
                     raise StopIteration
                 else:
-                    jsd = r.json()
+                    jsd = ujson.loads(r.text)
 
 
                 self._url = jsd['paging']['next'] if 'next' in jsd['paging'] else None
@@ -167,45 +173,3 @@ class anilistWrapper(list):
                         self.isNext = False
 
                 return self.pop()
-
-class vndbWrapper(list):
-    """
-        This is a search wrapper for VNDB. 
-        It does not inherit from the subclass of SearchWrapper because the interface is too different from the other apis.
-
-        :ivar sock: The socket reference
-        :ivar page: The next page or None
-        :ivar command: The command or None
-    """
-    def __init__(self, theData: list, theSocket, thePage: int | None, theCommand: str | None):
-        """
-            Initialize a new SearchWrapper. This is an API aware iterator that subclasses list.
-
-            :param theData: The initial list of results
-            :param theSocket: The Socket Reference
-            :param thePage: Which page of results?
-            :param theCommand: Copy of the command needed to recreate the request
-        """
-        super.__init__(theData)
-        self.sock = theSocket
-        self.page = thePage
-        self.command = theCommand
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.__len__():
-            return self.pop()
-        else:
-            if not self.page:
-                raise StopIteration
-            else:
-                data = self.sock.send_command(self.command + ' ' + ujson.dumps({'page': self.page}))
-
-                if 'more' in data:
-                    self.page += 1
-                else:
-                    self.page = None
-
-                self.extend(data['items'])
