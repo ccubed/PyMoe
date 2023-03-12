@@ -2,6 +2,31 @@
 # PyMoe
 Welcome to Pymoe, the only python lib you'll ever need if you need anime/manga on the python platform.
 
+## Installation
+If you are looking to install version 2 with the unified api:
+```python
+python -m pip install pymoe
+```
+
+If you are looking for version 1.0.6, the version prior to the unified api update:
+```python
+python -m pip install pymoe==1.0.6
+```
+
+You can also git clone this branch and install it that way:
+```python
+git clone https://github.com/ccubed/PyMoe.git .
+python -m pip install -e .
+```
+
+Note that this project does not include a setup.py. This project uses flit, a modern build system. You will have to use a recent version of setuptools and pip that has support for pyproject.toml with a specified build pipeline. 
+
+Assuming you have flit, you can also do:
+```python
+git clone https://github.com/ccubed/PyMoe.git .
+flit install
+```
+
 ## Simplified Changelong
 
 1.0.0:

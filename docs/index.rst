@@ -4,6 +4,24 @@ Welcome to Pymoe's documentation!
 .. automodule:: Pymoe
     :members:
 
+Installing the Module
+=====================
+| If you want version 2, you can simply:
+| ``python -m pip install pymoe``
+|
+| If you are looking for version 1.0.6, the version prior to the unified api update:
+| ``python -m pip install pymoe==1.0.6``
+| 
+| You can also clone the branch and build it directly:
+| ``git clone https://github.com/ccubed/PyMoe.git``
+| ``python -m pip install -e .``
+| 
+| Note that this project does not use a setup.py. It uses a modern buildsystem: Flit. You'll need a recent version of setuptools and pip with support for pyproject.toml and a specified build pipeline.
+| 
+| Assuming you have flit you can:
+| ``git clone https://github.com/ccubed/PyMoe.git``
+| ``flit install``
+
 Pymoe Module
 ============
 *   :doc:`Pymoe.helpers <helpers>`
