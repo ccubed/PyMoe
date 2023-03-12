@@ -1,0 +1,42 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "PyMoe"
+authors = [{name = "Charles Click", email = "CharlesClick@vertinext.com"}]
+readme = "README.md"
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    'Development Status :: 5 - Production/Stable',
+    'Intended Audience :: Developers',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.6',
+    'Programming Language :: Python :: 3.5',
+    'Topic :: Software Development :: Libraries'
+]
+dynamic = ["version", "description"]
+requires-python = ">=3.5"
+dependencies = [
+    "requests",
+    "bs4",
+    "ujson"
+]
+
+[project.optional-dependencies]
+doc = ["sphinx"]
+
+[project.urls]
+Source = "https://github.com/ccubed/PyMoe"
+Documentation = "https://pymoe.readthedocs.io/en/latest"
+
+[tool.flit.module]
+name = "pymoe"
+
+[tool.flit.sdist]
+exclude = ["docs/*", "DEV_NOTES"]
+include = ["pymoe/*", "pyproject.toml"]

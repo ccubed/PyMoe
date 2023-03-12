@@ -65,3 +65,12 @@ target/
 
 # Venv
 venv/*
+
+# Special
+DEV_NOTES
+devprep/
+
+# Sphinx
+_build/
+_static/
+_templates/
