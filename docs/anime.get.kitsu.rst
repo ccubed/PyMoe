@@ -1,4 +1,4 @@
-pymoe.anime.get.kitsu
+Pymoe.anime.get.kitsu
 =====================
-.. automodule:: pymoe.anime.get.kitsu
+.. automodule:: Pymoe.anime.get.kitsu
     :members:

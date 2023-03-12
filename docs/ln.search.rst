@@ -1,4 +1,4 @@
-pymoe.ln.search
+Pymoe.ln.search
 ===============
-.. automodule:: pymoe.ln.search
+.. automodule:: Pymoe.ln.search
     :members:

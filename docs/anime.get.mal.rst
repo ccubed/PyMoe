@@ -1,4 +1,4 @@
-pymoe.anime.get.mal
+Pymoe.anime.get.mal
 ===================
-.. automodule:: pymoe.anime.get.mal
+.. automodule:: Pymoe.anime.get.mal
     :members:

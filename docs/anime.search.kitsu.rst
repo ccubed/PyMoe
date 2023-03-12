@@ -1,4 +1,4 @@
-pymoe.anime.search.kitsu
+Pymoe.anime.search.kitsu
 ========================
-.. automodule:: pymoe.anime.search.kitsu
+.. automodule:: Pymoe.anime.search.kitsu
     :members:

@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.abspath('..'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'pymoe'
+project = 'Pymoe'
 copyright = '2022, Charles Click'
 author = 'Charles Click'
 

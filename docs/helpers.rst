@@ -1,4 +1,4 @@
-pymoe.helpers
+Pymoe.helpers
 =============
-.. automodule:: pymoe.helpers
+.. automodule:: Pymoe.helpers
     :members:

@@ -1,39 +1,39 @@
-Welcome to PyMoe's documentation!
+Welcome to Pymoe's documentation!
 =================================
 
-.. automodule:: pymoe
+.. automodule:: Pymoe
     :members:
 
-pymoe Module
+Pymoe Module
 ============
-*   :doc:`pymoe.helpers <helpers>`
-*   :doc:`pymoe.errors <errors>`
+*   :doc:`Pymoe.helpers <helpers>`
+*   :doc:`Pymoe.errors <errors>`
 
-pymoe.anime Module
+Pymoe.anime Module
 ==================
-*   :doc:`pymoe.anime <anime>`
-*   :doc:`pymoe.anime.get <anime.get>`
-*   :doc:`pymoe.anime.get.anilist <anime.get.anilist>`
-*   :doc:`pymoe.anime.get.kitsu <anime.get.kitsu>`
-*   :doc:`pymoe.anime.get.mal <anime.get.mal>`
-*   :doc:`pymoe.anime.search.anilist <anime.search.anilist>`
-*   :doc:`pymoe.anime.search.kitsu <anime.search.kitsu>`
-*   :doc:`pymoe.anime.search.mal <anime.search.mal>`
+*   :doc:`Pymoe.anime <anime>`
+*   :doc:`Pymoe.anime.get <anime.get>`
+*   :doc:`Pymoe.anime.get.anilist <anime.get.anilist>`
+*   :doc:`Pymoe.anime.get.kitsu <anime.get.kitsu>`
+*   :doc:`Pymoe.anime.get.mal <anime.get.mal>`
+*   :doc:`Pymoe.anime.search.anilist <anime.search.anilist>`
+*   :doc:`Pymoe.anime.search.kitsu <anime.search.kitsu>`
+*   :doc:`Pymoe.anime.search.mal <anime.search.mal>`
 
-pymoe.manga Module
+Pymoe.manga Module
 ==================
-*   :doc:`pymoe.manga <manga>`
-*   :doc:`pymoe.manga.get <manga.get>`
-*   :doc:`pymoe.manga.get.anilist <manga.get.anilist>`
-*   :doc:`pymoe.manga.get.kitsu <manga.get.kitsu>`
-*   :doc:`pymoe.manga.search.anilist <manga.search.anilist>`
-*   :doc:`pymoe.manga.search.kitsu <manga.search.kitsu>`
+*   :doc:`Pymoe.manga <manga>`
+*   :doc:`Pymoe.manga.get <manga.get>`
+*   :doc:`Pymoe.manga.get.anilist <manga.get.anilist>`
+*   :doc:`Pymoe.manga.get.kitsu <manga.get.kitsu>`
+*   :doc:`Pymoe.manga.search.anilist <manga.search.anilist>`
+*   :doc:`Pymoe.manga.search.kitsu <manga.search.kitsu>`
 
-pymoe.ln Module
+Pymoe.ln Module
 ===============
-*   :doc:`pymoe.ln <ln>`
-*   :doc:`pymoe.ln.get <ln.get>`
-*   :doc:`pymoe.ln.search <ln.search>`
+*   :doc:`Pymoe.ln <ln>`
+*   :doc:`Pymoe.ln.get <ln.get>`
+*   :doc:`Pymoe.ln.search <ln.search>`
 
 Indices and tables
 ==================

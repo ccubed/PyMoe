@@ -1,4 +1,4 @@
-pymoe.ln.get
+Pymoe.ln.get
 ============
-.. automodule:: pymoe.ln.get
+.. automodule:: Pymoe.ln.get
     :members:
