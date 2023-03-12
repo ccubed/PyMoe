@@ -1,4 +1,4 @@
-pymoe.manga.get
+Pymoe.manga.get
 ===============
-.. automodule:: pymoe.manga.get
+.. automodule:: Pymoe.manga.get
     :members:

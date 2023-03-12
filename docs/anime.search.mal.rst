@@ -1,4 +1,4 @@
-pymoe.anime.search.mal
-=======================
-.. automodule:: pymoe.anime.search.mal
+Pymoe.anime.search.mal
+======================
+.. automodule:: Pymoe.anime.search.mal
     :members:

@@ -1,4 +1,4 @@
-pymoe.ln
+Pymoe.ln
 ========
-.. automodule:: pymoe.ln
+.. automodule:: Pymoe.ln
     :members:

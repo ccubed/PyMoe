@@ -1,4 +1,4 @@
-pymoe.errors
+Pymoe.errors
 ============
-.. automodule:: pymoe.errors
+.. automodule:: Pymoe.errors
     :members:

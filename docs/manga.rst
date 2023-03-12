@@ -1,4 +1,4 @@
-pymoe.manga
+Pymoe.manga
 ===========
-.. automodule:: pymoe.manga
+.. automodule:: Pymoe.manga
     :members:

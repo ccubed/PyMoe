@@ -1,4 +1,4 @@
-pymoe.anime
+Pymoe.anime
 ===========
-.. automodule:: pymoe.anime
+.. automodule:: Pymoe.anime
     :members:

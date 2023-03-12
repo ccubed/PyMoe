@@ -1,4 +1,4 @@
-pymoe.anime.get
+Pymoe.anime.get
 ===============
-.. automodule:: pymoe.anime.get
+.. automodule:: Pymoe.anime.get
     :members:

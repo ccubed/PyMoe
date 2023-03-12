@@ -1,4 +1,4 @@
-pymoe.anime.get.anilist
+Pymoe.anime.get.anilist
 =======================
-.. automodule:: pymoe.anime.get.anilist
+.. automodule:: Pymoe.anime.get.anilist
     :members:
