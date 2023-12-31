@@ -51,6 +51,7 @@ def manga(item_id: int):
                 averageScore
                 isAdult
                 siteUrl
+                popularity
                 characters {
                     nodes {
                         id

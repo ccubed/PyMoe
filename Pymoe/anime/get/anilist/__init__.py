@@ -119,6 +119,8 @@ def show(item_id : int):
                 synonyms
                 isAdult
                 siteUrl
+                idMal
+                popularity
                 nextAiringEpisode {
                     timeUntilAiring
                     airingAt
