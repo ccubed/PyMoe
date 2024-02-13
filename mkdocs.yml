@@ -1,4 +1,5 @@
 site_name: PyMoe
+
 theme:
   name: material
   icon:
@@ -8,6 +9,7 @@ theme:
     - search.highlight
     - search.share
     - header.autohide
+
 plugins:
   - search
   - mkdocstrings
@@ -17,6 +19,9 @@ plugins:
   - git-committers:
     repository: ccubed/PyMoe
     branch: master
+
 repo_url: https://github.com/ccubed/PyMoe
+
 repo_name: ccubed/PyMoe
+
 copyright: Copyright &copy; 2024 Charles Click under the MIT License

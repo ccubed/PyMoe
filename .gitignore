@@ -179,3 +179,4 @@ cython_debug/
 
 # Personal Listings
 devnotes/
+tests/client.py

@@ -2,24 +2,25 @@ from datetime import date
 import ujson
 import requests
 from pymoe.utils.errors import serializationFailed, serverError, methodNotSupported
-from pymoe.utils.helpers import whatSeason
+from pymoe.utils.helpers import whatSeason, anilistWrapper
 
 settings = {
-    'header': {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Pymoe (github.com/ccubed/PyMoe)',
-        'Accept': 'application/json'
+    "header": {
+        "Content-Type": "application/json",
+        "User-Agent": "Pymoe (github.com/ccubed/PyMoe)",
+        "Accept": "application/json",
     },
-    'apiurl': 'https://graphql.anilist.co'
+    "apiurl": "https://graphql.anilist.co",
 }
 
-def character(item_id : int):
-    """
-        Get a character with a certain ID in the anilist API.
 
-        :param item_id: The ID of the character you want information on.
+def character(item_id: int):
     """
-    query_string = '''
+    Get a character with a certain ID in the anilist API.
+
+    :param item_id: The ID of the character you want information on.
+    """
+    query_string = """
         query ($id: Int){
             Character (id: $id){
                 name{
@@ -53,17 +54,12 @@ def character(item_id : int):
                 }
             }
         }
-    '''
+    """
 
     r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'id': item_id
-            }
-        }
+        settings["apiurl"],
+        headers=settings["header"],
+        json={"query": query_string, "variables": {"id": item_id}},
     )
 
     try:
@@ -71,18 +67,19 @@ def character(item_id : int):
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
             return jsd
 
-def show(item_id : int):
-    """
-        Get a show with a certain ID in the anilist API.
 
-        :param item_id: The ID of the show you want information on.
+def show(item_id: int):
     """
-    query_string = '''
+    Get a show with a certain ID in the anilist API.
+
+    :param item_id: The ID of the show you want information on.
+    """
+    query_string = """
         query ($id: Int) {
             Media (id: $id, type: ANIME) {
                 title {
@@ -155,17 +152,12 @@ def show(item_id : int):
                 }
             }
         }
-    '''
+    """
 
     r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'id': item_id
-            }
-        }
+        settings["apiurl"],
+        headers=settings["header"],
+        json={"query": query_string, "variables": {"id": item_id}},
     )
 
     try:
@@ -173,23 +165,26 @@ def show(item_id : int):
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
             return jsd
 
-def season(theSeason : str = None, year : int = date.today().year, page : int = 1, perPage : int = 3):
-    """
-        Get a list of seasonal anime given a season and year.
 
-        :param theSeason: What Season? See pymoe.utils.helpers for a list of seasons. If not provided we will determine the season for you based on the current month.
-        :param year: What year do you want info on?
-        :param page: Which page of results do you want?
-        :param perPage: How many results per page?
+def season(
+    theSeason: str = None, year: int = date.today().year, page: int = 1, perPage: int = 3
+):
+    """
+    Get a list of seasonal anime given a season and year.
+
+    :param theSeason: What Season? See pymoe.utils.helpers for a list of seasons. If not provided we will determine the season for you based on the current month.
+    :param year: What year do you want info on?
+    :param page: Which page of results do you want?
+    :param perPage: How many results per page?
     """
     myseason = theSeason if theSeason else whatSeason(date.today().month)
 
-    query_string = '''
+    query_string = """
         query($season: MediaSeason, $seasonYear: Int, $page: Int, $perPage: Int){
             Page (page: $page, perPage: $perPage) {
                 pageInfo {
@@ -199,16 +194,29 @@ def season(theSeason : str = None, year : int = date.today().year, page : int = 
                 media (season: $season, seasonYear: $seasonYear){
                     id
                     idMal
-                    title
+                    title {
+                        romaji
+                        english
+                        native
+                    }
                     description
                     genres
-                    coverImage
+                    coverImage {
+                        extraLarge
+                        large
+                        medium
+                        color
+                    }
                     isAdult
                     nextAiringEpisode {
                         timeUntilAiring
                         airingAt
                     }
-                    startDate
+                    startDate {
+                        year
+                        month
+                        day
+                    }
                     streamingEpisodes {
                         title
                         thumbnail
@@ -224,48 +232,54 @@ def season(theSeason : str = None, year : int = date.today().year, page : int = 
                 }
             }
         }
-    '''
+    """
 
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'season': myseason,
-                'seasonYear': year,
-                'page': page,
-                'perPage': perPage
-            }
-        }
-    )
+    jsonData = {
+        "query": query_string,
+        "variables": {
+            "season": myseason.upper(),
+            "seasonYear": year,
+            "page": page,
+            "perPage": perPage,
+        },
+    }
+
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=jsonData)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            return jsd
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
+                return anilistWrapper(
+                    jsd["data"]["Page"]["media"],
+                    jsonData,
+                    settings["header"],
+                    settings["apiurl"],
+                )
+            else:
+                return jsd["data"]["Page"]["media"]
 
 
-def episode(item_id : int):
+def episode(item_id: int):
     """
-        Unsupported on Anilist
+    Unsupported on Anilist
     """
     raise methodNotSupported("pymoe.anime.get.anilist.episode", "anilist")
-    
 
-def streaming(item_id : int, page : int = 1, perPage : int = 3):
-    '''
-        Given a show ID, return all streaming links for that show.
-        Unlike Kitsu, this returns one streaming link per episode per service.
 
-        :param item_id: The ID of the show you want streaming links for
-    '''
-    query_string = '''
+def streaming(item_id: int, page: int = 1, perPage: int = 3):
+    """
+    Given a show ID, return all streaming links for that show.
+    Unlike Kitsu, this returns one streaming link per episode per service.
+
+    :param item_id: The ID of the show you want streaming links for
+    """
+    query_string = """
         query ($id: Int) {
             Media(id: $id){
                 streamingEpisodes {
@@ -276,17 +290,12 @@ def streaming(item_id : int, page : int = 1, perPage : int = 3):
                 }
             }
         }
-    '''
+    """
 
     r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'id': item_id                
-            }
-        }
+        settings["apiurl"],
+        headers=settings["header"],
+        json={"query": query_string, "variables": {"id": item_id}},
     )
 
     try:
@@ -294,19 +303,19 @@ def streaming(item_id : int, page : int = 1, perPage : int = 3):
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
             return jsd
 
 
-def staff(item_id : int):
+def staff(item_id: int):
     """
-        Get information on a specific staffer given their ID.
+    Get information on a specific staffer given their ID.
 
-        :param item_id: The ID of the staff member you want information on.
+    :param item_id: The ID of the staff member you want information on.
     """
-    query_string = '''
+    query_string = """
         query ($id: Int){
             Staff (id: $id){
                 name {
@@ -385,17 +394,12 @@ def staff(item_id : int):
                 }
             }
         }
-    '''
+    """
 
     r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'id': item_id
-            }
-        }
+        settings["apiurl"],
+        headers=settings["header"],
+        json={"query": query_string, "variables": {"id": item_id}},
     )
 
     try:
@@ -403,18 +407,19 @@ def staff(item_id : int):
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
             return jsd
 
-def studio(item_id : int):
-    """
-        Get a studio with a specific id.
 
-        :param item_id: The ID of the studio you want information on.
+def studio(item_id: int):
     """
-    query_string = '''
+    Get a studio with a specific id.
+
+    :param item_id: The ID of the studio you want information on.
+    """
+    query_string = """
         query ($id: Int) {
             Studio (id: $id) {
                 name
@@ -439,17 +444,12 @@ def studio(item_id : int):
                 }
             }
         }
-    '''
+    """
 
     r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json={
-            'query': query_string,
-            'variables': {
-                'id': item_id
-            }
-        }
+        settings["apiurl"],
+        headers=settings["header"],
+        json={"query": query_string, "variables": {"id": item_id}},
     )
 
     try:
@@ -457,7 +457,7 @@ def studio(item_id : int):
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
             return jsd

@@ -6,18 +6,47 @@ authors = ["Charles Click <CharlesClick@vertinext.com>"]
 readme = "README.md"
 packages = [{include="pymoe"}]
 
+[tool.poetry.group.documentation]
+optional = true
+
+[tool.poetry.group.tests]
+optional = true
+
+[tool.poetry.group.cleaning]
+optional = true
+
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "*"
 bs4 = "*"
 ujson = "*"
+
+[tool.poetry.group.documentation.dependencies]
 mkdocs = "1.5.*"
 mkdocs-material = "9.5.*"
 mkdocstrings = "0.24.*"
 mkdocs-git-revision-date-localized-plugin = "1.2.*"
 mkdocs-git-committers-plugin-2 = "2.2.*"
 
+[tool.poetry.group.tests.dependencies]
+pytest="*"
+
+[tool.poetry.group.cleaning.dependencies]
+black="*"
+isort="*"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib -v"
+testpaths = "tests"
+
+[tool.isort]
+profile = "black"
+skip_gitignore = true
+line_length = 90
+
+[tool.black]
+line-length = 90

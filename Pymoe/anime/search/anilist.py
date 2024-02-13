@@ -6,21 +6,22 @@ from pymoe.utils.errors import serializationFailed, serverError
 from pymoe.utils.helpers import anilistWrapper
 
 settings = {
-    'header': {
-        'Content-Type': 'application/json',
-        'User-Agent': 'Pymoe (github.com/ccubed/PyMoe)',
-        'Accept': 'application/json'
+    "header": {
+        "Content-Type": "application/json",
+        "User-Agent": "Pymoe (github.com/ccubed/PyMoe)",
+        "Accept": "application/json",
     },
-    'apiurl': 'https://graphql.anilist.co'
+    "apiurl": "https://graphql.anilist.co",
 }
 
-def characters(term : str, page : int = 1, perPage : int = 3):
-    """
-        Search for characters that match the term in the API.
 
-        :param term: Search Term
-        :param page: Which page of the results?
-        :param perPage: How many results per page?
+def characters(term: str, page: int = 1, perPage: int = 3):
+    """
+    Search for characters that match the term in the API.
+
+    :param term: Search Term
+    :param page: Which page of the results?
+    :param perPage: How many results per page?
     """
     query_string = """\
         query ($query: String, $page: Int, $perPage: Int){
@@ -66,45 +67,38 @@ def characters(term : str, page : int = 1, perPage : int = 3):
     """
 
     json_params = {
-        'query': query_string,
-        'variables': {
-            'query': term,
-            'page': page,
-            'perPage': perPage
-        }
+        "query": query_string,
+        "variables": {"query": term, "page": page, "perPage": perPage},
     }
 
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json = json_params
-    )
-    
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=json_params)
+
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
                 return anilistWrapper(
-                    jsd['data']['Page']['characters'],
+                    jsd["data"]["Page"]["characters"],
                     json_params,
-                    settings['header'],
-                    settings['apiurl']
+                    settings["header"],
+                    settings["apiurl"],
                 )
             else:
-                return jsd['data']['Page']['characters']
+                return jsd["data"]["Page"]["characters"]
 
-def shows(term : str, page : int = 1, perPage : int = 3):
+
+def shows(term: str, page: int = 1, perPage: int = 3):
     """
-        Search for shows(anime) that match the term in the API.
+    Search for shows(anime) that match the term in the API.
 
-        :param term: Search Term
-        :param page: Which page of the results?
-        :param perPage: How many results per page?
+    :param term: Search Term
+    :param page: Which page of the results?
+    :param perPage: How many results per page?
     """
     query_string = """\
         query ($query: String, $page: Int, $perPage: Int){
@@ -157,45 +151,38 @@ def shows(term : str, page : int = 1, perPage : int = 3):
     """
 
     json_params = {
-        'query': query_string,
-        'variables': {
-            'query': term,
-            'page': page,
-            'perPage': perPage
-        }
+        "query": query_string,
+        "variables": {"query": term, "page": page, "perPage": perPage},
     }
-    
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json = json_params
-    )
+
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=json_params)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
                 return anilistWrapper(
-                    jsd['data']['Page']['media'],
+                    jsd["data"]["Page"]["media"],
                     json_params,
-                    settings['header'],
-                    settings['apiurl']
+                    settings["header"],
+                    settings["apiurl"],
                 )
             else:
-                return jsd['data']['Page']['media']
+                return jsd["data"]["Page"]["media"]
 
-def staff(term: str, page : int = 1, perPage : int = 3):
+
+def staff(term: str, page: int = 1, perPage: int = 3):
     """
-        Search for staffers that match the term in the API.
+    Search for staffers that match the term in the API.
 
-        :param term: Search Term
-        :param page: Which page of the results?
-        :param perPage: How many results per page?
+    :param term: Search Term
+    :param page: Which page of the results?
+    :param perPage: How many results per page?
     """
     query_string = """\
         query($query: String, $page: Int, $perPage: Int){
@@ -205,6 +192,7 @@ def staff(term: str, page : int = 1, perPage : int = 3):
                     hasNextPage
                 }
                 staff (search: $query){
+                    id
                     name {
                         first
                         last
@@ -287,45 +275,38 @@ def staff(term: str, page : int = 1, perPage : int = 3):
     """
 
     json_params = {
-        'query': query_string,
-        'variables': {
-            'query': term,
-            'page': page,
-            'perPage': perPage
-        }
+        "query": query_string,
+        "variables": {"query": term, "page": page, "perPage": perPage},
     }
 
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json = json_params
-    )
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=json_params)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
                 return anilistWrapper(
-                    jsd['data']['Page']['staff'],
+                    jsd["data"]["Page"]["staff"],
                     json_params,
-                    settings['header'],
-                    settings['apiurl']
+                    settings["header"],
+                    settings["apiurl"],
                 )
             else:
-                return jsd['data']['Page']['staff']
+                return jsd["data"]["Page"]["staff"]
 
-def studios(term : str, page : int = 1, perPage : int = 3):
+
+def studios(term: str, page: int = 1, perPage: int = 3):
     """
-        Search for studios that match the term in the API.
+    Search for studios that match the term in the API.
 
-        :param term: Search Term
-        :param page: Which page of the results?
-        :param perPage: How many results per page?
+    :param term: Search Term
+    :param page: Which page of the results?
+    :param perPage: How many results per page?
     """
     query_string = """\
         query($query: String, $page: Int, $perPage: Int){
@@ -362,46 +343,39 @@ def studios(term : str, page : int = 1, perPage : int = 3):
     """
 
     json_params = {
-        'query': query_string,
-        'variables': {
-            'query': term,
-            'page': page,
-            'perPage': perPage
-        }
+        "query": query_string,
+        "variables": {"query": term, "page": page, "perPage": perPage},
     }
 
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json = json_params
-    )
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=json_params)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
                 return anilistWrapper(
-                    jsd['data']['Page']['studios'],
+                    jsd["data"]["Page"]["studios"],
                     json_params,
-                    settings['header'],
-                    settings['apiurl']
+                    settings["header"],
+                    settings["apiurl"],
                 )
             else:
-                return jsd['data']['Page']['studios']
+                return jsd["data"]["Page"]["studios"]
+
 
 def airingSchedule(item_id: int):
     """
-        Given an anime id, return the airing schedule.
-        This returns a full airing schedule, including already aired episodes.
-        If an episode has already aired timeUntilAiring will be <= 0.
-        timeUntilAiring is just seconds.
+    Given an anime id, return the airing schedule.
+    This returns a full airing schedule, including already aired episodes.
+    If an episode has already aired timeUntilAiring will be <= 0.
+    timeUntilAiring is just seconds.
 
-        :param item_id: The ID of the show you want a schedule for
+    :param item_id: The ID of the show you want a schedule for
     """
     query_string = """\
         query( $id: Int, $page: Int, $perPage: Int ) {
@@ -420,66 +394,55 @@ def airingSchedule(item_id: int):
     """
 
     json_params = {
-        'query': query_string,
-        'variables': {
-            'id': item_id,
-            'page': 1,
-            'perPage': 3
-        }
+        "query": query_string,
+        "variables": {"id": item_id, "page": 1, "perPage": 3},
     }
 
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json = json_params
-    )
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=json_params)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
                 return anilistWrapper(
-                    jsd['data']['Page']['airingSchedules'],
+                    jsd["data"]["Page"]["airingSchedules"],
                     json_params,
-                    settings['header'],
-                    settings['apiurl']
+                    settings["header"],
+                    settings["apiurl"],
                 )
             else:
-                return jsd['data']['Page']['airingSchedules']
-            
-def dynamicRequest(params : Dict):
-    """
-        This allows you to run a query you wrote yourself against the anilist API.
-        You have to pass both a properly formatted query and the dictionary of parameters needed.
-        If your request returns multiple results, you will get back a wrapper.
+                return jsd["data"]["Page"]["airingSchedules"]
 
-        :param params: Dictionary of parameters needed for the request. Note this needs to include the GraphQL query.
+
+def dynamicRequest(params: Dict):
     """
-    r = requests.post(
-        settings['apiurl'],
-        headers = settings['header'],
-        json = params
-    )
+    This allows you to run a query you wrote yourself against the anilist API.
+    You have to pass both a properly formatted query and the dictionary of parameters needed.
+    If your request returns multiple results, you will get back a wrapper.
+
+    :param params: Dictionary of parameters needed for the request. Note this needs to include the GraphQL query.
+    """
+    r = requests.post(settings["apiurl"], headers=settings["header"], json=params)
 
     try:
         jsd = ujson.loads(r.text)
     except ValueError:
         raise serializationFailed(r.text, r.status_code)
     else:
-        if 'errors' in jsd:
+        if "errors" in jsd:
             raise serverError(r.text, r.status_code)
         else:
-            if jsd['data']['Page']['pageInfo']['hasNextPage']:
+            if jsd["data"]["Page"]["pageInfo"]["hasNextPage"]:
                 return anilistWrapper(
-                    jsd['data']['Page']['airingSchedules'],
+                    jsd["data"]["Page"]["airingSchedules"],
                     params,
-                    settings['header'],
-                    settings['apiurl']
+                    settings["header"],
+                    settings["apiurl"],
                 )
             else:
-                return jsd['data']['Page']['airingSchedules']
+                return jsd["data"]["Page"]["airingSchedules"]

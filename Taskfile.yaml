@@ -1,0 +1,39 @@
+version: '3'
+
+tasks:
+  clean-sync:
+    cmds:
+      - poetry install --sync
+
+  run-pytest:
+    cmds:
+      - task: clean-sync
+      - task: setup-tests
+      - poetry run pytest
+
+  setup-tests:
+    internal: true
+    cmds:
+      - poetry install --with tests --sync
+
+  run-cleaners:
+    cmds:
+      - task: setup-cleaning
+      - task: run-black-formatter
+      - task: run-isort-formatter
+
+  setup-cleaning:
+    internal: true
+    cmds:
+      - task: clean-sync
+      - poetry install --with cleaning --sync
+
+  run-black-formatter:
+    internal: true
+    cmds:
+      - poetry run black pymoe
+    
+  run-isort-formatter:
+    internal: true
+    cmds:
+      - poetry run isort pymoe
