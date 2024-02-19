@@ -24,16 +24,15 @@ ujson = "*"
 [tool.poetry.group.documentation.dependencies]
 mkdocs = "1.5.*"
 mkdocs-material = "9.5.*"
-mkdocstrings = "0.24.*"
-mkdocs-git-revision-date-localized-plugin = "1.2.*"
-mkdocs-git-committers-plugin-2 = "2.2.*"
+mkdocstrings = { version = "0.24.*", extras = ['python'] }
+mkdocs-git-revision-date-localized-plugin = "*"
 
 [tool.poetry.group.tests.dependencies]
-pytest="*"
+pytest = "*"
 
 [tool.poetry.group.cleaning.dependencies]
-black="*"
-isort="*"
+black = "*"
+isort = "*"
 
 [build-system]
 requires = ["poetry-core"]

@@ -8,4 +8,4 @@ def series(title: str):
     """
     Return a title search for title against WLNUpdates
     """
-    return wlnupdates.titles(title)
+    return wlnupdates.series(title)

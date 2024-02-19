@@ -46,7 +46,7 @@ class Test_GET_Anilist:
 
 class Test_GET_Mangaupdates:
     def test_GET_series(self):
-        test = ang.mangaupdates.series(55665151734)
+        test = ang.mangaupdates.manga(55665151734)
         assert test['series_id'] == 55665151734
         assert test['title'] == "Slam Dunk"
 
@@ -71,7 +71,7 @@ class Test_GET_Mangaupdates:
         assert test['bloodtype'] == "B"
 
     def test_GET_seriesReleaseFeed(self):
-        test = ang.mangaupdates.seriesReleaseFeed(55665151734)
+        test = ang.mangaupdates.mangaReleaseFeed(55665151734)
         assert test.startswith("<?xml")
 
     def test_GET_releasesFeed(self):
@@ -79,12 +79,12 @@ class Test_GET_Mangaupdates:
         assert test.startswith("<?xml")
 
     def test_GET_seriesByAuthor(self):
-        test = ang.mangaupdates.seriesByAuthor(60531410036)
+        test = ang.mangaupdates.mangaByAuthor(60531410036)
         assert 'total_series' in test
         assert 'series_id' in test['series_list'][0]
 
     def test_GET_groupsBySeries(self):
-        test = ang.mangaupdates.groupsBySeries(55665151734)
+        test = ang.mangaupdates.mangaBySeries(55665151734)
         assert 'group_list' in test
         assert 'group_id' in test['group_list'][0]
 
@@ -144,6 +144,6 @@ class Test_SEARCH_Mangaupdates:
         assert 'groups' in test[0]['record']
         
     def test_SEARCH_series(self):
-        test = ans.mangaupdates.series("Dragon")
+        test = ans.mangaupdates.manga("Dragon")
         assert 'record' in test[0]
         assert 'series_id' in test[0]['record']

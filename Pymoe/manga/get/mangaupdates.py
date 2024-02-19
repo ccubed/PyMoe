@@ -14,7 +14,7 @@ settings = {
 }
 
 
-def series(seriesId: int):
+def manga(seriesId: int):
     """
     Get a specific series by series ID.
 
@@ -120,7 +120,7 @@ def author(authorId: int):
         return jsd
 
 
-def seriesReleaseFeed(seriesId: int):
+def mangaReleaseFeed(seriesId: int):
     """
     Get an RSS Feed of Releases for a specific series
 
@@ -150,7 +150,7 @@ def releasesFeed():
     return r.text
 
 
-def seriesByAuthor(authorId: int):
+def mangaByAuthor(authorId: int):
     """
     Get a list of series an author has worked on
 
@@ -173,7 +173,7 @@ def seriesByAuthor(authorId: int):
         return jsd
 
 
-def groupsBySeries(seriesId: int):
+def groupsByManga(seriesId: int):
     """
     Get a list of groups that have worked on a series
 

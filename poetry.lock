@@ -293,6 +293,20 @@ gitdb = ">=4.0.1,<5"
 test = ["black", "coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit", "pytest (>=7.3.1)", "pytest-cov", "pytest-instafail", "pytest-mock", "pytest-sugar", "sumtypes"]
 
 [[package]]
+name = "griffe"
+version = "0.40.1"
+description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "griffe-0.40.1-py3-none-any.whl", hash = "sha256:5b8c023f366fe273e762131fe4bfd141ea56c09b3cb825aa92d06a82681cfd93"},
+    {file = "griffe-0.40.1.tar.gz", hash = "sha256:66c48a62e2ce5784b6940e603300fcfb807b6f099b94e7f753f1841661fd5c7c"},
+]
+
+[package.dependencies]
+colorama = ">=0.4"
+
+[[package]]
 name = "idna"
 version = "3.6"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -486,22 +500,6 @@ Markdown = ">=3.3"
 mkdocs = ">=1.1"
 
 [[package]]
-name = "mkdocs-git-committers-plugin-2"
-version = "2.2.3"
-description = "An MkDocs plugin to create a list of contributors on the page. The git-committers plugin will seed the template context with a list of GitHub or GitLab committers and other useful GIT info such as last modified date"
-optional = false
-python-versions = ">=3.8,<4"
-files = [
-    {file = "mkdocs-git-committers-plugin-2-2.2.3.tar.gz", hash = "sha256:e0dddef4e3e321d97bcb83123fd963a839d9f9fa801c3125efeb6544bd8b247c"},
-    {file = "mkdocs_git_committers_plugin_2-2.2.3-py3-none-any.whl", hash = "sha256:0f20d61a9315174f30d5a0266d4a457d3d88909ca5c5bd7d0e0dd2e1841f2af0"},
-]
-
-[package.dependencies]
-gitpython = "*"
-mkdocs = ">=1.0.3"
-requests = "*"
-
-[[package]]
 name = "mkdocs-git-revision-date-localized-plugin"
 version = "1.2.4"
 description = "Mkdocs plugin that enables displaying the localized date of the last git modification of a markdown file."
@@ -576,6 +574,7 @@ Markdown = ">=3.3"
 MarkupSafe = ">=1.1"
 mkdocs = ">=1.4"
 mkdocs-autorefs = ">=0.3.1"
+mkdocstrings-python = {version = ">=0.5.2", optional = true, markers = "extra == \"python\""}
 platformdirs = ">=2.2.0"
 pymdown-extensions = ">=6.3"
 
@@ -583,6 +582,21 @@ pymdown-extensions = ">=6.3"
 crystal = ["mkdocstrings-crystal (>=0.3.4)"]
 python = ["mkdocstrings-python (>=0.5.2)"]
 python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
+
+[[package]]
+name = "mkdocstrings-python"
+version = "1.8.0"
+description = "A Python handler for mkdocstrings."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "mkdocstrings_python-1.8.0-py3-none-any.whl", hash = "sha256:4209970cc90bec194568682a535848a8d8489516c6ed4adbe58bbc67b699ca9d"},
+    {file = "mkdocstrings_python-1.8.0.tar.gz", hash = "sha256:1488bddf50ee42c07d9a488dddc197f8e8999c2899687043ec5dd1643d057192"},
+]
+
+[package.dependencies]
+griffe = ">=0.37"
+mkdocstrings = ">=0.20"
 
 [[package]]
 name = "mypy-extensions"
@@ -1124,4 +1138,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "5ae12c0d833c84e46592e0950c5db3b9b24d8aa4191b96770af537b6efcb25a9"
+content-hash = "6fc9258df289b30a3d757747ab464b5190dd8773344d4b0f988ef19d17c5eb9d"

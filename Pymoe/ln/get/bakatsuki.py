@@ -34,8 +34,6 @@ def cover(pageid: str):
         headers=settings["header"],
     )
 
-    print(r.text)
-
     try:
         jsd = ujson.loads(r.text)
     except ValueError:

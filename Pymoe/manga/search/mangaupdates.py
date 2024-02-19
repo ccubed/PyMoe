@@ -14,7 +14,7 @@ settings = {
 }
 
 
-def series(title: str, options: Dict = None, page: int = 1, perPage: int = 5):
+def manga(title: str, options: Dict = None, page: int = 1, perPage: int = 5):
     """
     Search for a series with title on Mangaupdates.
     Options is an optional dictionary containing additional search options to pass.
@@ -286,7 +286,7 @@ def categories(title: str, options: Dict = None, page: int = 1, perPage: int = 5
     Search for Categories that match the title.
     Options is an optional dictionary containing additional search options to pass.
 
-    :param title: The name of the Author to find
+    :param title: The name of the Category to find
     :param options: An optional dictionary of additional search criteria
     :param page: Which page of results
     :param perPage: Results per page. Note that the only acceptable values are 5,10,15,25,30,40,50,75,100

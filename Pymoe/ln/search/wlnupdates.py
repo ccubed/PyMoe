@@ -14,7 +14,7 @@ settings = {
 }
 
 
-def titles(title_text: str):
+def series(title_text: str):
     """
     Given the title_text to search by, return a list of results.
     This is the best method to find a title by name.
@@ -105,7 +105,7 @@ def parametric(
     """
     if not (tag_category or genre_category):
         if title_search_text:
-            return titles(title_search_text)
+            return series(title_search_text)
         else:
             raise ValueError(
                 "pymoe.ln.search.wlnupdates.parametric: Requires one of tag_category or genre_category."

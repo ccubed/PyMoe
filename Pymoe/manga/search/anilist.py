@@ -2,6 +2,8 @@ import ujson
 import requests
 from pymoe.utils.errors import serializationFailed, serverError
 from pymoe.utils.helpers import anilistWrapper
+from pymoe.anime.search.anilist import characters as cref
+from pymoe.anime.search.anilist import staff as sref
 
 settings = {
     "header": {
@@ -92,3 +94,19 @@ def manga(term: str, page: int = 1, perPage: int = 3):
                 )
             else:
                 return jsd["data"]["Page"]["media"]
+
+
+def characters(item_id: int):
+    """
+    Anilist does not separate characters by anime/manga.
+    This is simply a reference to the character function that already exists.
+    """
+    return cref(item_id)
+
+
+def staff(item_id: int):
+    """
+    Anilist does not separate staff by anime/manga.
+    This is simply a reference to the staff function that already exists.
+    """
+    return sref(item_id)

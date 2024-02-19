@@ -11,3 +11,7 @@ def manga(item_id: int):
 
 def character(item_id: int):
     return anilist.character(item_id)
+
+
+def staff(item_id: int):
+    return anilist.staff(item_id)

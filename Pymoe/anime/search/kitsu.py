@@ -130,7 +130,7 @@ def streaming(item_id: int):
     Given a media ID, return all streaming links related to that media.
     Unlike anilist, this returns one link per streaming service.
 
-    :param term: Search Term
+    :param item_id: ID to get streaming links for
     """
     data = show(item_id)
 
