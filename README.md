@@ -60,13 +60,14 @@ A major upgrade to existing code. Refactored the code to be more thin and better
 ### Manga
 - Kitsu
 - Anilist
-- MyAnimeList
+- MangaUpdates
 
 ### Visual Novels (VN)
 - None
 
 ### Light Novels (LN)
 - Bakatsuki
+- WLNUpdates
 
 ## A few Examples
 
