@@ -6,6 +6,8 @@
 
 Welcome to PyMoe. PyMoe is a general purpose Python library that wraps APIs for several large websites that offer information about Anime, Manga, Light Novels, and Web Novels. Currently six different APIs are supported with plans for more in the future (Especially looking at MangaDex integration).
 
+You can find the documentation for this on [Github Pages](https://ccubed.github.io/PyMoe/).
+
 ## Installation
 If you are looking to install version 2 with the unified api:
 ```python
