@@ -1,12 +1,14 @@
-from ..anime import get
-from ..anime import search
-from ..anime.get import mal as gm
-from ..anime.search import mal as sm
+import pymoe.anime.get
+import pymoe.anime.search
+import pymoe.anime.get.mal as mg
+import pymoe.anime.search.mal as ms
 
-def setKey(apikey: str):
+
+def setMalClient(client_id: str):
     """
-        MAL Requires a key to access the API. 
-        This function sets the key in both submodules.
+    This is a helper function to set the MyAnimeList Client ID at both endpoints.
+
+    :param client_id: Your Client ID
     """
-    gm.settings['header']['X-MAL-CLIENT-ID'] = apikey
-    sm.settings['header']['X-MAL-CLIENT-ID'] = apikey
+    mg.settings["header"]["X-MAL-CLIENT-ID"] = client_id
+    ms.settings["header"]["X-MAL-CLIENT-ID"] = client_id

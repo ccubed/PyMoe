@@ -1,0 +1,74 @@
+version: '3'
+
+tasks:
+  clean-sync:
+    desc: Clean and Sync Environment
+    cmds:
+      - poetry install --sync
+
+  run-pytest:
+    desc: Run unittests in a testing environment
+    cmds:
+      - task: clean-sync
+      - task: setup-tests
+      - poetry run pytest
+
+  setup-tests:
+    internal: true
+    cmds:
+      - poetry install --with tests --sync
+
+  run-cleaners:
+    desc: Run Black and isort against the code
+    cmds:
+      - task: setup-cleaning
+      - task: run-black-formatter
+      - task: run-isort-formatter
+
+  setup-cleaning:
+    internal: true
+    cmds:
+      - task: clean-sync
+      - poetry install --with cleaning --sync
+
+  run-black-formatter:
+    internal: true
+    cmds:
+      - poetry run black pymoe
+    
+  run-isort-formatter:
+    internal: true
+    cmds:
+      - poetry run isort pymoe
+
+  setup-docs:
+    internal: true
+    cmds:
+      - poetry install --with documentation --sync
+
+  build-docs:
+    desc: Run mkdocs build in a documentation environment
+    cmds:
+      - task: clean-sync
+      - task: setup-docs
+      - poetry run mkdocs build
+
+  serve-docs:
+    desc: Run mkdocs serve in a documentation environment
+    cmds:
+      - task: clean-sync
+      - task: setup-docs
+      - poetry run mkdocs serve
+
+  make-build:
+    desc: Clean the code and build the distribution
+    cmds:
+      - task: run-cleaners
+      - task: clean-sync
+      - poetry build
+
+  make-shell:
+    desc: Clean the environment and open a poetry shell
+    cmds:
+      - task: clean-sync
+      - poetry shell

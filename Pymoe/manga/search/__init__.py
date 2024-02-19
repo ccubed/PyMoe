@@ -1,7 +1,7 @@
-from . import anilist
-from . import kitsu
+import pymoe.manga.search.anilist as anilist
+import pymoe.manga.search.kitsu as kitsu
+import pymoe.manga.search.mangaupdates as mangaupdates
 
-# Default Functions using Anilist
 
-def manga(term : str):
-    return anilist.manga(term)
+def manga(title: str):
+    return anilist.manga(title)
