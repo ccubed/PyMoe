@@ -1,8 +1,10 @@
 from datetime import date
-import ujson
+
 import requests
-from pymoe.utils.errors import serializationFailed, serverError, methodNotSupported
-from pymoe.utils.helpers import whatSeason, anilistWrapper
+import ujson
+
+from pymoe.utils.errors import methodNotSupported, serializationFailed, serverError
+from pymoe.utils.helpers import anilistWrapper, whatSeason
 
 settings = {
     "header": {
@@ -104,6 +106,7 @@ def show(item_id: int):
                     color
                 }
                 bannerImage
+                description
                 format
                 status
                 episodes

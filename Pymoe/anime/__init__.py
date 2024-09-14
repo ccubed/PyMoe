@@ -1,6 +1,6 @@
 import pymoe.anime.get
-import pymoe.anime.search
 import pymoe.anime.get.mal as mg
+import pymoe.anime.search
 import pymoe.anime.search.mal as ms
 
 

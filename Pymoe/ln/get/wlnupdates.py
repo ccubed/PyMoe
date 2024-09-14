@@ -1,5 +1,6 @@
 import requests
 import ujson
+
 from pymoe.utils.errors import serializationFailed, serverError
 
 settings = {

@@ -1,4 +1,5 @@
 from datetime import date
+
 import pymoe.anime.get.anilist as anilist
 import pymoe.anime.get.kitsu as kitsu
 import pymoe.anime.get.mal as mal

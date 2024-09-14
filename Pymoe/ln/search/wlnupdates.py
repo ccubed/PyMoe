@@ -1,7 +1,9 @@
 from inspect import currentframe, getargvalues
 from typing import Dict, Tuple
+
 import requests
 import ujson
+
 from pymoe.utils.errors import serializationFailed, serverError
 
 settings = {

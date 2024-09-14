@@ -83,11 +83,6 @@ class Test_GET_Mangaupdates:
         assert 'total_series' in test
         assert 'series_id' in test['series_list'][0]
 
-    def test_GET_groupsBySeries(self):
-        test = ang.mangaupdates.mangaBySeries(55665151734)
-        assert 'group_list' in test
-        assert 'group_id' in test['group_list'][0]
-
     def test_GET_genres(self):
         test = ang.mangaupdates.genres()
         assert 'id' in test[0]

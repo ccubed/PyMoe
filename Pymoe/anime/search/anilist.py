@@ -1,7 +1,9 @@
 from datetime import date
 from typing import Dict
-import ujson
+
 import requests
+import ujson
+
 from pymoe.utils.errors import serializationFailed, serverError
 from pymoe.utils.helpers import anilistWrapper
 

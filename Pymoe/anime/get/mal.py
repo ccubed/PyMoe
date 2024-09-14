@@ -1,6 +1,8 @@
 from datetime import date
-import ujson
+
 import requests
+import ujson
+
 from pymoe.utils.errors import methodNotSupported, serverError
 
 settings = {

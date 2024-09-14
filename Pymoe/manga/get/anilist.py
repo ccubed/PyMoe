@@ -1,8 +1,9 @@
 import requests
 import ujson
-from pymoe.utils.errors import serializationFailed, serverError
+
 from pymoe.anime.get.anilist import character as cref
 from pymoe.anime.get.anilist import staff as sref
+from pymoe.utils.errors import serializationFailed, serverError
 
 settings = {
     "header": {

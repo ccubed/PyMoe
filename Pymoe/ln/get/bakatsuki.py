@@ -1,9 +1,11 @@
 import re
+from collections import OrderedDict
+
 import requests
 import ujson
-from collections import OrderedDict
 from bs4 import BeautifulSoup as soup
-from pymoe.utils.errors import serverError, serializationFailed
+
+from pymoe.utils.errors import serializationFailed, serverError
 
 settings = {
     "apiurl": "https://www.baka-tsuki.org/project/api.php",

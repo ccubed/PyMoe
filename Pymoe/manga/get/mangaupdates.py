@@ -1,6 +1,8 @@
 from typing import Dict
+
 import requests
 import ujson
+
 from pymoe.utils.errors import serializationFailed, serverError
 from pymoe.utils.helpers import mangaupdatesWrapper
 

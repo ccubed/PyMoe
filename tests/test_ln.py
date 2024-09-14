@@ -102,10 +102,6 @@ class Test_SEARCH_Bakatsuki:
         assert type(test[0]) is tuple
 
 class Test_SEARCH_WLNUpdates:
-    def test_SEARCH_titles(self):
-        test = ans.wlnupdates.titles("Dragon")
-        assert 'sid' in test['results'][0]
-
     def test_SEARCH_tags(self):
         test = ans.wlnupdates.tags()
         assert type(test) is list

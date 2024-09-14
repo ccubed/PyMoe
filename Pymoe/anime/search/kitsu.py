@@ -1,9 +1,11 @@
 from datetime import date
-import ujson
+
 import requests
-from pymoe.utils.errors import methodNotSupported, serverError, serializationFailed
-from pymoe.utils.helpers import kitsuWrapper, whatSeason
+import ujson
+
 from pymoe.anime.get.kitsu import show
+from pymoe.utils.errors import methodNotSupported, serializationFailed, serverError
+from pymoe.utils.helpers import kitsuWrapper, whatSeason
 
 settings = {
     "header": {

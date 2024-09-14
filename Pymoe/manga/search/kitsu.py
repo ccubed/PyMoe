@@ -1,6 +1,7 @@
-import ujson
 import requests
-from pymoe.utils.errors import serverError, serializationFailed
+import ujson
+
+from pymoe.utils.errors import serializationFailed, serverError
 from pymoe.utils.helpers import kitsuWrapper
 
 settings = {

@@ -1,6 +1,8 @@
 from datetime import date
-import ujson
+
 import requests
+import ujson
+
 from pymoe.utils.errors import methodNotSupported, serializationFailed, serverError
 from pymoe.utils.helpers import malWrapper, whatSeason
 
