@@ -1,51 +1,48 @@
-[tool.poetry]
-name = "PyMoe"
-version = "2.2.1"
+[project]
+name = "pymoe"
+version = "3.0.0"
 description = "This is Pymoe. The only python library you'll need if you need information on Anime, Manga, Light Novels, or Visual Novels."
-authors = ["Charles Click <CharlesClick@vertinext.com>"]
 readme = "README.md"
-packages = [{include="pymoe"}]
+authors = [
+    { name = "Charles Click", email = "ccubed.techno@gmail.com" }
+]
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["anime", "manga", "light novel", "visual novel"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Software Development :: Libraries"
+]
+dependencies = [
+    "bs4>=0.0.2",
+    "httpx>=0.28.1",
+    "orjson>=3.11.5",
+]
 
-[tool.poetry.group.documentation]
-optional = true
-
-[tool.poetry.group.tests]
-optional = true
-
-[tool.poetry.group.cleaning]
-optional = true
-
-[tool.poetry.dependencies]
-python = "^3.10"
-requests = "*"
-bs4 = "*"
-ujson = "*"
-
-[tool.poetry.group.documentation.dependencies]
-mkdocs = "1.5.*"
-mkdocs-material = "9.5.*"
-mkdocstrings = { version = "0.24.*", extras = ['python'] }
-mkdocs-git-revision-date-localized-plugin = "*"
-
-[tool.poetry.group.tests.dependencies]
-pytest = "*"
-
-[tool.poetry.group.cleaning.dependencies]
-black = "*"
-isort = "*"
+[project.urls]
+Homepage = "https://www.github.com/ccubed/PyMoe"
+Documentation = "https://ccubed.github.io/PyMoe/"
+Issues = "https://github.com/ccubed/PyMoe/issues"
+Repository = "https://github.com/ccubed/PyMoe.git"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.9.18,<0.10.0"]
+build-backend = "uv_build"
 
-[tool.pytest.ini_options]
-addopts = "--import-mode=importlib -v"
-testpaths = "tests"
-
-[tool.isort]
-profile = "black"
-skip_gitignore = true
-line_length = 90
-
-[tool.black]
-line-length = 90
+[dependency-groups]
+dev = [
+    "black>=25.12.0",
+    "isort>=7.0.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-git-revision-date-localized-plugin>=1.5.0",
+    "mkdocs-material>=9.7.0",
+    "mkdocstrings>=1.0.0",
+    "pytest>=9.0.2",
+]
